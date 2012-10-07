@@ -3,7 +3,7 @@
 // module: tm
 //----------------------------------------------------------
 #include <stdio.h>
-#include <magic.h>
+#include "magic.h"
 
 int main(int argc, char** argv){
     magic_t m = magic_open(MAGIC_NONE);
