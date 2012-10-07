@@ -3,3 +3,4 @@ tm
 *.o
 TAGS
 file.js
+*.data

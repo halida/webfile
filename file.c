@@ -1,7 +1,4 @@
 //-*-coding:utf-8-*-
-//----------------------------------------------------------
-// module: tm
-//----------------------------------------------------------
 #include <stdio.h>
 #include "magic.h"
 
@@ -23,9 +20,3 @@ int main(int argc, char** argv){
     magic_close(m);
     return 0;
 }
-
-
-
-
-
-
