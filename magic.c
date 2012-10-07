@@ -439,22 +439,7 @@ file_or_fd(struct magic_set *ms, const char *inname, int fd)
 	 * try looking at the first HOWMANY bytes
 	 */
 	if (ispipe) {
-		ssize_t r = 0;
-
-		while ((r = sread(fd, (void *)&buf[nbytes],
-		    (size_t)(HOWMANY - nbytes), 1)) > 0) {
-			nbytes += r;
-			if (r < PIPE_BUF) break;
-		}
-
-		if (nbytes == 0) {
-			/* We can not read it, but we were able to stat it. */
-			if (unreadable_info(ms, sb.st_mode, inname) == -1)
-				goto done;
-			rv = 0;
-			goto done;
-		}
-
+            // deleted
 	} else {
 		if ((nbytes = read(fd, (char *)buf, HOWMANY)) == -1) {
 			file_error(ms, errno, "cannot read `%s'", inname);

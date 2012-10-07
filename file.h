@@ -37,7 +37,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #define HAVE_STRERROR
-#define VERSION 5.11
+#define VERSION "5.11"
 
 #ifndef	STDIN_FILENO
 #define	STDIN_FILENO	0
@@ -51,6 +51,10 @@
 #define strlcat strncat
 
 #include <string.h>
+#include <time.h>
+#include <limits.h>
+
+#include <regex.h>
 
 /* added end */
 
