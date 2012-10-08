@@ -11,13 +11,13 @@ void init_magic(){
     magic_load(m, "./magic");
 }
 
-const char * webfile_check(char * filename){
+const char * webfile_check(char *data, size_t length){
     if ( m == NULL ) {
         init_magic();
     }
 
     // checking file
-    const char* result = magic_file(m, filename);
+    const char* result = magic_buffer(m, (const void*)data, length);
 
     if ( result == NULL ) {
         printf("error: %s\n", magic_error(m));
@@ -28,8 +28,3 @@ const char * webfile_check(char * filename){
     return result;
 }
 
-
-int main(){
-    int * p = (int *)webfile_check;
-    return 0;
-}

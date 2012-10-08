@@ -54,6 +54,10 @@
 #include <time.h>
 #include <limits.h>
 
+#define S_IFMT  00170000
+#define S_IFDIR  0040000
+#define S_IFREG  0100000
+
 #include <regex.h>
 
 /* added end */

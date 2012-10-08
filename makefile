@@ -1,5 +1,5 @@
-EMSCRIPTEN=~/workspace/emscripten/
-LLVM=~/workspace/clang+llvm-3.1-x86-linux-ubuntu-11.10/bin/
+EMSCRIPTEN=/data/workspace/sources/emscripten/
+LLVM=/data/workspace/sources/clang+llvm-3.1-x86_64-linux-ubuntu_12.04/bin
 
 EMCC=$(EMSCRIPTEN)/emcc
 CFLAGS= -std=c99
@@ -28,7 +28,7 @@ node_file: file.js
 	node file.js test/a.out
 
 webfile.js: $(SRCS) file.h webfile.c
-	$(EMCC) $(CFLAGS) $(SRCS) webfile.c -o webfile.js --pre-js webfile_pre.js --preload-file magic.mgc -s EXPORTED_FUNCTIONS="['_webfile_check']"
+	$(EMCC) $(CFLAGS) $(SRCS) webfile.c -o webfile.html --preload-file magic.mgc --pre-js webfile_pre.js
 
 webfile: webfile.js
 	echo "done"
