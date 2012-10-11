@@ -1,5 +1,6 @@
 EMSCRIPTEN=/data/workspace/sources/emscripten/
 LLVM=/data/workspace/sources/clang+llvm-3.1-x86_64-linux-ubuntu_12.04/bin
+WEB_PAGE_URL=../wf_page/
 
 EMCC=$(EMSCRIPTEN)/emcc
 CFLAGS=
@@ -28,13 +29,13 @@ file.js: $(FILE_SRCS) file.h file.c
 	$(EMCC) $(CFLAGS) $(SRCS) file.c -o file.js --pre-js file_pre.js
 
 node_file: file.js
-	node file.js test/a.out
+	node file.js file.js
 
-webfile.js: $(SRCS) file.h webfile.c
+webfile.html: $(SRCS) file.h webfile.c
 	$(EMCC) $(CFLAGS) $(SRCS) webfile.c -o webfile.html --preload-file magic.mgc --pre-js webfile_pre.js
 
-webfile: webfile.js
-	echo "done"
+webfile: webfile.html
+	ruby pre_process_webfile.rb > $(WEB_PAGE_URL)/javascripts/webfile.js
 
 # tests
 
