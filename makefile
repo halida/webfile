@@ -2,15 +2,18 @@ EMSCRIPTEN=/data/workspace/sources/emscripten/
 LLVM=/data/workspace/sources/clang+llvm-3.1-x86_64-linux-ubuntu_12.04/bin
 
 EMCC=$(EMSCRIPTEN)/emcc
-CFLAGS= -std=c99
+CFLAGS=
 LDFLAGS=
 CC=$(LLVM)/clang
 
-SRCS= magic.c apprentice.c softmagic.c ascmagic.c encoding.c readelf.c print.c funcs.c apptype.c fsmagic.c is_tar.c cdf.c cdf_time.c readcdf.c asprintf.c vasprintf.c
+REG_SRCS= regexp/regcomp.c regexp/regerror.c regexp/regexec.c regexp/regfree.c regexp/regstrlcpy.c
+SRCS= magic.c apprentice.c softmagic.c ascmagic.c encoding.c readelf.c print.c funcs.c apptype.c fsmagic.c is_tar.c cdf.c cdf_time.c readcdf.c asprintf.c vasprintf.c $(REG_SRCS)
 OBJS=$(SRCS:.c=.o)
 
 run: ./file
-	./file ./file
+	cp file testfile
+	./file
+	rm testfile
 
 clean:
 	rm *.o file -f

@@ -9,8 +9,4 @@ Module.preRun = function(){
     var data = fs.readFileSync(filename);
     FS.createDataFile('/', 'testfile', data, true, false);
 
-    // todo
-    _regcomp = function(){return 0;};
-    _regexec = function(){return 0;};
-    _regfree = function(){return 0;};
 }

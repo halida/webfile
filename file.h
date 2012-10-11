@@ -58,7 +58,20 @@
 #define S_IFDIR  0040000
 #define S_IFREG  0100000
 
-#include <regex.h>
+#include "regexp/regex_impl.h"
+#include "regexp/regutils.h"
+#include "regexp/regex2.h"
+
+#include "regexp/regcclass.h"
+#include "regexp/regcname.h"
+
+#define regex_t llvm_regex_t
+#define regmatch_t llvm_regmatch_t
+#define regcomp llvm_regcomp
+#define regerror llvm_regerror
+#define regexec llvm_regexec
+#define regfree llvm_regfree
+#define strlcpy llvm_strlcpy
 
 /* added end */
 
@@ -90,7 +103,6 @@
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
-#include <regex.h>
 #include <sys/types.h>
 #include <sys/param.h>
 /* Do this here and now, because struct stat gets re-defined on solaris */
