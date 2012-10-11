@@ -1,13 +1,13 @@
-$(function(){
+$(function(){ 
 
-      // connect to canvas
-      var Module = {
-        preRun: [],
-        postRun: [],
-        print: (function() {
-          var element = document.getElementById('output');
-          element.value = ''; // clear browser cache
-          return function(text) {
+ // connect to canvas
+var Module = {
+    preRun: [],
+    postRun: [],
+    print: (function() {
+        var element = document.getElementById('output');
+        element.value = ''; // clear browser cache
+        return function(text) {
             // These replacements are necessary if you render to raw HTML
             //text = text.replace(/&/g, "&amp;");
             //text = text.replace(/</g, "&lt;");
@@ -15,42 +15,42 @@ $(function(){
             //text = text.replace('\n', '<br>', 'g');
             element.value += text + "\n";
             element.scrollTop = 99999; // focus on bottom
-          };
-        })(),
-        printErr: function(text) {
-          if (0) { // XXX disabled for safety typeof dump == 'function') {
+        };
+    })(),
+    printErr: function(text) {
+        if (0) { // XXX disabled for safety typeof dump == 'function') {
             dump(text + '\n'); // fast, straight to the real console
-          } else {
+        } else {
             console.log(text);
-          }
-        },
-        canvas: document.getElementById('canvas'),
-        setStatus: function(text) {
-          if (Module.setStatus.interval) clearInterval(Module.setStatus.interval);
-          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
-          var statusElement = document.getElementById('status');
-          var progressElement = document.getElementById('progress');
-          if (m) {
+        }
+    },
+    canvas: document.getElementById('canvas'),
+    setStatus: function(text) {
+        if (Module.setStatus.interval) clearInterval(Module.setStatus.interval);
+        var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+        var statusElement = document.getElementById('status');
+        var progressElement = document.getElementById('progress');
+        if (m) {
             text = m[1];
             progressElement.value = parseInt(m[2])*100;
             progressElement.max = parseInt(m[4])*100;
             progressElement.hidden = false;
-          } else {
+        } else {
             progressElement.value = null;
             progressElement.max = null;
             progressElement.hidden = true;
-          }
-          statusElement.innerHTML = text;
-        },
-        totalDependencies: 0,
-        monitorRunDependencies: function(left) {
-          this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
-      };
-      Module.setStatus('Downloading...');
+        statusElement.innerHTML = text;
+    },
+    totalDependencies: 0,
+    monitorRunDependencies: function(left) {
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+    }
+};
+Module.setStatus('Downloading...');
 
-      Module.preRun = function(){
+Module.preRun = function(){
 
     // todo
     _regcomp = function(){return 0;};
@@ -62,11 +62,11 @@ $(function(){
     // webfile_check(data, data.length);
 }
 
-// Note: Some Emscripten settings will significantly limit the speed of the generated code.
-// Note: Some Emscripten settings may limit the speed of the generated code.
-// TODO: " u s e   s t r i c t ";
+window.webfile = {cwrap: cwrap}
 
-try {
+ 
+
+ try {
   this['Module'] = Module;
 } catch(e) {
   this['Module'] = Module = {};
@@ -1991,6 +1991,61 @@ function _file_delmagic($p, $type, $entries) {
 }
 
 
+function _init_file_tables() {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $p;
+      var $1=HEAP32[((_init_file_tables_done)>>2)];
+      var $2=(($1)|0)!=0;
+      if ($2) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 8; break;
+    case 4: 
+      var $5=HEAP32[((_init_file_tables_done)>>2)];
+      var $6=((($5)+(1))|0);
+      HEAP32[((_init_file_tables_done)>>2)]=$6;
+      $p=((_type_tbl)|0);
+      __label__ = 5; break;
+    case 5: 
+      var $8=$p;
+      var $9=(($8+16)|0);
+      var $10=HEAP32[(($9)>>2)];
+      var $11=(($10)|0)!=0;
+      if ($11) { __label__ = 6; break; } else { __label__ = 8; break; }
+    case 6: 
+      var $13=$p;
+      var $14=(($13)|0);
+      var $15=(($14)|0);
+      var $16=$p;
+      var $17=(($16+20)|0);
+      var $18=HEAP32[(($17)>>2)];
+      var $19=((_file_names+($18<<2))|0);
+      HEAP32[(($19)>>2)]=$15;
+      var $20=$p;
+      var $21=(($20+24)|0);
+      var $22=HEAP32[(($21)>>2)];
+      var $23=$p;
+      var $24=(($23+20)|0);
+      var $25=HEAP32[(($24)>>2)];
+      var $26=((_file_formats+($25<<2))|0);
+      HEAP32[(($26)>>2)]=$22;
+      __label__ = 7; break;
+    case 7: 
+      var $28=$p;
+      var $29=(($28+28)|0);
+      $p=$29;
+      __label__ = 5; break;
+    case 8: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
 function _file_apprentice($ms, $fn, $action) {
   var __stackBase__  = STACKTOP; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
   var __label__;
@@ -2134,72 +2189,6 @@ function _file_apprentice($ms, $fn, $action) {
   }
 }
 _file_apprentice["X"]=1;
-
-function _init_file_tables() {
-  ;
-  var __label__;
-  __label__ = 2; 
-  while(1) switch(__label__) {
-    case 2: 
-      var $p;
-      var $1=HEAP32[((_init_file_tables_done)>>2)];
-      var $2=(($1)|0)!=0;
-      if ($2) { __label__ = 3; break; } else { __label__ = 4; break; }
-    case 3: 
-      __label__ = 11; break;
-    case 4: 
-      var $5=HEAP32[((_init_file_tables_done)>>2)];
-      var $6=((($5)+(1))|0);
-      HEAP32[((_init_file_tables_done)>>2)]=$6;
-      $p=((_type_tbl)|0);
-      __label__ = 5; break;
-    case 5: 
-      var $8=$p;
-      var $9=(($8+16)|0);
-      var $10=HEAP32[(($9)>>2)];
-      var $11=(($10)|0)!=0;
-      if ($11) { __label__ = 6; break; } else { __label__ = 11; break; }
-    case 6: 
-      var $13=$p;
-      var $14=(($13+20)|0);
-      var $15=HEAP32[(($14)>>2)];
-      var $16=(($15)|0) < 42;
-      if ($16) { __label__ = 7; break; } else { __label__ = 8; break; }
-    case 7: 
-      __label__ = 9; break;
-    case 8: 
-      ___assert_func(((STRING_TABLE.__str81)|0), 247, ((STRING_TABLE.___func___init_file_tables)|0), ((STRING_TABLE.__str82)|0));
-      __label__ = 9; break;
-    case 9: 
-      var $20=$p;
-      var $21=(($20)|0);
-      var $22=(($21)|0);
-      var $23=$p;
-      var $24=(($23+20)|0);
-      var $25=HEAP32[(($24)>>2)];
-      var $26=((_file_names+($25<<2))|0);
-      HEAP32[(($26)>>2)]=$22;
-      var $27=$p;
-      var $28=(($27+24)|0);
-      var $29=HEAP32[(($28)>>2)];
-      var $30=$p;
-      var $31=(($30+20)|0);
-      var $32=HEAP32[(($31)>>2)];
-      var $33=((_file_formats+($32<<2))|0);
-      HEAP32[(($33)>>2)]=$29;
-      __label__ = 10; break;
-    case 10: 
-      var $35=$p;
-      var $36=(($35+28)|0);
-      $p=$36;
-      __label__ = 5; break;
-    case 11: 
-      ;
-      return;
-    default: assert(0, "bad label: " + __label__);
-  }
-}
-
 
 function _apprentice_1($ms, $fn, $action, $mlist) {
   var __stackBase__  = STACKTOP; STACKTOP += 8; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
@@ -10083,7 +10072,7 @@ function _match($ms, $magic, $nmagic, $s, $nbytes, $mode, $text) {
       if ($455) { __label__ = 98; break; } else { __label__ = 100; break; }
     case 98: 
       var $457=$2;
-      var $458=_file_printf($457, ((STRING_TABLE.__str83)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $458=_file_printf($457, ((STRING_TABLE.__str81)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $459=(($458)|0)==-1;
       if ($459) { __label__ = 99; break; } else { __label__ = 100; break; }
     case 99: 
@@ -12688,7 +12677,7 @@ function _mget($ms, $s, $m, $nbytes, $cont_level, $text) {
       var $1808=$4;
       var $1809=(($1808+96)|0);
       var $1810=(($1809)|0);
-      var $1811=_file_printf($1807, ((STRING_TABLE.__str1194)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$1810,tempInt));
+      var $1811=_file_printf($1807, ((STRING_TABLE.__str1192)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$1810,tempInt));
       var $1812=(($1811)|0)==-1;
       if ($1812) { __label__ = 186; break; } else { __label__ = 187; break; }
     case 186: 
@@ -12938,7 +12927,7 @@ function _magiccheck($ms, $m) {
       var $69=(($68+4)|0);
       var $70=HEAPU8[($69)];
       var $71=(($70)&255);
-      _file_magerror($67, ((STRING_TABLE.__str1295)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$71,tempInt));
+      _file_magerror($67, ((STRING_TABLE.__str1293)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$71,tempInt));
       $1=-1;
       __label__ = 90; break;
     case 14: 
@@ -13016,7 +13005,7 @@ function _magiccheck($ms, $m) {
       var $110=(($109+4)|0);
       var $111=HEAPU8[($110)];
       var $112=(($111)&255);
-      _file_magerror($108, ((STRING_TABLE.__str1396)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$112,tempInt));
+      _file_magerror($108, ((STRING_TABLE.__str1394)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$112,tempInt));
       $1=-1;
       __label__ = 90; break;
     case 22: 
@@ -13253,7 +13242,7 @@ function _magiccheck($ms, $m) {
       var $250=(($249)|0)!=0;
       var $251=$250 ? 2 : 0;
       var $252=9 | $251;
-      var $253=_regcomp($rx, $243, $252);
+      var $253=_llvm_regcomp($rx, $243, $252);
       $rc=$253;
       var $254=$rc;
       var $255=(($254)|0)!=0;
@@ -13261,11 +13250,11 @@ function _magiccheck($ms, $m) {
     case 45: 
       var $257=$rc;
       var $258=(($errmsg)|0);
-      var $259=_regerror($257, $rx, $258, 512);
+      var $259=_llvm_regerror($257, $rx, $258, 512);
       var $260=$2;
       var $261=$rc;
       var $262=(($errmsg)|0);
-      _file_magerror($260, ((STRING_TABLE.__str891)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$261,HEAP32[(((tempInt)+(4))>>2)]=$262,tempInt));
+      _file_magerror($260, ((STRING_TABLE.__str889)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$261,HEAP32[(((tempInt)+(4))>>2)]=$262,tempInt));
       var $$emscripten$temp$8$0=-1;
       var $$emscripten$temp$8$1=-1;
       var $st$9$0=(($v)|0);
@@ -13289,7 +13278,7 @@ function _magiccheck($ms, $m) {
       var $274=(($273)|0);
       var $275=HEAP32[(($274)>>2)];
       var $276=(($pmatch)|0);
-      var $277=_regexec($rx, $275, 1, $276, 4);
+      var $277=_llvm_regexec($rx, $275, 1, $276, 4);
       $rc=$277;
       var $278=$rc;
       if ((($278)|0) == 0) {
@@ -13350,11 +13339,11 @@ function _magiccheck($ms, $m) {
     case 49: 
       var $308=$rc;
       var $309=(($errmsg)|0);
-      var $310=_regerror($308, $rx, $309, 512);
+      var $310=_llvm_regerror($308, $rx, $309, 512);
       var $311=$2;
       var $312=$rc;
       var $313=(($errmsg)|0);
-      _file_magerror($311, ((STRING_TABLE.__str1497)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$312,HEAP32[(((tempInt)+(4))>>2)]=$313,tempInt));
+      _file_magerror($311, ((STRING_TABLE.__str1495)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$312,HEAP32[(((tempInt)+(4))>>2)]=$313,tempInt));
       var $$emscripten$temp$11$0=-1;
       var $$emscripten$temp$11$1=-1;
       var $st$9$0=(($v)|0);
@@ -13363,7 +13352,7 @@ function _magiccheck($ms, $m) {
       HEAP32[(($st$9$1)>>2)]=$$emscripten$temp$11$1;
       __label__ = 50; break;
     case 50: 
-      _regfree($rx);
+      _llvm_regfree($rx);
       __label__ = 51; break;
     case 51: 
       var $st$0$0=(($v)|0);
@@ -13388,7 +13377,7 @@ function _magiccheck($ms, $m) {
       var $324=(($323+6)|0);
       var $325=HEAPU8[($324)];
       var $326=(($325)&255);
-      _file_magerror($322, ((STRING_TABLE.__str1598)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$326,tempInt));
+      _file_magerror($322, ((STRING_TABLE.__str1596)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$326,tempInt));
       $1=-1;
       __label__ = 90; break;
     case 56: 
@@ -13447,7 +13436,7 @@ function _magiccheck($ms, $m) {
       var $344$0=HEAP32[(($st$1$0)>>2)];
       var $st$1$1=(($v+4)|0);
       var $344$1=HEAP32[(($st$1$1)>>2)];
-      var $$emscripten$temp$13=((STRING_TABLE.__str1699)|0);
+      var $$emscripten$temp$13=((STRING_TABLE.__str1697)|0);
       var $345=_fprintf($343, $$emscripten$temp$13, (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$344$0,HEAP32[(((tempInt)+(4))>>2)]=$344$1,tempInt));
       __label__ = 59; break;
     case 59: 
@@ -13482,7 +13471,7 @@ function _magiccheck($ms, $m) {
       var $st$5$1=(($l+4)|0);
       var $360$1=HEAP32[(($st$5$1)>>2)];
       var $361=$matched;
-      var $$emscripten$temp$14=((STRING_TABLE.__str17100)|0);
+      var $$emscripten$temp$14=((STRING_TABLE.__str1798)|0);
       var $362=_fprintf($358, $$emscripten$temp$14, (tempInt=STACKTOP,STACKTOP += 20,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$359$0,HEAP32[(((tempInt)+(4))>>2)]=$359$1,HEAP32[(((tempInt)+(8))>>2)]=$360$0,HEAP32[(((tempInt)+(12))>>2)]=$360$1,HEAP32[(((tempInt)+(16))>>2)]=$361,tempInt));
       __label__ = 62; break;
     case 62: 
@@ -13516,7 +13505,7 @@ function _magiccheck($ms, $m) {
       var $st$5$1=(($l+4)|0);
       var $377$1=HEAP32[(($st$5$1)>>2)];
       var $378=$matched;
-      var $$emscripten$temp$15=((STRING_TABLE.__str18101)|0);
+      var $$emscripten$temp$15=((STRING_TABLE.__str1899)|0);
       var $379=_fprintf($375, $$emscripten$temp$15, (tempInt=STACKTOP,STACKTOP += 20,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$376$0,HEAP32[(((tempInt)+(4))>>2)]=$376$1,HEAP32[(((tempInt)+(8))>>2)]=$377$0,HEAP32[(((tempInt)+(12))>>2)]=$377$1,HEAP32[(((tempInt)+(16))>>2)]=$378,tempInt));
       __label__ = 65; break;
     case 65: 
@@ -13558,7 +13547,7 @@ function _magiccheck($ms, $m) {
       var $st$5$1=(($l+4)|0);
       var $401$1=HEAP32[(($st$5$1)>>2)];
       var $402=$matched;
-      var $$emscripten$temp$16=((STRING_TABLE.__str19102)|0);
+      var $$emscripten$temp$16=((STRING_TABLE.__str19100)|0);
       var $403=_fprintf($399, $$emscripten$temp$16, (tempInt=STACKTOP,STACKTOP += 20,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$400$0,HEAP32[(((tempInt)+(4))>>2)]=$400$1,HEAP32[(((tempInt)+(8))>>2)]=$401$0,HEAP32[(((tempInt)+(12))>>2)]=$401$1,HEAP32[(((tempInt)+(16))>>2)]=$402,tempInt));
       __label__ = 69; break;
     case 69: 
@@ -13592,7 +13581,7 @@ function _magiccheck($ms, $m) {
       var $st$5$1=(($l+4)|0);
       var $418$1=HEAP32[(($st$5$1)>>2)];
       var $419=$matched;
-      var $$emscripten$temp$17=((STRING_TABLE.__str20103)|0);
+      var $$emscripten$temp$17=((STRING_TABLE.__str20101)|0);
       var $420=_fprintf($416, $$emscripten$temp$17, (tempInt=STACKTOP,STACKTOP += 20,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$417$0,HEAP32[(((tempInt)+(4))>>2)]=$417$1,HEAP32[(((tempInt)+(8))>>2)]=$418$0,HEAP32[(((tempInt)+(12))>>2)]=$418$1,HEAP32[(((tempInt)+(16))>>2)]=$419,tempInt));
       __label__ = 72; break;
     case 72: 
@@ -13636,7 +13625,7 @@ function _magiccheck($ms, $m) {
       var $st$5$1=(($l+4)|0);
       var $443$1=HEAP32[(($st$5$1)>>2)];
       var $444=$matched;
-      var $$emscripten$temp$18=((STRING_TABLE.__str21104)|0);
+      var $$emscripten$temp$18=((STRING_TABLE.__str21102)|0);
       var $445=_fprintf($441, $$emscripten$temp$18, (tempInt=STACKTOP,STACKTOP += 20,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$442$0,HEAP32[(((tempInt)+(4))>>2)]=$442$1,HEAP32[(((tempInt)+(8))>>2)]=$443$0,HEAP32[(((tempInt)+(12))>>2)]=$443$1,HEAP32[(((tempInt)+(16))>>2)]=$444,tempInt));
       __label__ = 77; break;
     case 77: 
@@ -13670,7 +13659,7 @@ function _magiccheck($ms, $m) {
       var $st$5$1=(($l+4)|0);
       var $460$1=HEAP32[(($st$5$1)>>2)];
       var $461=$matched;
-      var $$emscripten$temp$19=((STRING_TABLE.__str22105)|0);
+      var $$emscripten$temp$19=((STRING_TABLE.__str22103)|0);
       var $462=_fprintf($458, $$emscripten$temp$19, (tempInt=STACKTOP,STACKTOP += 20,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$459$0,HEAP32[(((tempInt)+(4))>>2)]=$459$1,HEAP32[(((tempInt)+(8))>>2)]=$460$0,HEAP32[(((tempInt)+(12))>>2)]=$460$1,HEAP32[(((tempInt)+(16))>>2)]=$461,tempInt));
       __label__ = 80; break;
     case 80: 
@@ -13716,7 +13705,7 @@ function _magiccheck($ms, $m) {
       var $st$9$1=(($l+4)|0);
       var $481$1=HEAP32[(($st$9$1)>>2)];
       var $482=$matched;
-      var $$emscripten$temp$20=((STRING_TABLE.__str23106)|0);
+      var $$emscripten$temp$20=((STRING_TABLE.__str23104)|0);
       var $483=_fprintf($478, $$emscripten$temp$20, (tempInt=STACKTOP,STACKTOP += 28,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$479$0,HEAP32[(((tempInt)+(4))>>2)]=$479$1,HEAP32[(((tempInt)+(8))>>2)]=$480$0,HEAP32[(((tempInt)+(12))>>2)]=$480$1,HEAP32[(((tempInt)+(16))>>2)]=$481$0,HEAP32[(((tempInt)+(20))>>2)]=$481$1,HEAP32[(((tempInt)+(24))>>2)]=$482,tempInt));
       __label__ = 84; break;
     case 84: 
@@ -13760,7 +13749,7 @@ function _magiccheck($ms, $m) {
       var $st$9$1=(($l+4)|0);
       var $501$1=HEAP32[(($st$9$1)>>2)];
       var $502=$matched;
-      var $$emscripten$temp$21=((STRING_TABLE.__str24107)|0);
+      var $$emscripten$temp$21=((STRING_TABLE.__str24105)|0);
       var $503=_fprintf($498, $$emscripten$temp$21, (tempInt=STACKTOP,STACKTOP += 28,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$499$0,HEAP32[(((tempInt)+(4))>>2)]=$499$1,HEAP32[(((tempInt)+(8))>>2)]=$500$0,HEAP32[(((tempInt)+(12))>>2)]=$500$1,HEAP32[(((tempInt)+(16))>>2)]=$501$0,HEAP32[(((tempInt)+(20))>>2)]=$501$1,HEAP32[(((tempInt)+(24))>>2)]=$502,tempInt));
       __label__ = 87; break;
     case 87: 
@@ -13772,7 +13761,7 @@ function _magiccheck($ms, $m) {
       var $508=(($507+4)|0);
       var $509=HEAPU8[($508)];
       var $510=(($509)&255);
-      _file_magerror($506, ((STRING_TABLE.__str25108)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$510,tempInt));
+      _file_magerror($506, ((STRING_TABLE.__str25106)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$510,tempInt));
       $1=-1;
       __label__ = 90; break;
     case 89: 
@@ -13810,7 +13799,7 @@ function _handle_annotation($ms, $m) {
       var $11=$3;
       var $12=(($11+224)|0);
       var $13=(($12)|0);
-      var $14=_file_printf($10, ((STRING_TABLE.__str1093)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$13,tempInt));
+      var $14=_file_printf($10, ((STRING_TABLE.__str1091)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$13,tempInt));
       var $15=(($14)|0)==-1;
       if ($15) { __label__ = 4; break; } else { __label__ = 5; break; }
     case 4: 
@@ -13839,7 +13828,7 @@ function _handle_annotation($ms, $m) {
       var $33=$3;
       var $34=(($33+160)|0);
       var $35=(($34)|0);
-      var $36=_file_printf($32, ((STRING_TABLE.__str1194)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$35,tempInt));
+      var $36=_file_printf($32, ((STRING_TABLE.__str1192)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$35,tempInt));
       var $37=(($36)|0)==-1;
       if ($37) { __label__ = 9; break; } else { __label__ = 10; break; }
     case 9: 
@@ -13889,7 +13878,7 @@ function _print_sep($ms, $firstline) {
       __label__ = 7; break;
     case 6: 
       var $15=$2;
-      var $16=_file_printf($15, ((STRING_TABLE.__str992)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $16=_file_printf($15, ((STRING_TABLE.__str990)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       $1=$16;
       __label__ = 7; break;
     case 7: 
@@ -14022,7 +14011,7 @@ function _mprint($ms, $m) {
       var $25$0=$24$0;
       var $25=$25$0&255;
       var $26=(($25)&255);
-      var $27=_snprintf($23, 128, ((STRING_TABLE.__str285)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$26,tempInt));
+      var $27=_snprintf($23, 128, ((STRING_TABLE.__str283)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$26,tempInt));
       var $28=$2;
       var $29=$3;
       var $30=(($29+96)|0);
@@ -14108,7 +14097,7 @@ function _mprint($ms, $m) {
       var $70$0=$69$0;
       var $70=$70$0&65535;
       var $71=(($70)&65535);
-      var $72=_snprintf($68, 128, ((STRING_TABLE.__str386)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$71,tempInt));
+      var $72=_snprintf($68, 128, ((STRING_TABLE.__str384)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$71,tempInt));
       var $73=$2;
       var $74=$3;
       var $75=(($74+96)|0);
@@ -14193,7 +14182,7 @@ function _mprint($ms, $m) {
       var $114$1=HEAP32[(($st$1$1)>>2)];
       var $115$0=$114$0;
       var $115=$115$0;
-      var $116=_snprintf($113, 128, ((STRING_TABLE.__str487)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$115,tempInt));
+      var $116=_snprintf($113, 128, ((STRING_TABLE.__str485)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$115,tempInt));
       var $117=$2;
       var $118=$3;
       var $119=(($118+96)|0);
@@ -14338,7 +14327,7 @@ function _mprint($ms, $m) {
       var $207=$p;
       var $208=$207;
       var $209=(($208)|0);
-      var $210=_strcspn($209, ((STRING_TABLE.__str184)|0));
+      var $210=_strcspn($209, ((STRING_TABLE.__str182)|0));
       var $211=$p;
       var $212=$211;
       var $213=(($212+$210)|0);
@@ -14541,7 +14530,7 @@ function _mprint($ms, $m) {
       var $331=(($buf)|0);
       var $332=$vf;
       var $333=$332;
-      var $334=_snprintf($331, 128, ((STRING_TABLE.__str588)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$333,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
+      var $334=_snprintf($331, 128, ((STRING_TABLE.__str586)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$333,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
       var $335=$2;
       var $336=$3;
       var $337=(($336+96)|0);
@@ -14606,7 +14595,7 @@ function _mprint($ms, $m) {
     case 69: 
       var $370=(($buf)|0);
       var $371=$vd;
-      var $372=_snprintf($370, 128, ((STRING_TABLE.__str588)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$371,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
+      var $372=_snprintf($370, 128, ((STRING_TABLE.__str586)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$371,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
       var $373=$2;
       var $374=$3;
       var $375=(($374+96)|0);
@@ -14823,7 +14812,7 @@ function _mprint($ms, $m) {
       var $516=(($515+6)|0);
       var $517=HEAPU8[($516)];
       var $518=(($517)&255);
-      _file_magerror($514, ((STRING_TABLE.__str689)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$518,tempInt));
+      _file_magerror($514, ((STRING_TABLE.__str687)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$518,tempInt));
       $1=-1;
       __label__ = 96; break;
     case 95: 
@@ -14979,7 +14968,7 @@ function _moffset($ms, $m) {
       var $60=$p;
       var $61=$60;
       var $62=(($61)|0);
-      var $63=_strcspn($62, ((STRING_TABLE.__str184)|0));
+      var $63=_strcspn($62, ((STRING_TABLE.__str182)|0));
       var $64=$p;
       var $65=$64;
       var $66=(($65+$63)|0);
@@ -15158,7 +15147,7 @@ function _check_fmt($ms, $m) {
       $1=0;
       __label__ = 7; break;
     case 4: 
-      var $11=_regcomp($rx, ((STRING_TABLE.__str790)|0), 5);
+      var $11=_llvm_regcomp($rx, ((STRING_TABLE.__str788)|0), 5);
       $rc=$11;
       var $12=$rc;
       var $13=(($12)|0)!=0;
@@ -15166,20 +15155,20 @@ function _check_fmt($ms, $m) {
     case 5: 
       var $15=$rc;
       var $16=(($errmsg)|0);
-      var $17=_regerror($15, $rx, $16, 512);
+      var $17=_llvm_regerror($15, $rx, $16, 512);
       var $18=$2;
       var $19=$rc;
       var $20=(($errmsg)|0);
-      _file_magerror($18, ((STRING_TABLE.__str891)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$19,HEAP32[(((tempInt)+(4))>>2)]=$20,tempInt));
+      _file_magerror($18, ((STRING_TABLE.__str889)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$19,HEAP32[(((tempInt)+(4))>>2)]=$20,tempInt));
       $1=-1;
       __label__ = 7; break;
     case 6: 
       var $22=$3;
       var $23=(($22+96)|0);
       var $24=(($23)|0);
-      var $25=_regexec($rx, $24, 0, 0, 0);
+      var $25=_llvm_regexec($rx, $24, 0, 0, 0);
       $rc=$25;
-      _regfree($rx);
+      _llvm_regfree($rx);
       var $26=$rc;
       var $27=(($26)|0)!=0;
       var $28=$27 ^ 1;
@@ -15754,7 +15743,7 @@ function _mcopy($ms, $p, $type, $indir, $s, $offset, $nbytes, $linecnt) {
     case 25: 
       var $151=$2;
       var $152=$7;
-      _file_magerror($151, ((STRING_TABLE.__str28111)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$152,tempInt));
+      _file_magerror($151, ((STRING_TABLE.__str28109)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$152,tempInt));
       $1=-1;
       __label__ = 51; break;
     case 26: 
@@ -15900,7 +15889,7 @@ function _mdebug($offset, $str, $len) {
   $3=$len;
   var $4=HEAP32[((_stderr)>>2)];
   var $5=$1;
-  var $6=_fprintf($4, ((STRING_TABLE.__str27110)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$5,tempInt));
+  var $6=_fprintf($4, ((STRING_TABLE.__str27108)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$5,tempInt));
   var $7=HEAP32[((_stderr)>>2)];
   var $8=$2;
   var $9=$3;
@@ -16902,7 +16891,7 @@ function _mconvert($ms, $m) {
       var $490=(($489+6)|0);
       var $491=HEAPU8[($490)];
       var $492=(($491)&255);
-      _file_magerror($488, ((STRING_TABLE.__str26109)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$492,tempInt));
+      _file_magerror($488, ((STRING_TABLE.__str26107)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$492,tempInt));
       $1=0;
       __label__ = 29; break;
     case 29: 
@@ -18212,7 +18201,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       __label__ = 39; break;
     case 39: 
       var $147=$8;
-      var $148=_strcmp($147, ((STRING_TABLE.__str114)|0));
+      var $148=_strcmp($147, ((STRING_TABLE.__str112)|0));
       var $149=(($148)|0)==0;
       if ($149) { __label__ = 40; break; } else { __label__ = 41; break; }
     case 40: 
@@ -18239,7 +18228,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
     case 45: 
       var $166=$2;
       var $167=$subtype_mime;
-      var $168=_file_printf($166, ((STRING_TABLE.__str1115)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$167,tempInt));
+      var $168=_file_printf($166, ((STRING_TABLE.__str1113)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$167,tempInt));
       var $169=(($168)|0)==-1;
       if ($169) { __label__ = 46; break; } else { __label__ = 47; break; }
     case 46: 
@@ -18248,7 +18237,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       __label__ = 51; break;
     case 48: 
       var $173=$2;
-      var $174=_file_printf($173, ((STRING_TABLE.__str2116)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $174=_file_printf($173, ((STRING_TABLE.__str2114)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $175=(($174)|0)==-1;
       if ($175) { __label__ = 49; break; } else { __label__ = 50; break; }
     case 49: 
@@ -18266,7 +18255,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($183) { __label__ = 54; break; } else { __label__ = 65; break; }
     case 54: 
       var $185=$2;
-      var $186=_file_replace($185, ((STRING_TABLE.__str3117)|0), ((STRING_TABLE.__str4118)|0));
+      var $186=_file_replace($185, ((STRING_TABLE.__str3115)|0), ((STRING_TABLE.__str4116)|0));
       if ((($186)|0) == 0) {
         __label__ = 55; break;
       }
@@ -18279,7 +18268,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       
     case 55: 
       var $188=$2;
-      var $189=_file_replace($188, ((STRING_TABLE.__str5119)|0), ((STRING_TABLE.__str4118)|0));
+      var $189=_file_replace($188, ((STRING_TABLE.__str5117)|0), ((STRING_TABLE.__str4116)|0));
       if ((($189)|0) == 0) {
         __label__ = 56; break;
       }
@@ -18292,7 +18281,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       
     case 56: 
       var $191=$2;
-      var $192=_file_printf($191, ((STRING_TABLE.__str4118)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $192=_file_printf($191, ((STRING_TABLE.__str4116)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $193=(($192)|0)==-1;
       if ($193) { __label__ = 57; break; } else { __label__ = 58; break; }
     case 57: 
@@ -18315,7 +18304,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
     case 65: 
       var $203=$2;
       var $204=$7;
-      var $205=_file_printf($203, ((STRING_TABLE.__str1115)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$204,tempInt));
+      var $205=_file_printf($203, ((STRING_TABLE.__str1113)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$204,tempInt));
       var $206=(($205)|0)==-1;
       if ($206) { __label__ = 66; break; } else { __label__ = 67; break; }
     case 66: 
@@ -18327,7 +18316,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
     case 68: 
       var $212=$2;
       var $213=$subtype;
-      var $214=_file_printf($212, ((STRING_TABLE.__str6120)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$213,tempInt));
+      var $214=_file_printf($212, ((STRING_TABLE.__str6118)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$213,tempInt));
       var $215=(($214)|0)==-1;
       if ($215) { __label__ = 69; break; } else { __label__ = 70; break; }
     case 69: 
@@ -18337,7 +18326,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
     case 71: 
       var $219=$2;
       var $220=$8;
-      var $221=_file_printf($219, ((STRING_TABLE.__str6120)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$220,tempInt));
+      var $221=_file_printf($219, ((STRING_TABLE.__str6118)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$220,tempInt));
       var $222=(($221)|0)==-1;
       if ($222) { __label__ = 72; break; } else { __label__ = 73; break; }
     case 72: 
@@ -18348,7 +18337,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($226) { __label__ = 74; break; } else { __label__ = 77; break; }
     case 74: 
       var $228=$2;
-      var $229=_file_printf($228, ((STRING_TABLE.__str7121)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $229=_file_printf($228, ((STRING_TABLE.__str7119)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $230=(($229)|0)==-1;
       if ($230) { __label__ = 75; break; } else { __label__ = 76; break; }
     case 75: 
@@ -18361,7 +18350,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($235) { __label__ = 78; break; } else { __label__ = 81; break; }
     case 78: 
       var $237=$2;
-      var $238=_file_printf($237, ((STRING_TABLE.__str8122)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $238=_file_printf($237, ((STRING_TABLE.__str8120)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $239=(($238)|0)==-1;
       if ($239) { __label__ = 79; break; } else { __label__ = 80; break; }
     case 79: 
@@ -18398,7 +18387,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($262) { __label__ = 88; break; } else { __label__ = 132; break; }
     case 88: 
       var $264=$2;
-      var $265=_file_printf($264, ((STRING_TABLE.__str9123)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $265=_file_printf($264, ((STRING_TABLE.__str9121)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $266=(($265)|0)==-1;
       if ($266) { __label__ = 89; break; } else { __label__ = 90; break; }
     case 89: 
@@ -18421,7 +18410,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($279) { __label__ = 94; break; } else { __label__ = 97; break; }
     case 94: 
       var $281=$2;
-      var $282=_file_printf($281, ((STRING_TABLE.__str10124)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $282=_file_printf($281, ((STRING_TABLE.__str10122)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $283=(($282)|0)==-1;
       if ($283) { __label__ = 95; break; } else { __label__ = 96; break; }
     case 95: 
@@ -18434,7 +18423,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($288) { __label__ = 98; break; } else { __label__ = 107; break; }
     case 98: 
       var $290=$2;
-      var $291=_file_printf($290, ((STRING_TABLE.__str11125)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $291=_file_printf($290, ((STRING_TABLE.__str11123)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $292=(($291)|0)==-1;
       if ($292) { __label__ = 99; break; } else { __label__ = 100; break; }
     case 99: 
@@ -18453,7 +18442,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($302) { __label__ = 103; break; } else { __label__ = 106; break; }
     case 103: 
       var $304=$2;
-      var $305=_file_printf($304, ((STRING_TABLE.__str12126)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $305=_file_printf($304, ((STRING_TABLE.__str12124)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $306=(($305)|0)==-1;
       if ($306) { __label__ = 104; break; } else { __label__ = 105; break; }
     case 104: 
@@ -18468,7 +18457,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($312) { __label__ = 108; break; } else { __label__ = 116; break; }
     case 108: 
       var $314=$2;
-      var $315=_file_printf($314, ((STRING_TABLE.__str13127)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $315=_file_printf($314, ((STRING_TABLE.__str13125)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $316=(($315)|0)==-1;
       if ($316) { __label__ = 109; break; } else { __label__ = 110; break; }
     case 109: 
@@ -18483,7 +18472,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($323) { __label__ = 112; break; } else { __label__ = 115; break; }
     case 112: 
       var $325=$2;
-      var $326=_file_printf($325, ((STRING_TABLE.__str12126)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $326=_file_printf($325, ((STRING_TABLE.__str12124)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $327=(($326)|0)==-1;
       if ($327) { __label__ = 113; break; } else { __label__ = 114; break; }
     case 113: 
@@ -18498,7 +18487,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($333) { __label__ = 117; break; } else { __label__ = 124; break; }
     case 117: 
       var $335=$2;
-      var $336=_file_printf($335, ((STRING_TABLE.__str14128)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $336=_file_printf($335, ((STRING_TABLE.__str14126)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $337=(($336)|0)==-1;
       if ($337) { __label__ = 118; break; } else { __label__ = 119; break; }
     case 118: 
@@ -18509,7 +18498,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($341) { __label__ = 120; break; } else { __label__ = 123; break; }
     case 120: 
       var $343=$2;
-      var $344=_file_printf($343, ((STRING_TABLE.__str12126)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $344=_file_printf($343, ((STRING_TABLE.__str12124)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $345=(($344)|0)==-1;
       if ($345) { __label__ = 121; break; } else { __label__ = 122; break; }
     case 121: 
@@ -18524,7 +18513,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($351) { __label__ = 125; break; } else { __label__ = 128; break; }
     case 125: 
       var $353=$2;
-      var $354=_file_printf($353, ((STRING_TABLE.__str15129)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $354=_file_printf($353, ((STRING_TABLE.__str15127)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $355=(($354)|0)==-1;
       if ($355) { __label__ = 126; break; } else { __label__ = 127; break; }
     case 126: 
@@ -18535,7 +18524,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       __label__ = 129; break;
     case 129: 
       var $360=$2;
-      var $361=_file_printf($360, ((STRING_TABLE.__str16130)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $361=_file_printf($360, ((STRING_TABLE.__str16128)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $362=(($361)|0)==-1;
       if ($362) { __label__ = 130; break; } else { __label__ = 131; break; }
     case 130: 
@@ -18548,7 +18537,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($367) { __label__ = 133; break; } else { __label__ = 136; break; }
     case 133: 
       var $369=$2;
-      var $370=_file_printf($369, ((STRING_TABLE.__str17131)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $370=_file_printf($369, ((STRING_TABLE.__str17129)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $371=(($370)|0)==-1;
       if ($371) { __label__ = 134; break; } else { __label__ = 135; break; }
     case 134: 
@@ -18561,7 +18550,7 @@ function _file_ascmagic_with_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $
       if ($376) { __label__ = 137; break; } else { __label__ = 140; break; }
     case 137: 
       var $378=$2;
-      var $379=_file_printf($378, ((STRING_TABLE.__str18132)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $379=_file_printf($378, ((STRING_TABLE.__str18130)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $380=(($379)|0)==-1;
       if ($380) { __label__ = 138; break; } else { __label__ = 139; break; }
     case 138: 
@@ -19110,7 +19099,7 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       $rv=1;
       $nbuf=0;
       var $9=$8;
-      HEAP32[(($9)>>2)]=((STRING_TABLE.__str135)|0);
+      HEAP32[(($9)>>2)]=((STRING_TABLE.__str133)|0);
       var $10=$3;
       var $11=((($10)+(1))|0);
       var $12=(($11)|0);
@@ -19153,9 +19142,9 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($38) { __label__ = 7; break; } else { __label__ = 8; break; }
     case 7: 
       var $40=$6;
-      HEAP32[(($40)>>2)]=((STRING_TABLE.__str1136)|0);
+      HEAP32[(($40)>>2)]=((STRING_TABLE.__str1134)|0);
       var $41=$7;
-      HEAP32[(($41)>>2)]=((STRING_TABLE.__str2137)|0);
+      HEAP32[(($41)>>2)]=((STRING_TABLE.__str2135)|0);
       __label__ = 33; break;
     case 8: 
       var $43=$2;
@@ -19168,9 +19157,9 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($49) { __label__ = 9; break; } else { __label__ = 10; break; }
     case 9: 
       var $51=$6;
-      HEAP32[(($51)>>2)]=((STRING_TABLE.__str3138)|0);
+      HEAP32[(($51)>>2)]=((STRING_TABLE.__str3136)|0);
       var $52=$7;
-      HEAP32[(($52)>>2)]=((STRING_TABLE.__str4139)|0);
+      HEAP32[(($52)>>2)]=((STRING_TABLE.__str4137)|0);
       __label__ = 32; break;
     case 10: 
       var $54=$2;
@@ -19183,11 +19172,11 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($60) { __label__ = 11; break; } else { __label__ = 12; break; }
     case 11: 
       var $62=$6;
-      HEAP32[(($62)>>2)]=((STRING_TABLE.__str3138)|0);
+      HEAP32[(($62)>>2)]=((STRING_TABLE.__str3136)|0);
       var $63=$6;
-      HEAP32[(($63)>>2)]=((STRING_TABLE.__str5140)|0);
+      HEAP32[(($63)>>2)]=((STRING_TABLE.__str5138)|0);
       var $64=$7;
-      HEAP32[(($64)>>2)]=((STRING_TABLE.__str4139)|0);
+      HEAP32[(($64)>>2)]=((STRING_TABLE.__str4137)|0);
       __label__ = 31; break;
     case 12: 
       var $66=$2;
@@ -19205,15 +19194,15 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($75) { __label__ = 14; break; } else { __label__ = 15; break; }
     case 14: 
       var $77=$6;
-      HEAP32[(($77)>>2)]=((STRING_TABLE.__str6141)|0);
+      HEAP32[(($77)>>2)]=((STRING_TABLE.__str6139)|0);
       var $78=$7;
-      HEAP32[(($78)>>2)]=((STRING_TABLE.__str7142)|0);
+      HEAP32[(($78)>>2)]=((STRING_TABLE.__str7140)|0);
       __label__ = 16; break;
     case 15: 
       var $80=$6;
-      HEAP32[(($80)>>2)]=((STRING_TABLE.__str8143)|0);
+      HEAP32[(($80)>>2)]=((STRING_TABLE.__str8141)|0);
       var $81=$7;
-      HEAP32[(($81)>>2)]=((STRING_TABLE.__str9144)|0);
+      HEAP32[(($81)>>2)]=((STRING_TABLE.__str9142)|0);
       __label__ = 16; break;
     case 16: 
       __label__ = 30; break;
@@ -19228,9 +19217,9 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($90) { __label__ = 18; break; } else { __label__ = 19; break; }
     case 18: 
       var $92=$6;
-      HEAP32[(($92)>>2)]=((STRING_TABLE.__str10145)|0);
+      HEAP32[(($92)>>2)]=((STRING_TABLE.__str10143)|0);
       var $93=$7;
-      HEAP32[(($93)>>2)]=((STRING_TABLE.__str11146)|0);
+      HEAP32[(($93)>>2)]=((STRING_TABLE.__str11144)|0);
       __label__ = 29; break;
     case 19: 
       var $95=$2;
@@ -19243,9 +19232,9 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($101) { __label__ = 20; break; } else { __label__ = 21; break; }
     case 20: 
       var $103=$6;
-      HEAP32[(($103)>>2)]=((STRING_TABLE.__str12147)|0);
+      HEAP32[(($103)>>2)]=((STRING_TABLE.__str12145)|0);
       var $104=$7;
-      HEAP32[(($104)>>2)]=((STRING_TABLE.__str13148)|0);
+      HEAP32[(($104)>>2)]=((STRING_TABLE.__str13146)|0);
       __label__ = 28; break;
     case 21: 
       var $106=$2;
@@ -19262,9 +19251,9 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($115) { __label__ = 22; break; } else { __label__ = 23; break; }
     case 22: 
       var $117=$6;
-      HEAP32[(($117)>>2)]=((STRING_TABLE.__str14149)|0);
+      HEAP32[(($117)>>2)]=((STRING_TABLE.__str14147)|0);
       var $118=$7;
-      HEAP32[(($118)>>2)]=((STRING_TABLE.__str15150)|0);
+      HEAP32[(($118)>>2)]=((STRING_TABLE.__str15148)|0);
       __label__ = 27; break;
     case 23: 
       var $120=$nbuf;
@@ -19277,14 +19266,14 @@ function _file_encoding($ms, $buf, $nbytes, $ubuf, $ulen, $code, $code_mime, $ty
       if ($126) { __label__ = 24; break; } else { __label__ = 25; break; }
     case 24: 
       var $128=$6;
-      HEAP32[(($128)>>2)]=((STRING_TABLE.__str16151)|0);
+      HEAP32[(($128)>>2)]=((STRING_TABLE.__str16149)|0);
       var $129=$7;
-      HEAP32[(($129)>>2)]=((STRING_TABLE.__str15150)|0);
+      HEAP32[(($129)>>2)]=((STRING_TABLE.__str15148)|0);
       __label__ = 26; break;
     case 25: 
       $rv=0;
       var $131=$8;
-      HEAP32[(($131)>>2)]=((STRING_TABLE.__str17152)|0);
+      HEAP32[(($131)>>2)]=((STRING_TABLE.__str17150)|0);
       __label__ = 26; break;
     case 26: 
       __label__ = 27; break;
@@ -20084,7 +20073,7 @@ function _file_mdump($m) {
       var $12=$1;
       var $13=(($12+12)|0);
       var $14=HEAP32[(($13)>>2)];
-      var $15=_fprintf($2, ((STRING_TABLE.__str161)|0), (tempInt=STACKTOP,STACKTOP += 16,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$5,HEAP32[(((tempInt)+(4))>>2)]=$11,HEAP32[(((tempInt)+(8))>>2)]=((STRING_TABLE.__str1162)|0),HEAP32[(((tempInt)+(12))>>2)]=$14,tempInt));
+      var $15=_fprintf($2, ((STRING_TABLE.__str159)|0), (tempInt=STACKTOP,STACKTOP += 16,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$5,HEAP32[(((tempInt)+(4))>>2)]=$11,HEAP32[(((tempInt)+(8))>>2)]=((STRING_TABLE.__str1160)|0),HEAP32[(((tempInt)+(12))>>2)]=$14,tempInt));
       var $16=$1;
       var $17=(($16+2)|0);
       var $18=HEAPU8[($17)];
@@ -20110,10 +20099,10 @@ function _file_mdump($m) {
       var $36=((((HEAPU8[($35)])|(HEAPU8[(($35)+(1))]<<8)|(HEAPU8[(($35)+(2))]<<16)|(HEAPU8[(($35)+(3))]<<24))|0));
       var $39 = $36;__label__ = 6; break;
     case 5: 
-      var $39 = ((STRING_TABLE.__str3164)|0);__label__ = 6; break;
+      var $39 = ((STRING_TABLE.__str3162)|0);__label__ = 6; break;
     case 6: 
       var $39;
-      var $40=_fprintf($23, ((STRING_TABLE.__str2163)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$39,tempInt));
+      var $40=_fprintf($23, ((STRING_TABLE.__str2161)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$39,tempInt));
       var $41=$1;
       var $42=(($41+8)|0);
       var $43=HEAPU8[($42)];
@@ -20151,7 +20140,7 @@ function _file_mdump($m) {
       var $70=$1;
       var $71=(($70+16)|0);
       var $72=HEAP32[(($71)>>2)];
-      var $73=_fprintf($51, ((STRING_TABLE.__str4165)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$69,HEAP32[(((tempInt)+(4))>>2)]=$72,tempInt));
+      var $73=_fprintf($51, ((STRING_TABLE.__str4163)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$69,HEAP32[(((tempInt)+(4))>>2)]=$72,tempInt));
       __label__ = 12; break;
     case 12: 
       var $75=HEAP32[((_stderr)>>2)];
@@ -20161,7 +20150,7 @@ function _file_mdump($m) {
       var $79=(($78)&255);
       var $80=$79 & 8;
       var $81=(($80)|0)!=0;
-      var $82=$81 ? (((STRING_TABLE.__str6167)|0)) : (((__str7168)|0));
+      var $82=$81 ? (((STRING_TABLE.__str6165)|0)) : (((__str7166)|0));
       var $83=$1;
       var $84=(($83+6)|0);
       var $85=HEAPU8[($84)];
@@ -20178,10 +20167,10 @@ function _file_mdump($m) {
       var $95=((((HEAPU8[($94)])|(HEAPU8[(($94)+(1))]<<8)|(HEAPU8[(($94)+(2))]<<16)|(HEAPU8[(($94)+(3))]<<24))|0));
       var $98 = $95;__label__ = 15; break;
     case 14: 
-      var $98 = ((STRING_TABLE.__str3164)|0);__label__ = 15; break;
+      var $98 = ((STRING_TABLE.__str3162)|0);__label__ = 15; break;
     case 15: 
       var $98;
-      var $99=_fprintf($75, ((STRING_TABLE.__str5166)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$82,HEAP32[(((tempInt)+(4))>>2)]=$98,tempInt));
+      var $99=_fprintf($75, ((STRING_TABLE.__str5164)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$82,HEAP32[(((tempInt)+(4))>>2)]=$98,tempInt));
       var $100=$1;
       var $101=(($100+9)|0);
       var $102=HEAPU8[($101)];
@@ -20438,7 +20427,7 @@ function _file_mdump($m) {
       var $315=$314;
       var $316=(($315)|0);
       var $317=HEAP32[(($316)>>2)];
-      var $318=_fprintf($312, ((STRING_TABLE.__str8169)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$317,tempInt));
+      var $318=_fprintf($312, ((STRING_TABLE.__str8167)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$317,tempInt));
       __label__ = 54; break;
     case 54: 
       __label__ = 61; break;
@@ -20487,7 +20476,7 @@ function _file_mdump($m) {
       var $352$0=HEAP32[(($st$4$0)>>2)];
       var $st$4$1=(($351+4)|0);
       var $352$1=HEAP32[(($st$4$1)>>2)];
-      var $$emscripten$temp$1=((STRING_TABLE.__str9170)|0);
+      var $$emscripten$temp$1=((STRING_TABLE.__str9168)|0);
       var $353=_fprintf($348, $$emscripten$temp$1, (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$352$0,HEAP32[(((tempInt)+(4))>>2)]=$352$1,tempInt));
       __label__ = 60; break;
     case 60: 
@@ -20498,7 +20487,7 @@ function _file_mdump($m) {
       var $358=(($357+4)|0);
       var $359=HEAPU8[($358)];
       var $360=(($359)&255);
-      var $361=_fprintf($356, ((STRING_TABLE.__str10171)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$360,tempInt));
+      var $361=_fprintf($356, ((STRING_TABLE.__str10169)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$360,tempInt));
       var $362=$1;
       var $363=(($362+4)|0);
       var $364=HEAPU8[($363)];
@@ -20550,7 +20539,7 @@ function _file_mdump($m) {
       var $375=(($374+32)|0);
       var $376=$375;
       var $377=HEAP32[(($376)>>2)];
-      var $378=_fprintf($373, ((STRING_TABLE.__str11172)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$377,tempInt));
+      var $378=_fprintf($373, ((STRING_TABLE.__str11170)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$377,tempInt));
       __label__ = 74; break;
     case 64: 
       var $380=HEAP32[((_stderr)>>2)];
@@ -20561,7 +20550,7 @@ function _file_mdump($m) {
       var $384$0=HEAP32[(($st$4$0)>>2)];
       var $st$4$1=(($383+4)|0);
       var $384$1=HEAP32[(($st$4$1)>>2)];
-      var $$emscripten$temp$2=((STRING_TABLE.__str12173)|0);
+      var $$emscripten$temp$2=((STRING_TABLE.__str12171)|0);
       var $385=_fprintf($380, $$emscripten$temp$2, (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$384$0,HEAP32[(((tempInt)+(4))>>2)]=$384$1,tempInt));
       __label__ = 74; break;
     case 65: 
@@ -20583,7 +20572,7 @@ function _file_mdump($m) {
       var $400=$399;
       var $401=HEAP32[(($400)>>2)];
       var $402=_file_fmttime($401, 1);
-      var $403=_fprintf($397, ((STRING_TABLE.__str13174)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$402,tempInt));
+      var $403=_fprintf($397, ((STRING_TABLE.__str13172)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$402,tempInt));
       __label__ = 74; break;
     case 67: 
       var $405=HEAP32[((_stderr)>>2)];
@@ -20592,7 +20581,7 @@ function _file_mdump($m) {
       var $408=$407;
       var $409=HEAP32[(($408)>>2)];
       var $410=_file_fmttime($409, 0);
-      var $411=_fprintf($405, ((STRING_TABLE.__str13174)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$410,tempInt));
+      var $411=_fprintf($405, ((STRING_TABLE.__str13172)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$410,tempInt));
       __label__ = 74; break;
     case 68: 
       var $413=HEAP32[((_stderr)>>2)];
@@ -20606,7 +20595,7 @@ function _file_mdump($m) {
       var $418$0=$417$0;
       var $418=$418$0;
       var $419=_file_fmttime($418, 1);
-      var $420=_fprintf($413, ((STRING_TABLE.__str13174)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$419,tempInt));
+      var $420=_fprintf($413, ((STRING_TABLE.__str13172)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$419,tempInt));
       __label__ = 74; break;
     case 69: 
       var $422=HEAP32[((_stderr)>>2)];
@@ -20620,7 +20609,7 @@ function _file_mdump($m) {
       var $427$0=$426$0;
       var $427=$427$0;
       var $428=_file_fmttime($427, 0);
-      var $429=_fprintf($422, ((STRING_TABLE.__str13174)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$428,tempInt));
+      var $429=_fprintf($422, ((STRING_TABLE.__str13172)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$428,tempInt));
       __label__ = 74; break;
     case 70: 
       var $431=HEAP32[((_stderr)>>2)];
@@ -20629,7 +20618,7 @@ function _file_mdump($m) {
       var $434=$433;
       var $435=HEAPF32[(($434)>>2)];
       var $436=$435;
-      var $437=_fprintf($431, ((STRING_TABLE.__str14175)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$436,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
+      var $437=_fprintf($431, ((STRING_TABLE.__str14173)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$436,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
       __label__ = 74; break;
     case 71: 
       var $439=HEAP32[((_stderr)>>2)];
@@ -20637,13 +20626,13 @@ function _file_mdump($m) {
       var $441=(($440+32)|0);
       var $442=$441;
       var $443=(tempDoubleI32[0]=HEAP32[(($442)>>2)],tempDoubleI32[1]=HEAP32[((($442)+(4))>>2)],tempDoubleF64[0]);
-      var $444=_fprintf($439, ((STRING_TABLE.__str14175)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$443,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
+      var $444=_fprintf($439, ((STRING_TABLE.__str14173)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),(tempDoubleF64[0]=$443,HEAP32[((tempInt)>>2)]=tempDoubleI32[0],HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[1]),tempInt));
       __label__ = 74; break;
     case 72: 
       __label__ = 74; break;
     case 73: 
       var $447=HEAP32[((_stderr)>>2)];
-      var $448=_fputs(((STRING_TABLE.__str3164)|0), $447);
+      var $448=_fputs(((STRING_TABLE.__str3162)|0), $447);
       __label__ = 74; break;
     case 74: 
       __label__ = 75; break;
@@ -20652,7 +20641,7 @@ function _file_mdump($m) {
       var $452=$1;
       var $453=(($452+96)|0);
       var $454=(($453)|0);
-      var $455=_fprintf($451, ((STRING_TABLE.__str15176)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$454,tempInt));
+      var $455=_fprintf($451, ((STRING_TABLE.__str15174)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$454,tempInt));
       STACKTOP = __stackBase__;
       return;
     default: assert(0, "bad label: " + __label__);
@@ -20713,7 +20702,7 @@ function _file_fmttime($v, $local) {
       __label__ = 12; break;
     case 11: 
       var $28=$pp;
-      var $29=_strcspn($28, ((STRING_TABLE.__str18179)|0));
+      var $29=_strcspn($28, ((STRING_TABLE.__str18177)|0));
       var $30=$pp;
       var $31=(($30+$29)|0);
       HEAP8[($31)]=0;
@@ -20721,7 +20710,7 @@ function _file_fmttime($v, $local) {
       $1=$32;
       __label__ = 13; break;
     case 12: 
-      $1=((STRING_TABLE.__str19180)|0);
+      $1=((STRING_TABLE.__str19178)|0);
       __label__ = 13; break;
     case 13: 
       var $35=$1;
@@ -20758,11 +20747,11 @@ function _file_magwarn($ms, $f) {
       var $14=$1;
       var $15=(($14+40)|0);
       var $16=HEAP32[(($15)>>2)];
-      var $17=_fprintf($10, ((STRING_TABLE.__str16177)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$13,HEAP32[(((tempInt)+(4))>>2)]=$16,tempInt));
+      var $17=_fprintf($10, ((STRING_TABLE.__str16175)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$13,HEAP32[(((tempInt)+(4))>>2)]=$16,tempInt));
       __label__ = 4; break;
     case 4: 
       var $19=HEAP32[((_stderr)>>2)];
-      var $20=_fprintf($19, ((STRING_TABLE.__str17178)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $20=_fprintf($19, ((STRING_TABLE.__str17176)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $21=$va;
       HEAP32[(($21)>>2)]=arguments[_file_magwarn.length];
       var $22=HEAP32[((_stderr)>>2)];
@@ -20818,7 +20807,7 @@ function _file_vprintf($ms, $fmt, $ap) {
       var $20=(($19)|0);
       var $21=HEAP32[(($20)>>2)];
       var $22=HEAP32[(($buf)>>2)];
-      var $23=_asprintf($newstr, ((STRING_TABLE.__str189)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$21,HEAP32[(((tempInt)+(4))>>2)]=$22,tempInt));
+      var $23=_asprintf($newstr, ((STRING_TABLE.__str187)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$21,HEAP32[(((tempInt)+(4))>>2)]=$22,tempInt));
       $len=$23;
       var $24=HEAP32[(($buf)>>2)];
       _free($24);
@@ -20848,7 +20837,7 @@ function _file_vprintf($ms, $fmt, $ap) {
       var $40=$2;
       var $41=___errno();
       var $42=HEAP32[(($41)>>2)];
-      _file_error($40, $42, ((STRING_TABLE.__str1190)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      _file_error($40, $42, ((STRING_TABLE.__str1188)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       $1=-1;
       __label__ = 10; break;
     case 10: 
@@ -20950,7 +20939,7 @@ function _file_error_core($ms, $error, $f, $va, $lineno) {
       HEAP32[(($22)>>2)]=0;
       var $23=$1;
       var $24=$5;
-      var $25=_file_printf($23, ((STRING_TABLE.__str21210)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$24,tempInt));
+      var $25=_file_printf($23, ((STRING_TABLE.__str21208)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$24,tempInt));
       __label__ = 6; break;
     case 6: 
       var $27=$1;
@@ -20964,7 +20953,7 @@ function _file_error_core($ms, $error, $f, $va, $lineno) {
       var $34=$1;
       var $35=$2;
       var $36=_strerror($35);
-      var $37=_file_printf($34, ((STRING_TABLE.__str22211)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$36,tempInt));
+      var $37=_file_printf($34, ((STRING_TABLE.__str22209)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$36,tempInt));
       __label__ = 8; break;
     case 8: 
       var $39=$1;
@@ -21022,7 +21011,7 @@ function _file_oomem($ms, $len) {
   var $4=___errno();
   var $5=HEAP32[(($4)>>2)];
   var $6=$2;
-  _file_error($3, $5, ((STRING_TABLE.__str2191)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$6,tempInt));
+  _file_error($3, $5, ((STRING_TABLE.__str2189)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$6,tempInt));
   STACKTOP = __stackBase__;
   return;
 }
@@ -21037,7 +21026,7 @@ function _file_badseek($ms) {
   var $2=$1;
   var $3=___errno();
   var $4=HEAP32[(($3)>>2)];
-  _file_error($2, $4, ((STRING_TABLE.__str3192)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+  _file_error($2, $4, ((STRING_TABLE.__str3190)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
   STACKTOP = __stackBase__;
   return;
 }
@@ -21052,7 +21041,7 @@ function _file_badread($ms) {
   var $2=$1;
   var $3=___errno();
   var $4=HEAP32[(($3)>>2)];
-  _file_error($2, $4, ((STRING_TABLE.__str4193)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+  _file_error($2, $4, ((STRING_TABLE.__str4191)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
   STACKTOP = __stackBase__;
   return;
 }
@@ -21097,7 +21086,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
       $ubuf=$11;
       HEAP32[(($u8buf)>>2)]=0;
       HEAP32[(($code)>>2)]=0;
-      HEAP32[(($code_mime)>>2)]=((STRING_TABLE.__str5194)|0);
+      HEAP32[(($code_mime)>>2)]=((STRING_TABLE.__str5192)|0);
       HEAP32[(($type)>>2)]=0;
       var $12=$6;
       var $13=(($12)|0)==0;
@@ -21115,7 +21104,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
       var $22=$2;
       var $23=$mime;
       var $24=(($23)|0)!=0;
-      var $25=$24 ? (((STRING_TABLE.__str6195)|0)) : (((STRING_TABLE.__str7196)|0));
+      var $25=$24 ? (((STRING_TABLE.__str6193)|0)) : (((STRING_TABLE.__str7194)|0));
       var $26=_file_printf($22, $25, (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $27=(($26)|0)==-1;
       if ($27) { __label__ = 6; break; } else { __label__ = 7; break; }
@@ -21142,7 +21131,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
       var $41=$2;
       var $42=$mime;
       var $43=(($42)|0)!=0;
-      var $44=$43 ? (((STRING_TABLE.__str8197)|0)) : (((STRING_TABLE.__str9198)|0));
+      var $44=$43 ? (((STRING_TABLE.__str8195)|0)) : (((STRING_TABLE.__str9196)|0));
       var $45=_file_printf($41, $44, (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $46=(($45)|0)==-1;
       if ($46) { __label__ = 12; break; } else { __label__ = 13; break; }
@@ -21193,7 +21182,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
     case 20: 
       var $80=HEAP32[((_stderr)>>2)];
       var $81=$m;
-      var $82=_fprintf($80, ((STRING_TABLE.__str10199)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$81,tempInt));
+      var $82=_fprintf($80, ((STRING_TABLE.__str10197)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$81,tempInt));
       __label__ = 21; break;
     case 21: 
       __label__ = 54; break;
@@ -21225,7 +21214,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
     case 26: 
       var $105=HEAP32[((_stderr)>>2)];
       var $106=$m;
-      var $107=_fprintf($105, ((STRING_TABLE.__str11200)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$106,tempInt));
+      var $107=_fprintf($105, ((STRING_TABLE.__str11198)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$106,tempInt));
       __label__ = 27; break;
     case 27: 
       __label__ = 54; break;
@@ -21257,7 +21246,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
     case 32: 
       var $130=HEAP32[((_stderr)>>2)];
       var $131=$m;
-      var $132=_fprintf($130, ((STRING_TABLE.__str12201)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$131,tempInt));
+      var $132=_fprintf($130, ((STRING_TABLE.__str12199)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$131,tempInt));
       __label__ = 33; break;
     case 33: 
       __label__ = 54; break;
@@ -21289,7 +21278,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
     case 38: 
       var $155=HEAP32[((_stderr)>>2)];
       var $156=$m;
-      var $157=_fprintf($155, ((STRING_TABLE.__str13202)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$156,tempInt));
+      var $157=_fprintf($155, ((STRING_TABLE.__str13200)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$156,tempInt));
       __label__ = 39; break;
     case 39: 
       __label__ = 54; break;
@@ -21327,7 +21316,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
     case 44: 
       var $186=HEAP32[((_stderr)>>2)];
       var $187=$m;
-      var $188=_fprintf($186, ((STRING_TABLE.__str14203)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$187,tempInt));
+      var $188=_fprintf($186, ((STRING_TABLE.__str14201)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$187,tempInt));
       __label__ = 45; break;
     case 45: 
       __label__ = 54; break;
@@ -21351,7 +21340,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
       var $201=$2;
       var $202=$mime;
       var $203=(($202)|0)!=0;
-      var $204=$203 ? (((STRING_TABLE.__str8197)|0)) : (((STRING_TABLE.__str15204)|0));
+      var $204=$203 ? (((STRING_TABLE.__str8195)|0)) : (((STRING_TABLE.__str15202)|0));
       var $205=_file_printf($201, $204, (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $206=(($205)|0)==-1;
       if ($206) { __label__ = 52; break; } else { __label__ = 53; break; }
@@ -21376,7 +21365,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
       if ($220) { __label__ = 56; break; } else { __label__ = 59; break; }
     case 56: 
       var $222=$2;
-      var $223=_file_printf($222, ((STRING_TABLE.__str16205)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $223=_file_printf($222, ((STRING_TABLE.__str16203)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $224=(($223)|0)==-1;
       if ($224) { __label__ = 57; break; } else { __label__ = 58; break; }
     case 57: 
@@ -21387,7 +21376,7 @@ function _file_buffer($ms, $fd, $inname, $buf, $nb) {
     case 59: 
       var $228=$2;
       var $229=HEAP32[(($code_mime)>>2)];
-      var $230=_file_printf($228, ((STRING_TABLE.__str17206)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$229,tempInt));
+      var $230=_file_printf($228, ((STRING_TABLE.__str17204)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$229,tempInt));
       var $231=(($230)|0)==-1;
       if ($231) { __label__ = 60; break; } else { __label__ = 61; break; }
     case 60: 
@@ -21435,7 +21424,7 @@ function _file_reset($ms) {
       if ($6) { __label__ = 3; break; } else { __label__ = 4; break; }
     case 3: 
       var $8=$2;
-      _file_error($8, 0, ((STRING_TABLE.__str18207)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      _file_error($8, 0, ((STRING_TABLE.__str18205)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       $1=-1;
       __label__ = 9; break;
     case 4: 
@@ -21833,7 +21822,7 @@ function _file_replace($ms, $pat, $rep) {
       $3=$pat;
       $4=$rep;
       var $5=$3;
-      var $6=_regcomp($rx, $5, 1);
+      var $6=_llvm_regcomp($rx, $5, 1);
       $rc=$6;
       var $7=$rc;
       var $8=(($7)|0)!=0;
@@ -21841,11 +21830,11 @@ function _file_replace($ms, $pat, $rep) {
     case 3: 
       var $10=$rc;
       var $11=(($errmsg)|0);
-      var $12=_regerror($10, $rx, $11, 512);
+      var $12=_llvm_regerror($10, $rx, $11, 512);
       var $13=$2;
       var $14=$rc;
       var $15=(($errmsg)|0);
-      _file_magerror($13, ((STRING_TABLE.__str19208)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$14,HEAP32[(((tempInt)+(4))>>2)]=$15,tempInt));
+      _file_magerror($13, ((STRING_TABLE.__str19206)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$14,HEAP32[(((tempInt)+(4))>>2)]=$15,tempInt));
       $1=-1;
       __label__ = 13; break;
     case 4: 
@@ -21856,7 +21845,7 @@ function _file_replace($ms, $pat, $rep) {
       var $19=(($18+12)|0);
       var $20=(($19)|0);
       var $21=HEAP32[(($20)>>2)];
-      var $22=_regexec($rx, $21, 1, $rm, 0);
+      var $22=_llvm_regexec($rx, $21, 1, $rm, 0);
       var $23=(($22)|0)==0;
       if ($23) { __label__ = 6; break; } else { __label__ = 12; break; }
     case 6: 
@@ -21884,10 +21873,10 @@ function _file_replace($ms, $pat, $rep) {
       var $44=(($41+$43)|0);
       var $47 = $44;__label__ = 9; break;
     case 8: 
-      var $47 = ((__str20209)|0);__label__ = 9; break;
+      var $47 = ((__str20207)|0);__label__ = 9; break;
     case 9: 
       var $47;
-      var $48=_file_printf($32, ((STRING_TABLE.__str189)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$33,HEAP32[(((tempInt)+(4))>>2)]=$47,tempInt));
+      var $48=_file_printf($32, ((STRING_TABLE.__str187)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$33,HEAP32[(((tempInt)+(4))>>2)]=$47,tempInt));
       var $49=(($48)|0)==-1;
       if ($49) { __label__ = 10; break; } else { __label__ = 11; break; }
     case 10: 
@@ -21899,7 +21888,7 @@ function _file_replace($ms, $pat, $rep) {
       $nm=$53;
       __label__ = 5; break;
     case 12: 
-      _regfree($rx);
+      _llvm_regfree($rx);
       var $55=$nm;
       $1=$55;
       __label__ = 13; break;
@@ -21990,7 +21979,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       var $44=___errno();
       var $45=HEAP32[(($44)>>2)];
       var $46=$3;
-      _file_error($43, $45, ((STRING_TABLE.__str238)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$46,tempInt));
+      _file_error($43, $45, ((STRING_TABLE.__str236)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$46,tempInt));
       $1=-1;
       __label__ = 132; break;
     case 12: 
@@ -21999,7 +21988,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       var $50=___errno();
       var $51=HEAP32[(($50)>>2)];
       var $52=_strerror($51);
-      var $53=_file_printf($48, ((STRING_TABLE.__str1239)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$49,HEAP32[(((tempInt)+(4))>>2)]=$52,tempInt));
+      var $53=_file_printf($48, ((STRING_TABLE.__str1237)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$49,HEAP32[(((tempInt)+(4))>>2)]=$52,tempInt));
       var $54=(($53)|0)==-1;
       if ($54) { __label__ = 13; break; } else { __label__ = 14; break; }
     case 13: 
@@ -22026,7 +22015,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       if ($69) { __label__ = 17; break; } else { __label__ = 20; break; }
     case 17: 
       var $71=$2;
-      var $72=_file_printf($71, ((STRING_TABLE.__str2240)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $72=_file_printf($71, ((STRING_TABLE.__str2238)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $73=(($72)|0)==-1;
       if ($73) { __label__ = 18; break; } else { __label__ = 19; break; }
     case 18: 
@@ -22043,7 +22032,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       if ($81) { __label__ = 21; break; } else { __label__ = 24; break; }
     case 21: 
       var $83=$2;
-      var $84=_file_printf($83, ((STRING_TABLE.__str3241)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $84=_file_printf($83, ((STRING_TABLE.__str3239)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $85=(($84)|0)==-1;
       if ($85) { __label__ = 22; break; } else { __label__ = 23; break; }
     case 22: 
@@ -22060,7 +22049,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       if ($93) { __label__ = 25; break; } else { __label__ = 28; break; }
     case 25: 
       var $95=$2;
-      var $96=_file_printf($95, ((STRING_TABLE.__str4242)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $96=_file_printf($95, ((STRING_TABLE.__str4240)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $97=(($96)|0)==-1;
       if ($97) { __label__ = 26; break; } else { __label__ = 27; break; }
     case 26: 
@@ -22107,7 +22096,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 31: 
       var $110=$2;
       var $111=$mime;
-      var $112=_handle_mime($110, $111, ((STRING_TABLE.__str5243)|0));
+      var $112=_handle_mime($110, $111, ((STRING_TABLE.__str5241)|0));
       var $113=(($112)|0)==-1;
       if ($113) { __label__ = 32; break; } else { __label__ = 33; break; }
     case 32: 
@@ -22117,7 +22106,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       __label__ = 37; break;
     case 34: 
       var $117=$2;
-      var $118=_file_printf($117, ((STRING_TABLE.__str5243)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $118=_file_printf($117, ((STRING_TABLE.__str5241)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $119=(($118)|0)==-1;
       if ($119) { __label__ = 35; break; } else { __label__ = 36; break; }
     case 35: 
@@ -22144,7 +22133,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 41: 
       var $134=$2;
       var $135=$mime;
-      var $136=_handle_mime($134, $135, ((STRING_TABLE.__str6244)|0));
+      var $136=_handle_mime($134, $135, ((STRING_TABLE.__str6242)|0));
       var $137=(($136)|0)==-1;
       if ($137) { __label__ = 42; break; } else { __label__ = 43; break; }
     case 42: 
@@ -22154,7 +22143,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       __label__ = 47; break;
     case 44: 
       var $141=$2;
-      var $142=_file_printf($141, ((STRING_TABLE.__str7245)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $142=_file_printf($141, ((STRING_TABLE.__str7243)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $143=(($142)|0)==-1;
       if ($143) { __label__ = 45; break; } else { __label__ = 46; break; }
     case 45: 
@@ -22181,7 +22170,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 51: 
       var $158=$2;
       var $159=$mime;
-      var $160=_handle_mime($158, $159, ((STRING_TABLE.__str8246)|0));
+      var $160=_handle_mime($158, $159, ((STRING_TABLE.__str8244)|0));
       var $161=(($160)|0)==-1;
       if ($161) { __label__ = 52; break; } else { __label__ = 53; break; }
     case 52: 
@@ -22191,7 +22180,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       __label__ = 57; break;
     case 54: 
       var $165=$2;
-      var $166=_file_printf($165, ((STRING_TABLE.__str9247)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $166=_file_printf($165, ((STRING_TABLE.__str9245)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $167=(($166)|0)==-1;
       if ($167) { __label__ = 55; break; } else { __label__ = 56; break; }
     case 55: 
@@ -22218,7 +22207,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 61: 
       var $182=$2;
       var $183=$mime;
-      var $184=_handle_mime($182, $183, ((STRING_TABLE.__str10248)|0));
+      var $184=_handle_mime($182, $183, ((STRING_TABLE.__str10246)|0));
       var $185=(($184)|0)==-1;
       if ($185) { __label__ = 62; break; } else { __label__ = 63; break; }
     case 62: 
@@ -22228,7 +22217,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       __label__ = 67; break;
     case 64: 
       var $189=$2;
-      var $190=_file_printf($189, ((STRING_TABLE.__str11249)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $190=_file_printf($189, ((STRING_TABLE.__str11247)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $191=(($190)|0)==-1;
       if ($191) { __label__ = 65; break; } else { __label__ = 66; break; }
     case 65: 
@@ -22258,7 +22247,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       var $208=___errno();
       var $209=HEAP32[(($208)>>2)];
       var $210=$3;
-      _file_error($207, $209, ((STRING_TABLE.__str12250)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$210,tempInt));
+      _file_error($207, $209, ((STRING_TABLE.__str12248)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$210,tempInt));
       $1=-1;
       __label__ = 132; break;
     case 71: 
@@ -22268,7 +22257,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 72: 
       var $215=$2;
       var $216=$mime;
-      var $217=_handle_mime($215, $216, ((STRING_TABLE.__str13251)|0));
+      var $217=_handle_mime($215, $216, ((STRING_TABLE.__str13249)|0));
       var $218=(($217)|0)==-1;
       if ($218) { __label__ = 73; break; } else { __label__ = 74; break; }
     case 73: 
@@ -22282,7 +22271,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       var $224=___errno();
       var $225=HEAP32[(($224)>>2)];
       var $226=_strerror($225);
-      var $227=_file_printf($222, ((STRING_TABLE.__str14252)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$223,HEAP32[(((tempInt)+(4))>>2)]=$226,tempInt));
+      var $227=_file_printf($222, ((STRING_TABLE.__str14250)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$223,HEAP32[(((tempInt)+(4))>>2)]=$226,tempInt));
       var $228=(($227)|0)==-1;
       if ($228) { __label__ = 76; break; } else { __label__ = 77; break; }
     case 76: 
@@ -22346,7 +22335,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 87: 
       var $271=$2;
       var $272=(($buf)|0);
-      _file_error($271, 0, ((STRING_TABLE.__str15253)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$272,tempInt));
+      _file_error($271, 0, ((STRING_TABLE.__str15251)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$272,tempInt));
       $1=-1;
       __label__ = 132; break;
     case 88: 
@@ -22356,7 +22345,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 89: 
       var $277=$2;
       var $278=$mime;
-      var $279=_handle_mime($277, $278, ((STRING_TABLE.__str16254)|0));
+      var $279=_handle_mime($277, $278, ((STRING_TABLE.__str16252)|0));
       var $280=(($279)|0)==-1;
       if ($280) { __label__ = 90; break; } else { __label__ = 91; break; }
     case 90: 
@@ -22367,7 +22356,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 92: 
       var $284=$2;
       var $285=$3;
-      var $286=_file_printf($284, ((STRING_TABLE.__str15253)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$285,tempInt));
+      var $286=_file_printf($284, ((STRING_TABLE.__str15251)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$285,tempInt));
       var $287=(($286)|0)==-1;
       if ($287) { __label__ = 93; break; } else { __label__ = 94; break; }
     case 93: 
@@ -22381,7 +22370,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 96: 
       var $292=(($buf2)|0);
       var $293=$3;
-      var $294=_strncpy($292, $293, 2052);
+      var $294=_llvm_strlcpy($292, $293, 2052);
       var $295=$tmp;
       var $296=$3;
       var $297=$295;
@@ -22445,7 +22434,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 103: 
       var $342=$2;
       var $343=$mime;
-      var $344=_handle_mime($342, $343, ((STRING_TABLE.__str13251)|0));
+      var $344=_handle_mime($342, $343, ((STRING_TABLE.__str13249)|0));
       var $345=(($344)|0)==-1;
       if ($345) { __label__ = 104; break; } else { __label__ = 105; break; }
     case 104: 
@@ -22456,7 +22445,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 106: 
       var $349=$2;
       var $350=(($buf)|0);
-      var $351=_file_printf($349, ((STRING_TABLE.__str17255)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$350,tempInt));
+      var $351=_file_printf($349, ((STRING_TABLE.__str17253)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$350,tempInt));
       var $352=(($351)|0)==-1;
       if ($352) { __label__ = 107; break; } else { __label__ = 108; break; }
     case 107: 
@@ -22476,7 +22465,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 112: 
       var $361=$2;
       var $362=$mime;
-      var $363=_handle_mime($361, $362, ((STRING_TABLE.__str18256)|0));
+      var $363=_handle_mime($361, $362, ((STRING_TABLE.__str18254)|0));
       var $364=(($363)|0)==-1;
       if ($364) { __label__ = 113; break; } else { __label__ = 114; break; }
     case 113: 
@@ -22486,7 +22475,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       __label__ = 118; break;
     case 115: 
       var $368=$2;
-      var $369=_file_printf($368, ((STRING_TABLE.__str18256)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $369=_file_printf($368, ((STRING_TABLE.__str18254)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $370=(($369)|0)==-1;
       if ($370) { __label__ = 116; break; } else { __label__ = 117; break; }
     case 116: 
@@ -22504,7 +22493,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       var $377=$4;
       var $378=(($377+8)|0);
       var $379=HEAP32[(($378)>>2)];
-      _file_error($376, 0, ((STRING_TABLE.__str19257)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$379,tempInt));
+      _file_error($376, 0, ((STRING_TABLE.__str19255)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$379,tempInt));
       $1=-1;
       __label__ = 132; break;
     case 121: 
@@ -22527,7 +22516,7 @@ function _file_fsmagic($ms, $fn, $sb) {
     case 124: 
       var $395=$2;
       var $396=$mime;
-      var $397=_handle_mime($395, $396, ((STRING_TABLE.__str20258)|0));
+      var $397=_handle_mime($395, $396, ((STRING_TABLE.__str20256)|0));
       var $398=(($397)|0)==-1;
       if ($398) { __label__ = 125; break; } else { __label__ = 126; break; }
     case 125: 
@@ -22537,7 +22526,7 @@ function _file_fsmagic($ms, $fn, $sb) {
       __label__ = 130; break;
     case 127: 
       var $402=$2;
-      var $403=_file_printf($402, ((STRING_TABLE.__str21259)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $403=_file_printf($402, ((STRING_TABLE.__str21257)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $404=(($403)|0)==-1;
       if ($404) { __label__ = 128; break; } else { __label__ = 129; break; }
     case 128: 
@@ -22580,7 +22569,7 @@ function _handle_mime($ms, $mime, $str) {
     case 3: 
       var $9=$2;
       var $10=$4;
-      var $11=_file_printf($9, ((STRING_TABLE.__str24262)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$10,tempInt));
+      var $11=_file_printf($9, ((STRING_TABLE.__str24260)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$10,tempInt));
       var $12=(($11)|0)==-1;
       if ($12) { __label__ = 4; break; } else { __label__ = 5; break; }
     case 4: 
@@ -22593,7 +22582,7 @@ function _handle_mime($ms, $mime, $str) {
       if ($17) { __label__ = 6; break; } else { __label__ = 8; break; }
     case 6: 
       var $19=$2;
-      var $20=_file_printf($19, ((STRING_TABLE.__str25263)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $20=_file_printf($19, ((STRING_TABLE.__str25261)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $21=(($20)|0)==-1;
       if ($21) { __label__ = 7; break; } else { __label__ = 8; break; }
     case 7: 
@@ -22608,7 +22597,7 @@ function _handle_mime($ms, $mime, $str) {
       if ($27) { __label__ = 10; break; } else { __label__ = 12; break; }
     case 10: 
       var $29=$2;
-      var $30=_file_printf($29, ((STRING_TABLE.__str26264)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $30=_file_printf($29, ((STRING_TABLE.__str26262)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $31=(($30)|0)==-1;
       if ($31) { __label__ = 11; break; } else { __label__ = 12; break; }
     case 11: 
@@ -22651,7 +22640,7 @@ function _bad_link($ms, $err, $buf) {
       if ($11) { __label__ = 3; break; } else { __label__ = 5; break; }
     case 3: 
       var $13=$2;
-      var $14=_file_printf($13, ((STRING_TABLE.__str22260)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $14=_file_printf($13, ((STRING_TABLE.__str22258)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $15=(($14)|0)==-1;
       if ($15) { __label__ = 4; break; } else { __label__ = 5; break; }
     case 4: 
@@ -22672,13 +22661,13 @@ function _bad_link($ms, $err, $buf) {
       var $27=$2;
       var $28=$3;
       var $29=$4;
-      _file_error($27, $28, ((STRING_TABLE.__str23261)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$29,tempInt));
+      _file_error($27, $28, ((STRING_TABLE.__str23259)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$29,tempInt));
       $1=-1;
       __label__ = 13; break;
     case 8: 
       var $31=$2;
       var $32=$4;
-      var $33=_file_printf($31, ((STRING_TABLE.__str23261)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$32,tempInt));
+      var $33=_file_printf($31, ((STRING_TABLE.__str23259)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$32,tempInt));
       var $34=(($33)|0)==-1;
       if ($34) { __label__ = 9; break; } else { __label__ = 10; break; }
     case 9: 
@@ -22750,7 +22739,7 @@ function _file_is_tar($ms, $buf, $nbytes) {
       var $28=(($27)|0)!=0;
       if ($28) { __label__ = 8; break; } else { __label__ = 9; break; }
     case 8: 
-      var $36 = ((STRING_TABLE.__str1270)|0);__label__ = 10; break;
+      var $36 = ((STRING_TABLE.__str1268)|0);__label__ = 10; break;
     case 9: 
       var $31=$tar;
       var $32=((($31)-(1))|0);
@@ -22759,7 +22748,7 @@ function _file_is_tar($ms, $buf, $nbytes) {
       var $36 = $34;__label__ = 10; break;
     case 10: 
       var $36;
-      var $37=_file_printf($26, ((STRING_TABLE.__str269)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$36,tempInt));
+      var $37=_file_printf($26, ((STRING_TABLE.__str267)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$36,tempInt));
       var $38=(($37)|0)==-1;
       if ($38) { __label__ = 11; break; } else { __label__ = 12; break; }
     case 11: 
@@ -23016,7 +23005,7 @@ function _is_tar($buf, $nbytes) {
       var $53=$52;
       var $54=(($53+257)|0);
       var $55=(($54)|0);
-      var $56=_strcmp($55, ((STRING_TABLE.__str2271)|0));
+      var $56=_strcmp($55, ((STRING_TABLE.__str2269)|0));
       var $57=(($56)|0)==0;
       if ($57) { __label__ = 13; break; } else { __label__ = 14; break; }
     case 13: 
@@ -23027,7 +23016,7 @@ function _is_tar($buf, $nbytes) {
       var $61=$60;
       var $62=(($61+257)|0);
       var $63=(($62)|0);
-      var $64=_strcmp($63, ((STRING_TABLE.__str3272)|0));
+      var $64=_strcmp($63, ((STRING_TABLE.__str3270)|0));
       var $65=(($64)|0)==0;
       if ($65) { __label__ = 15; break; } else { __label__ = 16; break; }
     case 15: 
@@ -24390,7 +24379,7 @@ function _cdf_read_header($info, $h) {
       var $buf=__stackBase__;
       $2=$info;
       $3=$h;
-      assert(4 % 1 === 0, 'memcpy given ' + 4 + ' bytes to copy. Problem with quantum=1 corrections perhaps?');HEAP8[(((_cdf_bo)|0))]=HEAP8[(((STRING_TABLE.__str277)|0))];HEAP8[((((_cdf_bo)|0))+(1))]=HEAP8[((((STRING_TABLE.__str277)|0))+(1))];HEAP8[((((_cdf_bo)|0))+(2))]=HEAP8[((((STRING_TABLE.__str277)|0))+(2))];HEAP8[((((_cdf_bo)|0))+(3))]=HEAP8[((((STRING_TABLE.__str277)|0))+(3))];
+      assert(4 % 1 === 0, 'memcpy given ' + 4 + ' bytes to copy. Problem with quantum=1 corrections perhaps?');HEAP8[(((_cdf_bo)|0))]=HEAP8[(((STRING_TABLE.__str275)|0))];HEAP8[((((_cdf_bo)|0))+(1))]=HEAP8[((((STRING_TABLE.__str275)|0))+(1))];HEAP8[((((_cdf_bo)|0))+(2))]=HEAP8[((((STRING_TABLE.__str275)|0))+(2))];HEAP8[((((_cdf_bo)|0))+(3))]=HEAP8[((((STRING_TABLE.__str275)|0))+(3))];
       var $4=$2;
       var $5=(($buf)|0);
       var $6=_cdf_read($4, 0, $5, 512);
@@ -24557,64 +24546,50 @@ _cdf_read["X"]=1;
 function _cdf_read_sector($info, $buf, $offs, $len, $h, $id) {
   ;
   var __label__;
-  __label__ = 2; 
-  while(1) switch(__label__) {
-    case 2: 
-      var $1;
-      var $2;
-      var $3;
-      var $4;
-      var $5;
-      var $6;
-      var $ss;
-      var $pos;
-      $1=$info;
-      $2=$buf;
-      $3=$offs;
-      $4=$len;
-      $5=$h;
-      $6=$id;
-      var $7=$5;
-      var $8=(($7+30)|0);
-      var $9=HEAPU16[(($8)>>1)];
-      var $10=(($9)&65535);
-      var $11=1 << $10;
-      $ss=$11;
-      var $12=$5;
-      var $13=(($12+30)|0);
-      var $14=HEAPU16[(($13)>>1)];
-      var $15=(($14)&65535);
-      var $16=1 << $15;
-      var $17=$6;
-      var $18=$5;
-      var $19=(($18+30)|0);
-      var $20=HEAPU16[(($19)>>1)];
-      var $21=(($20)&65535);
-      var $22=1 << $21;
-      var $23=((($17)*($22))|0);
-      var $24=((($16)+($23))|0);
-      $pos=$24;
-      var $25=$ss;
-      var $26=$4;
-      var $27=(($25)|0)==(($26)|0);
-      if ($27) { __label__ = 3; break; } else { __label__ = 4; break; }
-    case 3: 
-      __label__ = 5; break;
-    case 4: 
-      ___assert_func(((STRING_TABLE.__str1278)|0), 347, ((STRING_TABLE.___func___cdf_read_sector)|0), ((STRING_TABLE.__str2279)|0));
-      __label__ = 5; break;
-    case 5: 
-      var $31=$1;
-      var $32=$pos;
-      var $33=$2;
-      var $34=$3;
-      var $35=(($33+$34)|0);
-      var $36=$4;
-      var $37=_cdf_read($31, $32, $35, $36);
-      ;
-      return $37;
-    default: assert(0, "bad label: " + __label__);
-  }
+
+  var $1;
+  var $2;
+  var $3;
+  var $4;
+  var $5;
+  var $6;
+  var $ss;
+  var $pos;
+  $1=$info;
+  $2=$buf;
+  $3=$offs;
+  $4=$len;
+  $5=$h;
+  $6=$id;
+  var $7=$5;
+  var $8=(($7+30)|0);
+  var $9=HEAPU16[(($8)>>1)];
+  var $10=(($9)&65535);
+  var $11=1 << $10;
+  $ss=$11;
+  var $12=$5;
+  var $13=(($12+30)|0);
+  var $14=HEAPU16[(($13)>>1)];
+  var $15=(($14)&65535);
+  var $16=1 << $15;
+  var $17=$6;
+  var $18=$5;
+  var $19=(($18+30)|0);
+  var $20=HEAPU16[(($19)>>1)];
+  var $21=(($20)&65535);
+  var $22=1 << $21;
+  var $23=((($17)*($22))|0);
+  var $24=((($16)+($23))|0);
+  $pos=$24;
+  var $25=$1;
+  var $26=$pos;
+  var $27=$2;
+  var $28=$3;
+  var $29=(($27+$28)|0);
+  var $30=$4;
+  var $31=_cdf_read($25, $26, $29, $30);
+  ;
+  return $31;
 }
 
 
@@ -24653,49 +24628,39 @@ function _cdf_read_short_sector($sst, $buf, $offs, $len, $h, $id) {
       var $18=1 << $17;
       var $19=((($13)*($18))|0);
       $pos=$19;
-      var $20=$ss;
-      var $21=$5;
-      var $22=(($20)|0)==(($21)|0);
-      if ($22) { __label__ = 3; break; } else { __label__ = 4; break; }
+      var $20=$pos;
+      var $21=$6;
+      var $22=(($21+30)|0);
+      var $23=HEAPU16[(($22)>>1)];
+      var $24=(($23)&65535);
+      var $25=1 << $24;
+      var $26=$2;
+      var $27=(($26+4)|0);
+      var $28=HEAP32[(($27)>>2)];
+      var $29=((($25)*($28))|0);
+      var $30=(($20)>>>0) > (($29)>>>0);
+      if ($30) { __label__ = 3; break; } else { __label__ = 4; break; }
     case 3: 
+      $1=-1;
       __label__ = 5; break;
     case 4: 
-      ___assert_func(((STRING_TABLE.__str1278)|0), 357, ((STRING_TABLE.___func___cdf_read_short_sector)|0), ((STRING_TABLE.__str2279)|0));
+      var $33=$3;
+      var $34=$4;
+      var $35=(($33+$34)|0);
+      var $36=$2;
+      var $37=(($36)|0);
+      var $38=HEAP32[(($37)>>2)];
+      var $39=$pos;
+      var $40=(($38+$39)|0);
+      var $41=$5;
+      assert($41 % 1 === 0, 'memcpy given ' + $41 + ' bytes to copy. Problem with quantum=1 corrections perhaps?');_memcpy($35, $40, $41, 1);
+      var $42=$5;
+      $1=$42;
       __label__ = 5; break;
     case 5: 
-      var $26=$pos;
-      var $27=$6;
-      var $28=(($27+30)|0);
-      var $29=HEAPU16[(($28)>>1)];
-      var $30=(($29)&65535);
-      var $31=1 << $30;
-      var $32=$2;
-      var $33=(($32+4)|0);
-      var $34=HEAP32[(($33)>>2)];
-      var $35=((($31)*($34))|0);
-      var $36=(($26)>>>0) > (($35)>>>0);
-      if ($36) { __label__ = 6; break; } else { __label__ = 7; break; }
-    case 6: 
-      $1=-1;
-      __label__ = 8; break;
-    case 7: 
-      var $39=$3;
-      var $40=$4;
-      var $41=(($39+$40)|0);
-      var $42=$2;
-      var $43=(($42)|0);
-      var $44=HEAP32[(($43)>>2)];
-      var $45=$pos;
-      var $46=(($44+$45)|0);
-      var $47=$5;
-      assert($47 % 1 === 0, 'memcpy given ' + $47 + ' bytes to copy. Problem with quantum=1 corrections perhaps?');_memcpy($41, $46, $47, 1);
-      var $48=$5;
-      $1=$48;
-      __label__ = 8; break;
-    case 8: 
-      var $50=$1;
+      var $44=$1;
       ;
-      return $50;
+      return $44;
     default: assert(0, "bad label: " + __label__);
   }
 }
@@ -27699,7 +27664,7 @@ function _cdf_print_classid($buf, $buflen, $id) {
   var $56=(($55+5)|0);
   var $57=HEAPU8[($56)];
   var $58=(($57)&255);
-  var $59=_snprintf($4, $5, ((STRING_TABLE.__str3280)|0), (tempInt=STACKTOP,STACKTOP += 44,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$8,HEAP32[(((tempInt)+(4))>>2)]=$13,HEAP32[(((tempInt)+(8))>>2)]=$18,HEAP32[(((tempInt)+(12))>>2)]=$23,HEAP32[(((tempInt)+(16))>>2)]=$28,HEAP32[(((tempInt)+(20))>>2)]=$33,HEAP32[(((tempInt)+(24))>>2)]=$38,HEAP32[(((tempInt)+(28))>>2)]=$43,HEAP32[(((tempInt)+(32))>>2)]=$48,HEAP32[(((tempInt)+(36))>>2)]=$53,HEAP32[(((tempInt)+(40))>>2)]=$58,tempInt));
+  var $59=_snprintf($4, $5, ((STRING_TABLE.__str1276)|0), (tempInt=STACKTOP,STACKTOP += 44,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$8,HEAP32[(((tempInt)+(4))>>2)]=$13,HEAP32[(((tempInt)+(8))>>2)]=$18,HEAP32[(((tempInt)+(12))>>2)]=$23,HEAP32[(((tempInt)+(16))>>2)]=$28,HEAP32[(((tempInt)+(20))>>2)]=$33,HEAP32[(((tempInt)+(24))>>2)]=$38,HEAP32[(((tempInt)+(28))>>2)]=$43,HEAP32[(((tempInt)+(32))>>2)]=$48,HEAP32[(((tempInt)+(36))>>2)]=$53,HEAP32[(((tempInt)+(40))>>2)]=$58,tempInt));
   STACKTOP = __stackBase__;
   return $59;
 }
@@ -27740,7 +27705,7 @@ function _cdf_print_property_name($buf, $bufsiz, $p) {
       var $19=((_vn+($18<<3))|0);
       var $20=(($19+4)|0);
       var $21=HEAP32[(($20)>>2)];
-      var $22=_snprintf($16, $17, ((STRING_TABLE.__str4281)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$21,tempInt));
+      var $22=_snprintf($16, $17, ((STRING_TABLE.__str2277)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$21,tempInt));
       $1=$22;
       __label__ = 9; break;
     case 6: 
@@ -27754,7 +27719,7 @@ function _cdf_print_property_name($buf, $bufsiz, $p) {
       var $28=$2;
       var $29=$3;
       var $30=$4;
-      var $31=_snprintf($28, $29, ((STRING_TABLE.__str5282)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$30,tempInt));
+      var $31=_snprintf($28, $29, ((STRING_TABLE.__str3278)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$30,tempInt));
       $1=$31;
       __label__ = 9; break;
     case 9: 
@@ -27880,7 +27845,7 @@ function _cdf_print_elapsed_time($buf, $bufsiz, $ts$0, $ts$1) {
       var $31=$len;
       var $32=((($30)-($31))|0);
       var $33=$days;
-      var $34=_snprintf($29, $32, ((STRING_TABLE.__str6283)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$33,tempInt));
+      var $34=_snprintf($29, $32, ((STRING_TABLE.__str4279)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$33,tempInt));
       var $35=$len;
       var $36=((($35)+($34))|0);
       $len=$36;
@@ -27910,7 +27875,7 @@ function _cdf_print_elapsed_time($buf, $bufsiz, $ts$0, $ts$1) {
       var $54=$len;
       var $55=((($53)-($54))|0);
       var $56=$hours;
-      var $57=_snprintf($52, $55, ((STRING_TABLE.__str7284)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$56,tempInt));
+      var $57=_snprintf($52, $55, ((STRING_TABLE.__str5280)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$56,tempInt));
       var $58=$len;
       var $59=((($58)+($57))|0);
       $len=$59;
@@ -27932,7 +27897,7 @@ function _cdf_print_elapsed_time($buf, $bufsiz, $ts$0, $ts$1) {
       var $71=$len;
       var $72=((($70)-($71))|0);
       var $73=$mins;
-      var $74=_snprintf($69, $72, ((STRING_TABLE.__str7284)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$73,tempInt));
+      var $74=_snprintf($69, $72, ((STRING_TABLE.__str5280)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$73,tempInt));
       var $75=$len;
       var $76=((($75)+($74))|0);
       $len=$76;
@@ -27952,7 +27917,7 @@ function _cdf_print_elapsed_time($buf, $bufsiz, $ts$0, $ts$1) {
       var $87=$len;
       var $88=((($86)-($87))|0);
       var $89=$secs;
-      var $90=_snprintf($85, $88, ((STRING_TABLE.__str8285)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$89,tempInt));
+      var $90=_snprintf($85, $88, ((STRING_TABLE.__str6281)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$89,tempInt));
       var $91=$len;
       var $92=((($91)+($90))|0);
       $len=$92;
@@ -28190,7 +28155,7 @@ function _cdf_ctime($sec) {
       var $11=HEAP32[(($10)>>2)];
       var $12$0=$11;
       var $12$1=((($11)|0) < 0 ? -1 : 0);
-      var $$emscripten$temp$1=((STRING_TABLE.__str308)|0);
+      var $$emscripten$temp$1=((STRING_TABLE.__str304)|0);
       var $$emscripten$temp$0=((_cdf_ctime_ctbuf)|0);
       var $13=_snprintf($$emscripten$temp$0, 26, $$emscripten$temp$1, (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$12$0,HEAP32[(((tempInt)+(4))>>2)]=$12$1,tempInt));
       $1=((_cdf_ctime_ctbuf)|0);
@@ -28234,8 +28199,8 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       $3=$fd;
       $4=$buf;
       $5=$nbytes;
-      $expn=((__str311)|0);
-      $corrupt=((STRING_TABLE.__str1312)|0);
+      $expn=((__str307)|0);
+      $corrupt=((STRING_TABLE.__str1308)|0);
       var $6=$3;
       var $7=(($info)|0);
       HEAP32[(($7)>>2)]=$6;
@@ -28267,7 +28232,7 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       var $24=(($23)|0)==-1;
       if ($24) { __label__ = 7; break; } else { __label__ = 8; break; }
     case 7: 
-      $expn=((STRING_TABLE.__str2313)|0);
+      $expn=((STRING_TABLE.__str2309)|0);
       __label__ = 40; break;
     case 8: 
       var $27=_cdf_read_ssat($info, $h, $sat, $ssat);
@@ -28275,7 +28240,7 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       var $28=(($27)|0)==-1;
       if ($28) { __label__ = 9; break; } else { __label__ = 10; break; }
     case 9: 
-      $expn=((STRING_TABLE.__str3314)|0);
+      $expn=((STRING_TABLE.__str3310)|0);
       __label__ = 39; break;
     case 10: 
       var $31=_cdf_read_dir($info, $h, $sat, $dir);
@@ -28283,7 +28248,7 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       var $32=(($31)|0)==-1;
       if ($32) { __label__ = 11; break; } else { __label__ = 12; break; }
     case 11: 
-      $expn=((STRING_TABLE.__str4315)|0);
+      $expn=((STRING_TABLE.__str4311)|0);
       __label__ = 38; break;
     case 12: 
       var $35=_cdf_read_short_stream($info, $h, $sat, $dir, $sst);
@@ -28291,7 +28256,7 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       var $36=(($35)|0)==-1;
       if ($36) { __label__ = 13; break; } else { __label__ = 14; break; }
     case 13: 
-      $expn=((STRING_TABLE.__str5316)|0);
+      $expn=((STRING_TABLE.__str5312)|0);
       __label__ = 37; break;
     case 14: 
       var $39=_cdf_read_summary_info($info, $h, $sat, $ssat, $sst, $dir, $scn);
@@ -28306,10 +28271,10 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
     case 16: 
       var $46=$expn;
       $corrupt=$46;
-      $expn=((STRING_TABLE.__str6317)|0);
+      $expn=((STRING_TABLE.__str6313)|0);
       __label__ = 18; break;
     case 17: 
-      $expn=((STRING_TABLE.__str7318)|0);
+      $expn=((STRING_TABLE.__str7314)|0);
       __label__ = 18; break;
     case 18: 
       __label__ = 36; break;
@@ -28320,14 +28285,14 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       var $52=(($51)|0) < 0;
       if ($52) { __label__ = 20; break; } else { __label__ = 21; break; }
     case 20: 
-      $expn=((STRING_TABLE.__str8319)|0);
+      $expn=((STRING_TABLE.__str8315)|0);
       __label__ = 21; break;
     case 21: 
       var $55=$i;
       var $56=(($55)|0)==0;
       if ($56) { __label__ = 22; break; } else { __label__ = 35; break; }
     case 22: 
-      $str=((STRING_TABLE.__str9320)|0);
+      $str=((STRING_TABLE.__str9316)|0);
       $j=0;
       __label__ = 23; break;
     case 23: 
@@ -28367,11 +28332,11 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       __label__ = 25; break;
     case 28: 
       var $85=(($name)|0);
-      var $86=_strstr($85, ((STRING_TABLE.__str10321)|0));
+      var $86=_strstr($85, ((STRING_TABLE.__str10317)|0));
       var $87=(($86)|0)==0;
       if ($87) { __label__ = 29; break; } else { __label__ = 30; break; }
     case 29: 
-      $str=((STRING_TABLE.__str11322)|0);
+      $str=((STRING_TABLE.__str11318)|0);
       __label__ = 32; break;
     case 30: 
       __label__ = 31; break;
@@ -28383,7 +28348,7 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
     case 32: 
       var $94=$2;
       var $95=$str;
-      var $96=_file_printf($94, ((STRING_TABLE.__str12323)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$95,tempInt));
+      var $96=_file_printf($94, ((STRING_TABLE.__str12319)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$95,tempInt));
       var $97=(($96)|0)==-1;
       if ($97) { __label__ = 33; break; } else { __label__ = 34; break; }
     case 33: 
@@ -28430,7 +28395,7 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       if ($123) { __label__ = 42; break; } else { __label__ = 45; break; }
     case 42: 
       var $125=$2;
-      var $126=_file_printf($125, ((STRING_TABLE.__str13324)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $126=_file_printf($125, ((STRING_TABLE.__str13320)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $127=(($126)|0)==-1;
       if ($127) { __label__ = 43; break; } else { __label__ = 44; break; }
     case 43: 
@@ -28447,7 +28412,7 @@ function _file_trycdf($ms, $fd, $buf, $nbytes) {
       var $135=$2;
       var $136=$corrupt;
       var $137=$expn;
-      var $138=_file_printf($135, ((STRING_TABLE.__str14325)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$136,HEAP32[(((tempInt)+(4))>>2)]=$137,tempInt));
+      var $138=_file_printf($135, ((STRING_TABLE.__str14321)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$136,HEAP32[(((tempInt)+(4))>>2)]=$137,tempInt));
       var $139=(($138)|0)==-1;
       if ($139) { __label__ = 47; break; } else { __label__ = 48; break; }
     case 47: 
@@ -28505,7 +28470,7 @@ function _cdf_file_summary_info($ms, $h, $sst) {
       if ($15) { __label__ = 5; break; } else { __label__ = 20; break; }
     case 5: 
       var $17=$2;
-      var $18=_file_printf($17, ((STRING_TABLE.__str13324)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $18=_file_printf($17, ((STRING_TABLE.__str13320)|0), (tempInt=STACKTOP,STACKTOP += 1,STACKTOP = ((((STACKTOP)+3)>>2)<<2),assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       var $19=(($18)|0)==-1;
       if ($19) { __label__ = 6; break; } else { __label__ = 7; break; }
     case 6: 
@@ -28517,8 +28482,8 @@ function _cdf_file_summary_info($ms, $h, $sst) {
       var $24=HEAPU16[(($23)>>1)];
       var $25=(($24)&65535);
       var $26=(($25)|0)==65534;
-      var $27=$26 ? (((STRING_TABLE.__str16327)|0)) : (((STRING_TABLE.__str17328)|0));
-      var $28=_file_printf($22, ((STRING_TABLE.__str15326)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$27,tempInt));
+      var $27=$26 ? (((STRING_TABLE.__str16323)|0)) : (((STRING_TABLE.__str17324)|0));
+      var $28=_file_printf($22, ((STRING_TABLE.__str15322)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$27,tempInt));
       var $29=(($28)|0)==-1;
       if ($29) { __label__ = 8; break; } else { __label__ = 9; break; }
     case 8: 
@@ -28548,7 +28513,7 @@ function _cdf_file_summary_info($ms, $h, $sst) {
       var $42=HEAPU16[(($41)>>1)];
       var $43=(($42)&65535);
       var $44=$43 >>> 8;
-      var $45=_file_printf($36, ((STRING_TABLE.__str18329)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$40,HEAP32[(((tempInt)+(4))>>2)]=$44,tempInt));
+      var $45=_file_printf($36, ((STRING_TABLE.__str18325)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$40,HEAP32[(((tempInt)+(4))>>2)]=$44,tempInt));
       var $46=(($45)|0)==-1;
       if ($46) { __label__ = 11; break; } else { __label__ = 12; break; }
     case 11: 
@@ -28566,7 +28531,7 @@ function _cdf_file_summary_info($ms, $h, $sst) {
       var $56=HEAPU16[(($55)>>1)];
       var $57=(($56)&65535);
       var $58=$57 & 255;
-      var $59=_file_printf($50, ((STRING_TABLE.__str19330)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$54,HEAP32[(((tempInt)+(4))>>2)]=$58,tempInt));
+      var $59=_file_printf($50, ((STRING_TABLE.__str19326)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$54,HEAP32[(((tempInt)+(4))>>2)]=$58,tempInt));
       var $60=(($59)|0)==-1;
       if ($60) { __label__ = 14; break; } else { __label__ = 15; break; }
     case 14: 
@@ -28587,7 +28552,7 @@ function _cdf_file_summary_info($ms, $h, $sst) {
       var $73=HEAPU16[(($72)>>1)];
       var $74=(($73)&65535);
       var $75=$74 >>> 8;
-      var $76=_file_printf($64, ((STRING_TABLE.__str20331)|0), (tempInt=STACKTOP,STACKTOP += 12,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$67,HEAP32[(((tempInt)+(4))>>2)]=$71,HEAP32[(((tempInt)+(8))>>2)]=$75,tempInt));
+      var $76=_file_printf($64, ((STRING_TABLE.__str20327)|0), (tempInt=STACKTOP,STACKTOP += 12,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$67,HEAP32[(((tempInt)+(4))>>2)]=$71,HEAP32[(((tempInt)+(8))>>2)]=$75,tempInt));
       var $77=(($76)|0)==-1;
       if ($77) { __label__ = 17; break; } else { __label__ = 18; break; }
     case 17: 
@@ -28724,7 +28689,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $36=$35;
       var $37=HEAP16[(($36)>>1)];
       var $38=(($37 << 16) >> 16);
-      var $39=_file_printf($30, ((STRING_TABLE.__str21332)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$31,HEAP32[(((tempInt)+(4))>>2)]=$38,tempInt));
+      var $39=_file_printf($30, ((STRING_TABLE.__str21328)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$31,HEAP32[(((tempInt)+(4))>>2)]=$38,tempInt));
       var $40=(($39)|0)==-1;
       if ($40) { __label__ = 8; break; } else { __label__ = 9; break; }
     case 8: 
@@ -28748,7 +28713,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $55=(($54+8)|0);
       var $56=$55;
       var $57=HEAP32[(($56)>>2)];
-      var $58=_file_printf($50, ((STRING_TABLE.__str22333)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$51,HEAP32[(((tempInt)+(4))>>2)]=$57,tempInt));
+      var $58=_file_printf($50, ((STRING_TABLE.__str22329)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$51,HEAP32[(((tempInt)+(4))>>2)]=$57,tempInt));
       var $59=(($58)|0)==-1;
       if ($59) { __label__ = 12; break; } else { __label__ = 13; break; }
     case 12: 
@@ -28772,7 +28737,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $74=(($73+8)|0);
       var $75=$74;
       var $76=HEAP32[(($75)>>2)];
-      var $77=_file_printf($69, ((STRING_TABLE.__str23334)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$70,HEAP32[(((tempInt)+(4))>>2)]=$76,tempInt));
+      var $77=_file_printf($69, ((STRING_TABLE.__str23330)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$70,HEAP32[(((tempInt)+(4))>>2)]=$76,tempInt));
       var $78=(($77)|0)==-1;
       if ($78) { __label__ = 16; break; } else { __label__ = 17; break; }
     case 16: 
@@ -28797,7 +28762,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $94=$93;
       var $95=HEAPF32[(($94)>>2)];
       var $96=$95;
-      var $97=_file_printf($88, ((STRING_TABLE.__str24335)|0), (tempInt=STACKTOP,STACKTOP += 12,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$89,(tempDoubleF64[0]=$96,HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[0],HEAP32[((((tempInt)+(4))+(4))>>2)]=tempDoubleI32[1]),tempInt));
+      var $97=_file_printf($88, ((STRING_TABLE.__str24331)|0), (tempInt=STACKTOP,STACKTOP += 12,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$89,(tempDoubleF64[0]=$96,HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[0],HEAP32[((((tempInt)+(4))+(4))>>2)]=tempDoubleI32[1]),tempInt));
       var $98=(($97)|0)==-1;
       if ($98) { __label__ = 20; break; } else { __label__ = 21; break; }
     case 20: 
@@ -28821,7 +28786,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $113=(($112+8)|0);
       var $114=$113;
       var $115=(tempDoubleI32[0]=HEAP32[(($114)>>2)],tempDoubleI32[1]=HEAP32[((($114)+(4))>>2)],tempDoubleF64[0]);
-      var $116=_file_printf($108, ((STRING_TABLE.__str24335)|0), (tempInt=STACKTOP,STACKTOP += 12,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$109,(tempDoubleF64[0]=$115,HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[0],HEAP32[((((tempInt)+(4))+(4))>>2)]=tempDoubleI32[1]),tempInt));
+      var $116=_file_printf($108, ((STRING_TABLE.__str24331)|0), (tempInt=STACKTOP,STACKTOP += 12,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$109,(tempDoubleF64[0]=$115,HEAP32[(((tempInt)+(4))>>2)]=tempDoubleI32[0],HEAP32[((((tempInt)+(4))+(4))>>2)]=tempDoubleI32[1]),tempInt));
       var $117=(($116)|0)==-1;
       if ($117) { __label__ = 24; break; } else { __label__ = 25; break; }
     case 24: 
@@ -28940,7 +28905,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $200=$2;
       var $201=(($buf)|0);
       var $202=(($vbuf)|0);
-      var $203=_file_printf($200, ((STRING_TABLE.__str25336)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$201,HEAP32[(((tempInt)+(4))>>2)]=$202,tempInt));
+      var $203=_file_printf($200, ((STRING_TABLE.__str25332)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$201,HEAP32[(((tempInt)+(4))>>2)]=$202,tempInt));
       var $204=(($203)|0)==-1;
       if ($204) { __label__ = 44; break; } else { __label__ = 45; break; }
     case 44: 
@@ -28960,35 +28925,35 @@ function _cdf_file_property_info($ms, $info, $count) {
       if ($214) { __label__ = 48; break; } else { __label__ = 60; break; }
     case 48: 
       var $216=(($vbuf)|0);
-      var $217=_strstr($216, ((STRING_TABLE.__str26337)|0));
+      var $217=_strstr($216, ((STRING_TABLE.__str26333)|0));
       var $218=(($217)|0)!=0;
       if ($218) { __label__ = 49; break; } else { __label__ = 50; break; }
     case 49: 
-      $str=((STRING_TABLE.__str11322)|0);
+      $str=((STRING_TABLE.__str11318)|0);
       __label__ = 59; break;
     case 50: 
       var $221=(($vbuf)|0);
-      var $222=_strstr($221, ((STRING_TABLE.__str27338)|0));
+      var $222=_strstr($221, ((STRING_TABLE.__str27334)|0));
       var $223=(($222)|0)!=0;
       if ($223) { __label__ = 51; break; } else { __label__ = 52; break; }
     case 51: 
-      $str=((STRING_TABLE.__str28339)|0);
+      $str=((STRING_TABLE.__str28335)|0);
       __label__ = 58; break;
     case 52: 
       var $226=(($vbuf)|0);
-      var $227=_strstr($226, ((STRING_TABLE.__str29340)|0));
+      var $227=_strstr($226, ((STRING_TABLE.__str29336)|0));
       var $228=(($227)|0)!=0;
       if ($228) { __label__ = 53; break; } else { __label__ = 54; break; }
     case 53: 
-      $str=((STRING_TABLE.__str30341)|0);
+      $str=((STRING_TABLE.__str30337)|0);
       __label__ = 57; break;
     case 54: 
       var $231=(($vbuf)|0);
-      var $232=_strstr($231, ((STRING_TABLE.__str31342)|0));
+      var $232=_strstr($231, ((STRING_TABLE.__str31338)|0));
       var $233=(($232)|0)!=0;
       if ($233) { __label__ = 55; break; } else { __label__ = 56; break; }
     case 55: 
-      $str=((STRING_TABLE.__str32343)|0);
+      $str=((STRING_TABLE.__str32339)|0);
       __label__ = 56; break;
     case 56: 
       __label__ = 57; break;
@@ -29053,7 +29018,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $264=$2;
       var $265=(($buf)|0);
       var $266=(($tbuf)|0);
-      var $267=_file_printf($264, ((STRING_TABLE.__str25336)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$265,HEAP32[(((tempInt)+(4))>>2)]=$266,tempInt));
+      var $267=_file_printf($264, ((STRING_TABLE.__str25332)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$265,HEAP32[(((tempInt)+(4))>>2)]=$266,tempInt));
       var $268=(($267)|0)==-1;
       if ($268) { __label__ = 67; break; } else { __label__ = 68; break; }
     case 67: 
@@ -29091,7 +29056,7 @@ function _cdf_file_property_info($ms, $info, $count) {
       var $288=$2;
       var $289=(($buf)|0);
       var $290=$c;
-      var $291=_file_printf($288, ((STRING_TABLE.__str25336)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$289,HEAP32[(((tempInt)+(4))>>2)]=$290,tempInt));
+      var $291=_file_printf($288, ((STRING_TABLE.__str25332)|0), (tempInt=STACKTOP,STACKTOP += 8,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$289,HEAP32[(((tempInt)+(4))>>2)]=$290,tempInt));
       var $292=(($291)|0)==-1;
       if ($292) { __label__ = 73; break; } else { __label__ = 74; break; }
     case 73: 
@@ -29132,7 +29097,7 @@ function _cdf_file_property_info($ms, $info, $count) {
     case 84: 
       var $314=$2;
       var $315=$str;
-      var $316=_file_printf($314, ((STRING_TABLE.__str12323)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$315,tempInt));
+      var $316=_file_printf($314, ((STRING_TABLE.__str12319)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$315,tempInt));
       var $317=(($316)|0)==-1;
       if ($317) { __label__ = 85; break; } else { __label__ = 86; break; }
     case 85: 
@@ -29265,7 +29230,7 @@ function _core($s) {
     case 5: 
       var $18=$2;
       var $19=(($18)|0);
-      HEAP32[(($19)>>2)]=((STRING_TABLE.__str352)|0);
+      HEAP32[(($19)>>2)]=((STRING_TABLE.__str348)|0);
       __label__ = 6; break;
     case 6: 
       var $21=$2;
@@ -29520,17 +29485,17 @@ function _realloc_buff($s, $len) {
   }
 }
 _realloc_buff["X"]=1;
-// WARNING: content after a branch in a label, line: 29425
-// WARNING: content after a branch in a label, line: 29511
-// WARNING: content after a branch in a label, line: 29585
-// WARNING: content after a branch in a label, line: 29617
-// WARNING: content after a branch in a label, line: 29713
-// WARNING: content after a branch in a label, line: 29748
-// WARNING: content after a branch in a label, line: 30026
-// WARNING: content after a branch in a label, line: 30047
-// WARNING: content after a branch in a label, line: 30113
-// WARNING: content after a branch in a label, line: 30165
-// WARNING: content after a branch in a label, line: 30209
+// WARNING: content after a branch in a label, line: 29532
+// WARNING: content after a branch in a label, line: 29618
+// WARNING: content after a branch in a label, line: 29692
+// WARNING: content after a branch in a label, line: 29724
+// WARNING: content after a branch in a label, line: 29820
+// WARNING: content after a branch in a label, line: 29855
+// WARNING: content after a branch in a label, line: 30133
+// WARNING: content after a branch in a label, line: 30154
+// WARNING: content after a branch in a label, line: 30220
+// WARNING: content after a branch in a label, line: 30272
+// WARNING: content after a branch in a label, line: 30316
 
 function _dispatch($s) {
   var __stackBase__  = STACKTOP; STACKTOP += 24; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
@@ -29974,7 +29939,7 @@ function _dispatch($s) {
       $type=$303;
       var $304=$type;
       var $305=(($304 << 24) >> 24);
-      var $306=_strchr(((STRING_TABLE.__str1353)|0), $305);
+      var $306=_strchr(((STRING_TABLE.__str1349)|0), $305);
       var $307=(($306)|0)==0;
       if ($307) { __label__ = 74; break; } else { __label__ = 76; break; }
     case 74: 
@@ -30057,7 +30022,7 @@ function _dispatch($s) {
     case 87: 
       var $359=$format_ptr;
       var $360=$width;
-      var $361=_sprintf($359, ((STRING_TABLE.__str2354)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$360,tempInt));
+      var $361=_sprintf($359, ((STRING_TABLE.__str2350)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$360,tempInt));
       var $362=$format_ptr;
       var $363=_strlen($362);
       var $364=$format_ptr;
@@ -30076,7 +30041,7 @@ function _dispatch($s) {
       $format_ptr=$372;
       var $373=$format_ptr;
       var $374=$prec;
-      var $375=_sprintf($373, ((STRING_TABLE.__str2354)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$374,tempInt));
+      var $375=_sprintf($373, ((STRING_TABLE.__str2350)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$374,tempInt));
       var $376=$format_ptr;
       var $377=_strlen($376);
       var $378=$format_ptr;
@@ -30094,7 +30059,7 @@ function _dispatch($s) {
     case 92: 
       var $387=$type;
       var $388=(($387 << 24) >> 24);
-      var $389=_strchr(((STRING_TABLE.__str3355)|0), $388);
+      var $389=_strchr(((STRING_TABLE.__str3351)|0), $388);
       var $390=(($389)|0)!=0;
       if ($390) { __label__ = 93; break; } else { __label__ = 94; break; }
     case 93: 
@@ -30439,7 +30404,7 @@ function _usual_char($s) {
       var $3=$2;
       var $4=(($3)|0);
       var $5=HEAP32[(($4)>>2)];
-      var $6=_strcspn($5, ((STRING_TABLE.__str6358)|0));
+      var $6=_strcspn($5, ((STRING_TABLE.__str4352)|0));
       $len=$6;
       var $7=$2;
       var $8=$len;
@@ -30570,7 +30535,7 @@ function _print_it($s, $approx_len, $format_string) {
       if ($8) { __label__ = 3; break; } else { __label__ = 4; break; }
     case 3: 
       $1=-1;
-      __label__ = 10; break;
+      __label__ = 7; break;
     case 4: 
       var $11=$varg;
       HEAP32[(($11)>>2)]=arguments[_print_it.length];
@@ -30583,60 +30548,42 @@ function _print_it($s, $approx_len, $format_string) {
       $vsprintf_len=$17;
       var $18=$varg;
       ;
-      var $19=$2;
-      var $20=(($19+12)|0);
-      var $21=HEAP32[(($20)>>2)];
-      var $22=((($21)-(1))|0);
-      var $23=$2;
-      var $24=(($23+4)|0);
-      var $25=HEAP32[(($24)>>2)];
-      var $26=(($25+$22)|0);
-      var $27=HEAP8[($26)];
-      var $28=(($27 << 24) >> 24);
-      var $29=(($28)|0)==1;
-      if ($29) { __label__ = 5; break; } else { __label__ = 6; break; }
+      var $19=$vsprintf_len;
+      var $20=(($19)|0)==-1;
+      if ($20) { __label__ = 5; break; } else { __label__ = 6; break; }
     case 5: 
+      $1=-1;
       __label__ = 7; break;
     case 6: 
-      ___assert_func(((STRING_TABLE.__str4356)|0), 217, ((STRING_TABLE.___func___print_it)|0), ((STRING_TABLE.__str5357)|0));
+      var $23=$vsprintf_len;
+      var $24=$2;
+      var $25=(($24+20)|0);
+      var $26=HEAP32[(($25)>>2)];
+      var $27=((($26)+($23))|0);
+      HEAP32[(($25)>>2)]=$27;
+      var $28=$2;
+      var $29=(($28+8)|0);
+      var $30=HEAP32[(($29)>>2)];
+      var $31=_strlen($30);
+      $len=$31;
+      var $32=$len;
+      var $33=$2;
+      var $34=(($33+16)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=((($35)+($32))|0);
+      HEAP32[(($34)>>2)]=$36;
+      var $37=$len;
+      var $38=$2;
+      var $39=(($38+8)|0);
+      var $40=HEAP32[(($39)>>2)];
+      var $41=(($40+$37)|0);
+      HEAP32[(($39)>>2)]=$41;
+      $1=0;
       __label__ = 7; break;
     case 7: 
-      var $33=$vsprintf_len;
-      var $34=(($33)|0)==-1;
-      if ($34) { __label__ = 8; break; } else { __label__ = 9; break; }
-    case 8: 
-      $1=-1;
-      __label__ = 10; break;
-    case 9: 
-      var $37=$vsprintf_len;
-      var $38=$2;
-      var $39=(($38+20)|0);
-      var $40=HEAP32[(($39)>>2)];
-      var $41=((($40)+($37))|0);
-      HEAP32[(($39)>>2)]=$41;
-      var $42=$2;
-      var $43=(($42+8)|0);
-      var $44=HEAP32[(($43)>>2)];
-      var $45=_strlen($44);
-      $len=$45;
-      var $46=$len;
-      var $47=$2;
-      var $48=(($47+16)|0);
-      var $49=HEAP32[(($48)>>2)];
-      var $50=((($49)+($46))|0);
-      HEAP32[(($48)>>2)]=$50;
-      var $51=$len;
-      var $52=$2;
-      var $53=(($52+8)|0);
-      var $54=HEAP32[(($53)>>2)];
-      var $55=(($54+$51)|0);
-      HEAP32[(($53)>>2)]=$55;
-      $1=0;
-      __label__ = 10; break;
-    case 10: 
-      var $57=$1;
+      var $43=$1;
       STACKTOP = __stackBase__;
-      return $57;
+      return $43;
     default: assert(0, "bad label: " + __label__);
   }
 }
@@ -30665,7 +30612,7 @@ function _type_s($s, $width, $prec, $format_string, $arg_string) {
       if ($8) { __label__ = 3; break; } else { __label__ = 4; break; }
     case 3: 
       var $10=$2;
-      var $11=_print_it($10, 6, ((STRING_TABLE.__str352)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
+      var $11=_print_it($10, 6, ((STRING_TABLE.__str348)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=0,tempInt));
       $1=$11;
       __label__ = 13; break;
     case 4: 
@@ -30722,6 +30669,13336 @@ function _type_s($s, $width, $prec, $format_string, $arg_string) {
 }
 _type_s["X"]=1;
 
+function _llvm_regcomp($preg, $pattern, $cflags) {
+  var __stackBase__  = STACKTOP; STACKTOP += 112; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $pa=__stackBase__;
+      var $g;
+      var $p;
+      var $i;
+      var $len;
+      $2=$preg;
+      $3=$pattern;
+      $4=$cflags;
+      $p=$pa;
+      var $5=$4;
+      var $6=$5 & -129;
+      $4=$6;
+      var $7=$4;
+      var $8=$7 & 1;
+      var $9=(($8)|0)!=0;
+      if ($9) { __label__ = 3; break; } else { __label__ = 5; break; }
+    case 3: 
+      var $11=$4;
+      var $12=$11 & 16;
+      var $13=(($12)|0)!=0;
+      if ($13) { __label__ = 4; break; } else { __label__ = 5; break; }
+    case 4: 
+      $1=16;
+      __label__ = 29; break;
+    case 5: 
+      var $16=$4;
+      var $17=$16 & 32;
+      var $18=(($17)|0)!=0;
+      if ($18) { __label__ = 6; break; } else { __label__ = 9; break; }
+    case 6: 
+      var $20=$2;
+      var $21=(($20+8)|0);
+      var $22=HEAPU32[(($21)>>2)];
+      var $23=$3;
+      var $24=(($22)>>>0) < (($23)>>>0);
+      if ($24) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      $1=16;
+      __label__ = 29; break;
+    case 8: 
+      var $27=$2;
+      var $28=(($27+8)|0);
+      var $29=HEAP32[(($28)>>2)];
+      var $30=$3;
+      var $31=$29;
+      var $32=$30;
+      var $33=((($31)-($32))|0);
+      $len=$33;
+      __label__ = 10; break;
+    case 9: 
+      var $35=$3;
+      var $36=_strlen($35);
+      $len=$36;
+      __label__ = 10; break;
+    case 10: 
+      var $38=_malloc(339);
+      var $39=$38;
+      $g=$39;
+      var $40=$g;
+      var $41=(($40)|0)==0;
+      if ($41) { __label__ = 11; break; } else { __label__ = 12; break; }
+    case 11: 
+      $1=12;
+      __label__ = 29; break;
+    case 12: 
+      var $44=$len;
+      var $45=Math.floor(((($44)>>>0))/(2));
+      var $46=((($45)*(3))|0);
+      var $47=((($46)+(1))|0);
+      var $48=$p;
+      var $49=(($48+16)|0);
+      HEAP32[(($49)>>2)]=$47;
+      var $50=$p;
+      var $51=(($50+16)|0);
+      var $52=HEAP32[(($51)>>2)];
+      var $53=_calloc($52, 4);
+      var $54=$53;
+      var $55=$p;
+      var $56=(($55+12)|0);
+      HEAP32[(($56)>>2)]=$54;
+      var $57=$p;
+      var $58=(($57+20)|0);
+      HEAP32[(($58)>>2)]=0;
+      var $59=$p;
+      var $60=(($59+12)|0);
+      var $61=HEAP32[(($60)>>2)];
+      var $62=(($61)|0)==0;
+      if ($62) { __label__ = 13; break; } else { __label__ = 14; break; }
+    case 13: 
+      var $64=$g;
+      var $65=$64;
+      _free($65);
+      $1=12;
+      __label__ = 29; break;
+    case 14: 
+      var $67=$g;
+      var $68=$p;
+      var $69=(($68+28)|0);
+      HEAP32[(($69)>>2)]=$67;
+      var $70=$3;
+      var $71=$p;
+      var $72=(($71)|0);
+      HEAP32[(($72)>>2)]=$70;
+      var $73=$p;
+      var $74=(($73)|0);
+      var $75=HEAP32[(($74)>>2)];
+      var $76=$len;
+      var $77=(($75+$76)|0);
+      var $78=$p;
+      var $79=(($78+4)|0);
+      HEAP32[(($79)>>2)]=$77;
+      var $80=$p;
+      var $81=(($80+8)|0);
+      HEAP32[(($81)>>2)]=0;
+      var $82=$p;
+      var $83=(($82+24)|0);
+      HEAP32[(($83)>>2)]=0;
+      $i=0;
+      __label__ = 15; break;
+    case 15: 
+      var $85=$i;
+      var $86=(($85)|0) < 10;
+      if ($86) { __label__ = 16; break; } else { __label__ = 18; break; }
+    case 16: 
+      var $88=$i;
+      var $89=$p;
+      var $90=(($89+32)|0);
+      var $91=(($90+($88<<2))|0);
+      HEAP32[(($91)>>2)]=0;
+      var $92=$i;
+      var $93=$p;
+      var $94=(($93+72)|0);
+      var $95=(($94+($92<<2))|0);
+      HEAP32[(($95)>>2)]=0;
+      __label__ = 17; break;
+    case 17: 
+      var $97=$i;
+      var $98=((($97)+(1))|0);
+      $i=$98;
+      __label__ = 15; break;
+    case 18: 
+      var $100=$g;
+      var $101=(($100+8)|0);
+      HEAP32[(($101)>>2)]=256;
+      var $102=$g;
+      var $103=(($102+16)|0);
+      HEAP32[(($103)>>2)]=0;
+      var $104=$g;
+      var $105=(($104+20)|0);
+      HEAP32[(($105)>>2)]=0;
+      var $106=$g;
+      var $107=(($106+12)|0);
+      HEAP32[(($107)>>2)]=0;
+      var $108=$4;
+      var $109=$g;
+      var $110=(($109+24)|0);
+      HEAP32[(($110)>>2)]=$108;
+      var $111=$g;
+      var $112=(($111+40)|0);
+      HEAP32[(($112)>>2)]=0;
+      var $113=$g;
+      var $114=(($113+44)|0);
+      HEAP32[(($114)>>2)]=0;
+      var $115=$g;
+      var $116=(($115+48)|0);
+      HEAP32[(($116)>>2)]=0;
+      var $117=$g;
+      var $118=(($117+60)|0);
+      HEAP32[(($118)>>2)]=0;
+      var $119=$g;
+      var $120=(($119+64)|0);
+      HEAP32[(($120)>>2)]=0;
+      var $121=$g;
+      var $122=(($121+68)|0);
+      HEAP32[(($122)>>2)]=0;
+      var $123=$g;
+      var $124=(($123+52)|0);
+      HEAP32[(($124)>>2)]=1;
+      var $125=$g;
+      var $126=(($125+80)|0);
+      var $127=(($126+128)|0);
+      var $128=$g;
+      var $129=(($128+56)|0);
+      HEAP32[(($129)>>2)]=$127;
+      var $130=$g;
+      var $131=(($130+80)|0);
+      var $132=(($131)|0);
+      _memset($132, 0, 256, 1);
+      var $133=$g;
+      var $134=(($133+72)|0);
+      HEAP32[(($134)>>2)]=0;
+      var $135=$p;
+      _doemit($135, 134217728, 0);
+      var $136=$p;
+      var $137=(($136+20)|0);
+      var $138=HEAP32[(($137)>>2)];
+      var $139=((($138)-(1))|0);
+      var $140=$g;
+      var $141=(($140+32)|0);
+      HEAP32[(($141)>>2)]=$139;
+      var $142=$4;
+      var $143=$142 & 1;
+      var $144=(($143)|0)!=0;
+      if ($144) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 19: 
+      var $146=$p;
+      _p_ere($146, 128);
+      __label__ = 24; break;
+    case 20: 
+      var $148=$4;
+      var $149=$148 & 16;
+      var $150=(($149)|0)!=0;
+      if ($150) { __label__ = 21; break; } else { __label__ = 22; break; }
+    case 21: 
+      var $152=$p;
+      _p_str($152);
+      __label__ = 23; break;
+    case 22: 
+      var $154=$p;
+      _p_bre($154, 128, 128);
+      __label__ = 23; break;
+    case 23: 
+      __label__ = 24; break;
+    case 24: 
+      var $157=$p;
+      _doemit($157, 134217728, 0);
+      var $158=$p;
+      var $159=(($158+20)|0);
+      var $160=HEAP32[(($159)>>2)];
+      var $161=((($160)-(1))|0);
+      var $162=$g;
+      var $163=(($162+36)|0);
+      HEAP32[(($163)>>2)]=$161;
+      var $164=$p;
+      var $165=$g;
+      _categorize($164, $165);
+      var $166=$p;
+      var $167=$g;
+      _stripsnug($166, $167);
+      var $168=$p;
+      var $169=$g;
+      _findmust($168, $169);
+      var $170=$p;
+      var $171=$g;
+      var $172=_pluscount($170, $171);
+      var $173=$g;
+      var $174=(($173+76)|0);
+      HEAP32[(($174)>>2)]=$172;
+      var $175=$g;
+      var $176=(($175)|0);
+      HEAP32[(($176)>>2)]=53829;
+      var $177=$g;
+      var $178=(($177+68)|0);
+      var $179=HEAP32[(($178)>>2)];
+      var $180=$2;
+      var $181=(($180+4)|0);
+      HEAP32[(($181)>>2)]=$179;
+      var $182=$g;
+      var $183=$2;
+      var $184=(($183+12)|0);
+      HEAP32[(($184)>>2)]=$182;
+      var $185=$2;
+      var $186=(($185)|0);
+      HEAP32[(($186)>>2)]=62053;
+      var $187=$g;
+      var $188=(($187+40)|0);
+      var $189=HEAP32[(($188)>>2)];
+      var $190=$189 & 4;
+      var $191=(($190)|0)!=0;
+      if ($191) { __label__ = 25; break; } else { __label__ = 26; break; }
+    case 25: 
+      var $193=$p;
+      var $194=_seterr($193, 15);
+      __label__ = 26; break;
+    case 26: 
+      var $196=$p;
+      var $197=(($196+8)|0);
+      var $198=HEAP32[(($197)>>2)];
+      var $199=(($198)|0)!=0;
+      if ($199) { __label__ = 27; break; } else { __label__ = 28; break; }
+    case 27: 
+      var $201=$2;
+      _llvm_regfree($201);
+      __label__ = 28; break;
+    case 28: 
+      var $203=$p;
+      var $204=(($203+8)|0);
+      var $205=HEAP32[(($204)>>2)];
+      $1=$205;
+      __label__ = 29; break;
+    case 29: 
+      var $207=$1;
+      STACKTOP = __stackBase__;
+      return $207;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_llvm_regcomp["X"]=1;
+
+function _doemit($p, $op, $opnd) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      $1=$p;
+      $2=$op;
+      $3=$opnd;
+      var $4=$1;
+      var $5=(($4+8)|0);
+      var $6=HEAP32[(($5)>>2)];
+      var $7=(($6)|0)!=0;
+      if ($7) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 7; break;
+    case 4: 
+      var $10=$1;
+      var $11=(($10+20)|0);
+      var $12=HEAP32[(($11)>>2)];
+      var $13=$1;
+      var $14=(($13+16)|0);
+      var $15=HEAP32[(($14)>>2)];
+      var $16=(($12)|0) >= (($15)|0);
+      if ($16) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $18=$1;
+      var $19=$1;
+      var $20=(($19+16)|0);
+      var $21=HEAP32[(($20)>>2)];
+      var $22=((($21)+(1))|0);
+      var $23=((((($22)|0))/(2))&-1);
+      var $24=((($23)*(3))|0);
+      _enlarge($18, $24);
+      __label__ = 6; break;
+    case 6: 
+      var $26=$2;
+      var $27=$3;
+      var $28=$26 | $27;
+      var $29=$1;
+      var $30=(($29+20)|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=((($31)+(1))|0);
+      HEAP32[(($30)>>2)]=$32;
+      var $33=$1;
+      var $34=(($33+12)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=(($35+($31<<2))|0);
+      HEAP32[(($36)>>2)]=$28;
+      __label__ = 7; break;
+    case 7: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _p_ere($p, $stop) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $c;
+      var $prevback;
+      var $prevfwd;
+      var $conc;
+      var $first;
+      $1=$p;
+      $2=$stop;
+      $prevback=0;
+      $prevfwd=0;
+      $first=1;
+      __label__ = 3; break;
+    case 3: 
+      var $4=$1;
+      var $5=(($4+20)|0);
+      var $6=HEAP32[(($5)>>2)];
+      $conc=$6;
+      __label__ = 4; break;
+    case 4: 
+      var $8=$1;
+      var $9=(($8)|0);
+      var $10=HEAPU32[(($9)>>2)];
+      var $11=$1;
+      var $12=(($11+4)|0);
+      var $13=HEAPU32[(($12)>>2)];
+      var $14=(($10)>>>0) < (($13)>>>0);
+      if ($14) { __label__ = 5; break; } else { var $28 = 0;__label__ = 7; break; }
+    case 5: 
+      var $16=$1;
+      var $17=(($16)|0);
+      var $18=HEAP32[(($17)>>2)];
+      var $19=HEAP8[($18)];
+      $c=$19;
+      var $20=(($19 << 24) >> 24);
+      var $21=(($20)|0)!=124;
+      if ($21) { __label__ = 6; break; } else { var $28 = 0;__label__ = 7; break; }
+    case 6: 
+      var $23=$c;
+      var $24=(($23 << 24) >> 24);
+      var $25=$2;
+      var $26=(($24)|0)!=(($25)|0);
+      var $28 = $26;__label__ = 7; break;
+    case 7: 
+      var $28;
+      if ($28) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $30=$1;
+      _p_ere_exp($30);
+      __label__ = 4; break;
+    case 9: 
+      var $32=$1;
+      var $33=(($32+20)|0);
+      var $34=HEAP32[(($33)>>2)];
+      var $35=$conc;
+      var $36=(($34)|0)!=(($35)|0);
+      if ($36) { var $42 = 1;__label__ = 11; break; } else { __label__ = 10; break; }
+    case 10: 
+      var $38=$1;
+      var $39=_seterr($38, 14);
+      var $40=(($39)|0)!=0;
+      var $42 = $40;__label__ = 11; break;
+    case 11: 
+      var $42;
+      var $43=(($42)&1);
+      var $44=$1;
+      var $45=(($44)|0);
+      var $46=HEAPU32[(($45)>>2)];
+      var $47=$1;
+      var $48=(($47+4)|0);
+      var $49=HEAPU32[(($48)>>2)];
+      var $50=(($46)>>>0) < (($49)>>>0);
+      if ($50) { __label__ = 12; break; } else { __label__ = 14; break; }
+    case 12: 
+      var $52=$1;
+      var $53=(($52)|0);
+      var $54=HEAP32[(($53)>>2)];
+      var $55=HEAP8[($54)];
+      var $56=(($55 << 24) >> 24);
+      var $57=(($56)|0)==124;
+      if ($57) { __label__ = 13; break; } else { __label__ = 14; break; }
+    case 13: 
+      var $59=$1;
+      var $60=(($59)|0);
+      var $61=HEAP32[(($60)>>2)];
+      var $62=(($61+1)|0);
+      HEAP32[(($60)>>2)]=$62;
+      if (1) { __label__ = 16; break; } else { __label__ = 15; break; }
+    case 14: 
+      if (0) { __label__ = 16; break; } else { __label__ = 15; break; }
+    case 15: 
+      __label__ = 19; break;
+    case 16: 
+      var $66=$first;
+      var $67=(($66)|0)!=0;
+      if ($67) { __label__ = 17; break; } else { __label__ = 18; break; }
+    case 17: 
+      var $69=$1;
+      var $70=$1;
+      var $71=(($70+20)|0);
+      var $72=HEAP32[(($71)>>2)];
+      var $73=$conc;
+      var $74=((($72)-($73))|0);
+      var $75=((($74)+(1))|0);
+      var $76=$conc;
+      _doinsert($69, 2013265920, $75, $76);
+      var $77=$conc;
+      $prevfwd=$77;
+      var $78=$conc;
+      $prevback=$78;
+      $first=0;
+      __label__ = 18; break;
+    case 18: 
+      var $80=$1;
+      var $81=$1;
+      var $82=(($81+20)|0);
+      var $83=HEAP32[(($82)>>2)];
+      var $84=$prevback;
+      var $85=((($83)-($84))|0);
+      _doemit($80, -2147483648, $85);
+      var $86=$1;
+      var $87=(($86+20)|0);
+      var $88=HEAP32[(($87)>>2)];
+      var $89=((($88)-(1))|0);
+      $prevback=$89;
+      var $90=$1;
+      var $91=$prevfwd;
+      var $92=$1;
+      var $93=(($92+20)|0);
+      var $94=HEAP32[(($93)>>2)];
+      var $95=$prevfwd;
+      var $96=((($94)-($95))|0);
+      _dofwd($90, $91, $96);
+      var $97=$1;
+      var $98=(($97+20)|0);
+      var $99=HEAP32[(($98)>>2)];
+      $prevfwd=$99;
+      var $100=$1;
+      _doemit($100, -2013265920, 0);
+      __label__ = 3; break;
+    case 19: 
+      var $102=$first;
+      var $103=(($102)|0)!=0;
+      if ($103) { __label__ = 21; break; } else { __label__ = 20; break; }
+    case 20: 
+      var $105=$1;
+      var $106=$prevfwd;
+      var $107=$1;
+      var $108=(($107+20)|0);
+      var $109=HEAP32[(($108)>>2)];
+      var $110=$prevfwd;
+      var $111=((($109)-($110))|0);
+      _dofwd($105, $106, $111);
+      var $112=$1;
+      var $113=$1;
+      var $114=(($113+20)|0);
+      var $115=HEAP32[(($114)>>2)];
+      var $116=$prevback;
+      var $117=((($115)-($116))|0);
+      _doemit($112, -1879048192, $117);
+      __label__ = 21; break;
+    case 21: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_ere["X"]=1;
+
+function _p_str($p) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      $1=$p;
+      var $2=$1;
+      var $3=(($2)|0);
+      var $4=HEAPU32[(($3)>>2)];
+      var $5=$1;
+      var $6=(($5+4)|0);
+      var $7=HEAPU32[(($6)>>2)];
+      var $8=(($4)>>>0) < (($7)>>>0);
+      if ($8) { var $14 = 1;__label__ = 4; break; } else { __label__ = 3; break; }
+    case 3: 
+      var $10=$1;
+      var $11=_seterr($10, 14);
+      var $12=(($11)|0)!=0;
+      var $14 = $12;__label__ = 4; break;
+    case 4: 
+      var $14;
+      var $15=(($14)&1);
+      __label__ = 5; break;
+    case 5: 
+      var $17=$1;
+      var $18=(($17)|0);
+      var $19=HEAPU32[(($18)>>2)];
+      var $20=$1;
+      var $21=(($20+4)|0);
+      var $22=HEAPU32[(($21)>>2)];
+      var $23=(($19)>>>0) < (($22)>>>0);
+      if ($23) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      var $25=$1;
+      var $26=$1;
+      var $27=(($26)|0);
+      var $28=HEAP32[(($27)>>2)];
+      var $29=(($28+1)|0);
+      HEAP32[(($27)>>2)]=$29;
+      var $30=HEAP8[($28)];
+      var $31=(($30 << 24) >> 24);
+      _ordinary($25, $31);
+      __label__ = 5; break;
+    case 7: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _pluscount($p, $g) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $scan;
+      var $s;
+      var $plusnest;
+      var $maxnest;
+      $2=$p;
+      $3=$g;
+      $plusnest=0;
+      $maxnest=0;
+      var $4=$2;
+      var $5=(($4+8)|0);
+      var $6=HEAP32[(($5)>>2)];
+      var $7=(($6)|0)!=0;
+      if ($7) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      $1=0;
+      __label__ = 15; break;
+    case 4: 
+      var $10=$3;
+      var $11=(($10+4)|0);
+      var $12=HEAP32[(($11)>>2)];
+      var $13=(($12+4)|0);
+      $scan=$13;
+      __label__ = 5; break;
+    case 5: 
+      var $15=$scan;
+      var $16=(($15+4)|0);
+      $scan=$16;
+      var $17=HEAP32[(($15)>>2)];
+      $s=$17;
+      var $18=$s;
+      var $19=$18 & -134217728;
+      if ((($19)|0) == 1207959552) {
+        __label__ = 6; break;
+      }
+      else if ((($19)|0) == 1342177280) {
+        __label__ = 7; break;
+      }
+      else {
+      __label__ = 10; break;
+      }
+      
+    case 6: 
+      var $21=$plusnest;
+      var $22=((($21)+(1))|0);
+      $plusnest=$22;
+      __label__ = 10; break;
+    case 7: 
+      var $24=$plusnest;
+      var $25=$maxnest;
+      var $26=(($24)|0) > (($25)|0);
+      if ($26) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $28=$plusnest;
+      $maxnest=$28;
+      __label__ = 9; break;
+    case 9: 
+      var $30=$plusnest;
+      var $31=((($30)-(1))|0);
+      $plusnest=$31;
+      __label__ = 10; break;
+    case 10: 
+      __label__ = 11; break;
+    case 11: 
+      var $34=$s;
+      var $35=$34 & -134217728;
+      var $36=(($35)|0)!=134217728;
+      if ($36) { __label__ = 5; break; } else { __label__ = 12; break; }
+    case 12: 
+      var $38=$plusnest;
+      var $39=(($38)|0)!=0;
+      if ($39) { __label__ = 13; break; } else { __label__ = 14; break; }
+    case 13: 
+      var $41=$3;
+      var $42=(($41+40)|0);
+      var $43=HEAP32[(($42)>>2)];
+      var $44=$43 | 4;
+      HEAP32[(($42)>>2)]=$44;
+      __label__ = 14; break;
+    case 14: 
+      var $46=$maxnest;
+      $1=$46;
+      __label__ = 15; break;
+    case 15: 
+      var $48=$1;
+      ;
+      return $48;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_pluscount["X"]=1;
+
+function _seterr($p, $e) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      $1=$p;
+      $2=$e;
+      var $3=$1;
+      var $4=(($3+8)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=(($5)|0)==0;
+      if ($6) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $8=$2;
+      var $9=$1;
+      var $10=(($9+8)|0);
+      HEAP32[(($10)>>2)]=$8;
+      __label__ = 4; break;
+    case 4: 
+      var $12=$1;
+      var $13=(($12)|0);
+      HEAP32[(($13)>>2)]=((_nuls)|0);
+      var $14=$1;
+      var $15=(($14+4)|0);
+      HEAP32[(($15)>>2)]=((_nuls)|0);
+      ;
+      return 0;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _isinsets($g, $c) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $col;
+      var $i;
+      var $ncols;
+      var $uc;
+      $2=$g;
+      $3=$c;
+      var $4=$2;
+      var $5=(($4+12)|0);
+      var $6=HEAP32[(($5)>>2)];
+      var $7=((($6)+(7))|0);
+      var $8=((((($7)|0))/(8))&-1);
+      $ncols=$8;
+      var $9=$3;
+      var $10=(($9) & 255);
+      var $11=(($10)&255);
+      $uc=$11;
+      $i=0;
+      var $12=$2;
+      var $13=(($12+20)|0);
+      var $14=HEAP32[(($13)>>2)];
+      $col=$14;
+      __label__ = 3; break;
+    case 3: 
+      var $16=$i;
+      var $17=$ncols;
+      var $18=(($16)|0) < (($17)|0);
+      if ($18) { __label__ = 4; break; } else { __label__ = 8; break; }
+    case 4: 
+      var $20=$uc;
+      var $21=$col;
+      var $22=(($21+$20)|0);
+      var $23=HEAPU8[($22)];
+      var $24=(($23)&255);
+      var $25=(($24)|0)!=0;
+      if ($25) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      $1=1;
+      __label__ = 9; break;
+    case 6: 
+      __label__ = 7; break;
+    case 7: 
+      var $29=$i;
+      var $30=((($29)+(1))|0);
+      $i=$30;
+      var $31=$2;
+      var $32=(($31+8)|0);
+      var $33=HEAP32[(($32)>>2)];
+      var $34=$col;
+      var $35=(($34+$33)|0);
+      $col=$35;
+      __label__ = 3; break;
+    case 8: 
+      $1=0;
+      __label__ = 9; break;
+    case 9: 
+      var $38=$1;
+      ;
+      return $38;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_isinsets["X"]=1;
+
+function _samesets($g, $c1, $c2) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $col;
+      var $i;
+      var $ncols;
+      var $uc1;
+      var $uc2;
+      $2=$g;
+      $3=$c1;
+      $4=$c2;
+      var $5=$2;
+      var $6=(($5+12)|0);
+      var $7=HEAP32[(($6)>>2)];
+      var $8=((($7)+(7))|0);
+      var $9=((((($8)|0))/(8))&-1);
+      $ncols=$9;
+      var $10=$3;
+      var $11=(($10) & 255);
+      var $12=(($11)&255);
+      $uc1=$12;
+      var $13=$4;
+      var $14=(($13) & 255);
+      var $15=(($14)&255);
+      $uc2=$15;
+      $i=0;
+      var $16=$2;
+      var $17=(($16+20)|0);
+      var $18=HEAP32[(($17)>>2)];
+      $col=$18;
+      __label__ = 3; break;
+    case 3: 
+      var $20=$i;
+      var $21=$ncols;
+      var $22=(($20)|0) < (($21)|0);
+      if ($22) { __label__ = 4; break; } else { __label__ = 8; break; }
+    case 4: 
+      var $24=$uc1;
+      var $25=$col;
+      var $26=(($25+$24)|0);
+      var $27=HEAPU8[($26)];
+      var $28=(($27)&255);
+      var $29=$uc2;
+      var $30=$col;
+      var $31=(($30+$29)|0);
+      var $32=HEAPU8[($31)];
+      var $33=(($32)&255);
+      var $34=(($28)|0)!=(($33)|0);
+      if ($34) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      $1=0;
+      __label__ = 9; break;
+    case 6: 
+      __label__ = 7; break;
+    case 7: 
+      var $38=$i;
+      var $39=((($38)+(1))|0);
+      $i=$39;
+      var $40=$2;
+      var $41=(($40+8)|0);
+      var $42=HEAP32[(($41)>>2)];
+      var $43=$col;
+      var $44=(($43+$42)|0);
+      $col=$44;
+      __label__ = 3; break;
+    case 8: 
+      $1=1;
+      __label__ = 9; break;
+    case 9: 
+      var $47=$1;
+      ;
+      return $47;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_samesets["X"]=1;
+
+function _p_bre($p, $end1, $end2) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $start;
+      var $first;
+      var $wasdollar;
+      $1=$p;
+      $2=$end1;
+      $3=$end2;
+      var $4=$1;
+      var $5=(($4+20)|0);
+      var $6=HEAP32[(($5)>>2)];
+      $start=$6;
+      $first=1;
+      $wasdollar=0;
+      var $7=$1;
+      var $8=(($7)|0);
+      var $9=HEAPU32[(($8)>>2)];
+      var $10=$1;
+      var $11=(($10+4)|0);
+      var $12=HEAPU32[(($11)>>2)];
+      var $13=(($9)>>>0) < (($12)>>>0);
+      if ($13) { __label__ = 3; break; } else { __label__ = 5; break; }
+    case 3: 
+      var $15=$1;
+      var $16=(($15)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=HEAP8[($17)];
+      var $19=(($18 << 24) >> 24);
+      var $20=(($19)|0)==94;
+      if ($20) { __label__ = 4; break; } else { __label__ = 5; break; }
+    case 4: 
+      var $22=$1;
+      var $23=(($22)|0);
+      var $24=HEAP32[(($23)>>2)];
+      var $25=(($24+1)|0);
+      HEAP32[(($23)>>2)]=$25;
+      if (1) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 5: 
+      if (0) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      var $28=$1;
+      _doemit($28, 402653184, 0);
+      var $29=$1;
+      var $30=(($29+28)|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=(($31+40)|0);
+      var $33=HEAP32[(($32)>>2)];
+      var $34=$33 | 1;
+      HEAP32[(($32)>>2)]=$34;
+      var $35=$1;
+      var $36=(($35+28)|0);
+      var $37=HEAP32[(($36)>>2)];
+      var $38=(($37+44)|0);
+      var $39=HEAP32[(($38)>>2)];
+      var $40=((($39)+(1))|0);
+      HEAP32[(($38)>>2)]=$40;
+      __label__ = 7; break;
+    case 7: 
+      __label__ = 8; break;
+    case 8: 
+      var $43=$1;
+      var $44=(($43)|0);
+      var $45=HEAPU32[(($44)>>2)];
+      var $46=$1;
+      var $47=(($46+4)|0);
+      var $48=HEAPU32[(($47)>>2)];
+      var $49=(($45)>>>0) < (($48)>>>0);
+      if ($49) { __label__ = 9; break; } else { var $88 = 0;__label__ = 14; break; }
+    case 9: 
+      var $51=$1;
+      var $52=(($51)|0);
+      var $53=HEAPU32[(($52)>>2)];
+      var $54=$1;
+      var $55=(($54+4)|0);
+      var $56=HEAPU32[(($55)>>2)];
+      var $57=(($53)>>>0) < (($56)>>>0);
+      if ($57) { __label__ = 10; break; } else { var $85 = 0;__label__ = 13; break; }
+    case 10: 
+      var $59=$1;
+      var $60=(($59)|0);
+      var $61=HEAP32[(($60)>>2)];
+      var $62=(($61+1)|0);
+      var $63=$1;
+      var $64=(($63+4)|0);
+      var $65=HEAPU32[(($64)>>2)];
+      var $66=(($62)>>>0) < (($65)>>>0);
+      if ($66) { __label__ = 11; break; } else { var $85 = 0;__label__ = 13; break; }
+    case 11: 
+      var $68=$1;
+      var $69=(($68)|0);
+      var $70=HEAP32[(($69)>>2)];
+      var $71=HEAP8[($70)];
+      var $72=(($71 << 24) >> 24);
+      var $73=$2;
+      var $74=(($72)|0)==(($73)|0);
+      if ($74) { __label__ = 12; break; } else { var $85 = 0;__label__ = 13; break; }
+    case 12: 
+      var $76=$1;
+      var $77=(($76)|0);
+      var $78=HEAP32[(($77)>>2)];
+      var $79=(($78+1)|0);
+      var $80=HEAP8[($79)];
+      var $81=(($80 << 24) >> 24);
+      var $82=$3;
+      var $83=(($81)|0)==(($82)|0);
+      var $85 = $83;__label__ = 13; break;
+    case 13: 
+      var $85;
+      var $86=$85 ^ 1;
+      var $88 = $86;__label__ = 14; break;
+    case 14: 
+      var $88;
+      if ($88) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      var $90=$1;
+      var $91=$first;
+      var $92=_p_simp_re($90, $91);
+      $wasdollar=$92;
+      $first=0;
+      __label__ = 8; break;
+    case 16: 
+      var $94=$wasdollar;
+      var $95=(($94)|0)!=0;
+      if ($95) { __label__ = 17; break; } else { __label__ = 18; break; }
+    case 17: 
+      var $97=$1;
+      var $98=(($97+20)|0);
+      var $99=HEAP32[(($98)>>2)];
+      var $100=((($99)-(1))|0);
+      HEAP32[(($98)>>2)]=$100;
+      var $101=$1;
+      _doemit($101, 536870912, 0);
+      var $102=$1;
+      var $103=(($102+28)|0);
+      var $104=HEAP32[(($103)>>2)];
+      var $105=(($104+40)|0);
+      var $106=HEAP32[(($105)>>2)];
+      var $107=$106 | 2;
+      HEAP32[(($105)>>2)]=$107;
+      var $108=$1;
+      var $109=(($108+28)|0);
+      var $110=HEAP32[(($109)>>2)];
+      var $111=(($110+48)|0);
+      var $112=HEAP32[(($111)>>2)];
+      var $113=((($112)+(1))|0);
+      HEAP32[(($111)>>2)]=$113;
+      __label__ = 18; break;
+    case 18: 
+      var $115=$1;
+      var $116=(($115+20)|0);
+      var $117=HEAP32[(($116)>>2)];
+      var $118=$start;
+      var $119=(($117)|0)!=(($118)|0);
+      if ($119) { var $125 = 1;__label__ = 20; break; } else { __label__ = 19; break; }
+    case 19: 
+      var $121=$1;
+      var $122=_seterr($121, 14);
+      var $123=(($122)|0)!=0;
+      var $125 = $123;__label__ = 20; break;
+    case 20: 
+      var $125;
+      var $126=(($125)&1);
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_bre["X"]=1;
+
+function _categorize($p, $g) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $cats;
+      var $c;
+      var $c2;
+      var $cat;
+      $1=$p;
+      $2=$g;
+      var $3=$2;
+      var $4=(($3+56)|0);
+      var $5=HEAP32[(($4)>>2)];
+      $cats=$5;
+      var $6=$1;
+      var $7=(($6+8)|0);
+      var $8=HEAP32[(($7)>>2)];
+      var $9=(($8)|0)!=0;
+      if ($9) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 18; break;
+    case 4: 
+      $c=-128;
+      __label__ = 5; break;
+    case 5: 
+      var $13=$c;
+      var $14=(($13)|0) <= 127;
+      if ($14) { __label__ = 6; break; } else { __label__ = 18; break; }
+    case 6: 
+      var $16=$c;
+      var $17=$cats;
+      var $18=(($17+$16)|0);
+      var $19=HEAPU8[($18)];
+      var $20=(($19)&255);
+      var $21=(($20)|0)==0;
+      if ($21) { __label__ = 7; break; } else { __label__ = 16; break; }
+    case 7: 
+      var $23=$2;
+      var $24=$c;
+      var $25=_isinsets($23, $24);
+      var $26=(($25)|0)!=0;
+      if ($26) { __label__ = 8; break; } else { __label__ = 16; break; }
+    case 8: 
+      var $28=$2;
+      var $29=(($28+52)|0);
+      var $30=HEAP32[(($29)>>2)];
+      var $31=((($30)+(1))|0);
+      HEAP32[(($29)>>2)]=$31;
+      var $32=(($30) & 255);
+      $cat=$32;
+      var $33=$cat;
+      var $34=$c;
+      var $35=$cats;
+      var $36=(($35+$34)|0);
+      HEAP8[($36)]=$33;
+      var $37=$c;
+      var $38=((($37)+(1))|0);
+      $c2=$38;
+      __label__ = 9; break;
+    case 9: 
+      var $40=$c2;
+      var $41=(($40)|0) <= 127;
+      if ($41) { __label__ = 10; break; } else { __label__ = 15; break; }
+    case 10: 
+      var $43=$c2;
+      var $44=$cats;
+      var $45=(($44+$43)|0);
+      var $46=HEAPU8[($45)];
+      var $47=(($46)&255);
+      var $48=(($47)|0)==0;
+      if ($48) { __label__ = 11; break; } else { __label__ = 13; break; }
+    case 11: 
+      var $50=$2;
+      var $51=$c;
+      var $52=$c2;
+      var $53=_samesets($50, $51, $52);
+      var $54=(($53)|0)!=0;
+      if ($54) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      var $56=$cat;
+      var $57=$c2;
+      var $58=$cats;
+      var $59=(($58+$57)|0);
+      HEAP8[($59)]=$56;
+      __label__ = 13; break;
+    case 13: 
+      __label__ = 14; break;
+    case 14: 
+      var $62=$c2;
+      var $63=((($62)+(1))|0);
+      $c2=$63;
+      __label__ = 9; break;
+    case 15: 
+      __label__ = 16; break;
+    case 16: 
+      __label__ = 17; break;
+    case 17: 
+      var $67=$c;
+      var $68=((($67)+(1))|0);
+      $c=$68;
+      __label__ = 5; break;
+    case 18: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_categorize["X"]=1;
+
+function _stripsnug($p, $g) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      $1=$p;
+      $2=$g;
+      var $3=$1;
+      var $4=(($3+20)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=$2;
+      var $7=(($6+28)|0);
+      HEAP32[(($7)>>2)]=$5;
+      var $8=$1;
+      var $9=(($8+12)|0);
+      var $10=HEAP32[(($9)>>2)];
+      var $11=$10;
+      var $12=$1;
+      var $13=(($12+20)|0);
+      var $14=HEAP32[(($13)>>2)];
+      var $15=((($14<<2))|0);
+      var $16=_realloc($11, $15);
+      var $17=$16;
+      var $18=$2;
+      var $19=(($18+4)|0);
+      HEAP32[(($19)>>2)]=$17;
+      var $20=$2;
+      var $21=(($20+4)|0);
+      var $22=HEAP32[(($21)>>2)];
+      var $23=(($22)|0)==0;
+      if ($23) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $25=$1;
+      var $26=_seterr($25, 12);
+      var $27=$1;
+      var $28=(($27+12)|0);
+      var $29=HEAP32[(($28)>>2)];
+      var $30=$2;
+      var $31=(($30+4)|0);
+      HEAP32[(($31)>>2)]=$29;
+      __label__ = 4; break;
+    case 4: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _findmust($p, $g) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $scan;
+      var $start;
+      var $newstart;
+      var $newlen;
+      var $s;
+      var $cp;
+      var $i;
+      $1=$p;
+      $2=$g;
+      $start=0;
+      $newstart=0;
+      var $3=$1;
+      var $4=(($3+8)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=(($5)|0)!=0;
+      if ($6) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 37; break;
+    case 4: 
+      $newlen=0;
+      var $9=$2;
+      var $10=(($9+4)|0);
+      var $11=HEAP32[(($10)>>2)];
+      var $12=(($11+4)|0);
+      $scan=$12;
+      __label__ = 5; break;
+    case 5: 
+      var $14=$scan;
+      var $15=(($14+4)|0);
+      $scan=$15;
+      var $16=HEAP32[(($14)>>2)];
+      $s=$16;
+      var $17=$s;
+      var $18=$17 & -134217728;
+      if ((($18)|0) == 268435456) {
+        __label__ = 6; break;
+      }
+      else if ((($18)|0) == 1207959552 || (($18)|0) == 1744830464 || (($18)|0) == 1879048192) {
+        __label__ = 9; break;
+      }
+      else if ((($18)|0) == 1476395008 || (($18)|0) == 2013265920) {
+        __label__ = 10; break;
+      }
+      else {
+      __label__ = 20; break;
+      }
+      
+    case 6: 
+      var $20=$newlen;
+      var $21=(($20)|0)==0;
+      if ($21) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $23=$scan;
+      var $24=((($23)-(4))|0);
+      $newstart=$24;
+      __label__ = 8; break;
+    case 8: 
+      var $26=$newlen;
+      var $27=((($26)+(1))|0);
+      $newlen=$27;
+      __label__ = 23; break;
+    case 9: 
+      __label__ = 23; break;
+    case 10: 
+      var $30=$scan;
+      var $31=((($30)-(4))|0);
+      $scan=$31;
+      __label__ = 11; break;
+    case 11: 
+      var $33=$s;
+      var $34=$33 & 134217727;
+      var $35=$scan;
+      var $36=(($35+($34<<2))|0);
+      $scan=$36;
+      var $37=$scan;
+      var $38=HEAP32[(($37)>>2)];
+      $s=$38;
+      var $39=$s;
+      var $40=$39 & -134217728;
+      var $41=(($40)|0)!=1610612736;
+      if ($41) { __label__ = 12; break; } else { __label__ = 15; break; }
+    case 12: 
+      var $43=$s;
+      var $44=$43 & -134217728;
+      var $45=(($44)|0)!=-1879048192;
+      if ($45) { __label__ = 13; break; } else { __label__ = 15; break; }
+    case 13: 
+      var $47=$s;
+      var $48=$47 & -134217728;
+      var $49=(($48)|0)!=-2013265920;
+      if ($49) { __label__ = 14; break; } else { __label__ = 15; break; }
+    case 14: 
+      var $51=$2;
+      var $52=(($51+40)|0);
+      var $53=HEAP32[(($52)>>2)];
+      var $54=$53 | 4;
+      HEAP32[(($52)>>2)]=$54;
+      __label__ = 37; break;
+    case 15: 
+      __label__ = 16; break;
+    case 16: 
+      var $57=$s;
+      var $58=$57 & -134217728;
+      var $59=(($58)|0)!=1610612736;
+      if ($59) { __label__ = 17; break; } else { var $65 = 0;__label__ = 18; break; }
+    case 17: 
+      var $61=$s;
+      var $62=$61 & -134217728;
+      var $63=(($62)|0)!=-1879048192;
+      var $65 = $63;__label__ = 18; break;
+    case 18: 
+      var $65;
+      if ($65) { __label__ = 11; break; } else { __label__ = 19; break; }
+    case 19: 
+      __label__ = 20; break;
+    case 20: 
+      var $68=$newlen;
+      var $69=$2;
+      var $70=(($69+64)|0);
+      var $71=HEAP32[(($70)>>2)];
+      var $72=(($68)|0) > (($71)|0);
+      if ($72) { __label__ = 21; break; } else { __label__ = 22; break; }
+    case 21: 
+      var $74=$newstart;
+      $start=$74;
+      var $75=$newlen;
+      var $76=$2;
+      var $77=(($76+64)|0);
+      HEAP32[(($77)>>2)]=$75;
+      __label__ = 22; break;
+    case 22: 
+      $newlen=0;
+      __label__ = 23; break;
+    case 23: 
+      __label__ = 24; break;
+    case 24: 
+      var $81=$s;
+      var $82=$81 & -134217728;
+      var $83=(($82)|0)!=134217728;
+      if ($83) { __label__ = 5; break; } else { __label__ = 25; break; }
+    case 25: 
+      var $85=$2;
+      var $86=(($85+64)|0);
+      var $87=HEAP32[(($86)>>2)];
+      var $88=(($87)|0)==0;
+      if ($88) { __label__ = 26; break; } else { __label__ = 27; break; }
+    case 26: 
+      __label__ = 37; break;
+    case 27: 
+      var $91=$2;
+      var $92=(($91+64)|0);
+      var $93=HEAP32[(($92)>>2)];
+      var $94=((($93)+(1))|0);
+      var $95=_malloc($94);
+      var $96=$2;
+      var $97=(($96+60)|0);
+      HEAP32[(($97)>>2)]=$95;
+      var $98=$2;
+      var $99=(($98+60)|0);
+      var $100=HEAP32[(($99)>>2)];
+      var $101=(($100)|0)==0;
+      if ($101) { __label__ = 28; break; } else { __label__ = 29; break; }
+    case 28: 
+      var $103=$2;
+      var $104=(($103+64)|0);
+      HEAP32[(($104)>>2)]=0;
+      __label__ = 37; break;
+    case 29: 
+      var $106=$2;
+      var $107=(($106+60)|0);
+      var $108=HEAP32[(($107)>>2)];
+      $cp=$108;
+      var $109=$start;
+      $scan=$109;
+      var $110=$2;
+      var $111=(($110+64)|0);
+      var $112=HEAP32[(($111)>>2)];
+      $i=$112;
+      __label__ = 30; break;
+    case 30: 
+      var $114=$i;
+      var $115=(($114)|0) > 0;
+      if ($115) { __label__ = 31; break; } else { __label__ = 36; break; }
+    case 31: 
+      __label__ = 32; break;
+    case 32: 
+      var $118=$scan;
+      var $119=(($118+4)|0);
+      $scan=$119;
+      var $120=HEAP32[(($118)>>2)];
+      $s=$120;
+      var $121=$120 & -134217728;
+      var $122=(($121)|0)!=268435456;
+      if ($122) { __label__ = 33; break; } else { __label__ = 34; break; }
+    case 33: 
+      __label__ = 32; break;
+    case 34: 
+      var $125=$s;
+      var $126=$125 & 134217727;
+      var $127=(($126) & 255);
+      var $128=$cp;
+      var $129=(($128+1)|0);
+      $cp=$129;
+      HEAP8[($128)]=$127;
+      __label__ = 35; break;
+    case 35: 
+      var $131=$i;
+      var $132=((($131)-(1))|0);
+      $i=$132;
+      __label__ = 30; break;
+    case 36: 
+      var $134=$cp;
+      var $135=(($134+1)|0);
+      $cp=$135;
+      HEAP8[($134)]=0;
+      __label__ = 37; break;
+    case 37: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_findmust["X"]=1;
+
+function _enlarge($p, $size) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $sp;
+      $1=$p;
+      $2=$size;
+      var $3=$1;
+      var $4=(($3+16)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=$2;
+      var $7=(($5)|0) >= (($6)|0);
+      if ($7) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 7; break;
+    case 4: 
+      var $10=$1;
+      var $11=(($10+12)|0);
+      var $12=HEAP32[(($11)>>2)];
+      var $13=$12;
+      var $14=$2;
+      var $15=((($14<<2))|0);
+      var $16=_realloc($13, $15);
+      var $17=$16;
+      $sp=$17;
+      var $18=$sp;
+      var $19=(($18)|0)==0;
+      if ($19) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $21=$1;
+      var $22=_seterr($21, 12);
+      __label__ = 7; break;
+    case 6: 
+      var $24=$sp;
+      var $25=$1;
+      var $26=(($25+12)|0);
+      HEAP32[(($26)>>2)]=$24;
+      var $27=$2;
+      var $28=$1;
+      var $29=(($28+16)|0);
+      HEAP32[(($29)>>2)]=$27;
+      __label__ = 7; break;
+    case 7: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _p_simp_re($p, $starordinary) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $c;
+      var $count;
+      var $count2;
+      var $pos;
+      var $i;
+      var $subno;
+      $2=$p;
+      $3=$starordinary;
+      var $4=$2;
+      var $5=(($4+20)|0);
+      var $6=HEAP32[(($5)>>2)];
+      $pos=$6;
+      var $7=$2;
+      var $8=(($7)|0);
+      var $9=HEAP32[(($8)>>2)];
+      var $10=(($9+1)|0);
+      HEAP32[(($8)>>2)]=$10;
+      var $11=HEAP8[($9)];
+      var $12=(($11 << 24) >> 24);
+      $c=$12;
+      var $13=$c;
+      var $14=(($13)|0)==92;
+      if ($14) { __label__ = 3; break; } else { __label__ = 6; break; }
+    case 3: 
+      var $16=$2;
+      var $17=(($16)|0);
+      var $18=HEAPU32[(($17)>>2)];
+      var $19=$2;
+      var $20=(($19+4)|0);
+      var $21=HEAPU32[(($20)>>2)];
+      var $22=(($18)>>>0) < (($21)>>>0);
+      if ($22) { var $28 = 1;__label__ = 5; break; } else { __label__ = 4; break; }
+    case 4: 
+      var $24=$2;
+      var $25=_seterr($24, 5);
+      var $26=(($25)|0)!=0;
+      var $28 = $26;__label__ = 5; break;
+    case 5: 
+      var $28;
+      var $29=(($28)&1);
+      var $30=$2;
+      var $31=(($30)|0);
+      var $32=HEAPU32[(($31)>>2)];
+      var $33=(($32+1)|0);
+      HEAP32[(($31)>>2)]=$33;
+      var $34=HEAP8[($32)];
+      var $35=(($34 << 24) >> 24);
+      var $36=256 | $35;
+      $c=$36;
+      __label__ = 6; break;
+    case 6: 
+      var $38=$c;
+      if ((($38)|0) == 46) {
+        __label__ = 7; break;
+      }
+      else if ((($38)|0) == 91) {
+        __label__ = 11; break;
+      }
+      else if ((($38)|0) == 379) {
+        __label__ = 12; break;
+      }
+      else if ((($38)|0) == 296) {
+        __label__ = 13; break;
+      }
+      else if ((($38)|0) == 297 || (($38)|0) == 381) {
+        __label__ = 31; break;
+      }
+      else if ((($38)|0) == 305 || (($38)|0) == 306 || (($38)|0) == 307 || (($38)|0) == 308 || (($38)|0) == 309 || (($38)|0) == 310 || (($38)|0) == 311 || (($38)|0) == 312 || (($38)|0) == 313) {
+        __label__ = 32; break;
+      }
+      else if ((($38)|0) == 42) {
+        __label__ = 36; break;
+      }
+      else {
+      __label__ = 39; break;
+      }
+      
+    case 7: 
+      var $40=$2;
+      var $41=(($40+28)|0);
+      var $42=HEAP32[(($41)>>2)];
+      var $43=(($42+24)|0);
+      var $44=HEAP32[(($43)>>2)];
+      var $45=$44 & 8;
+      var $46=(($45)|0)!=0;
+      if ($46) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $48=$2;
+      _nonnewline($48);
+      __label__ = 10; break;
+    case 9: 
+      var $50=$2;
+      _doemit($50, 671088640, 0);
+      __label__ = 10; break;
+    case 10: 
+      __label__ = 40; break;
+    case 11: 
+      var $53=$2;
+      _p_bracket($53);
+      __label__ = 40; break;
+    case 12: 
+      var $55=$2;
+      var $56=_seterr($55, 13);
+      __label__ = 40; break;
+    case 13: 
+      var $58=$2;
+      var $59=(($58+28)|0);
+      var $60=HEAP32[(($59)>>2)];
+      var $61=(($60+68)|0);
+      var $62=HEAP32[(($61)>>2)];
+      var $63=((($62)+(1))|0);
+      HEAP32[(($61)>>2)]=$63;
+      var $64=$2;
+      var $65=(($64+28)|0);
+      var $66=HEAP32[(($65)>>2)];
+      var $67=(($66+68)|0);
+      var $68=HEAP32[(($67)>>2)];
+      $subno=$68;
+      var $69=$subno;
+      var $70=(($69)|0) < 10;
+      if ($70) { __label__ = 14; break; } else { __label__ = 15; break; }
+    case 14: 
+      var $72=$2;
+      var $73=(($72+20)|0);
+      var $74=HEAP32[(($73)>>2)];
+      var $75=$subno;
+      var $76=$2;
+      var $77=(($76+32)|0);
+      var $78=(($77+($75<<2))|0);
+      HEAP32[(($78)>>2)]=$74;
+      __label__ = 15; break;
+    case 15: 
+      var $80=$2;
+      var $81=$subno;
+      _doemit($80, 1744830464, $81);
+      var $82=$2;
+      var $83=(($82)|0);
+      var $84=HEAPU32[(($83)>>2)];
+      var $85=$2;
+      var $86=(($85+4)|0);
+      var $87=HEAPU32[(($86)>>2)];
+      var $88=(($84)>>>0) < (($87)>>>0);
+      if ($88) { __label__ = 16; break; } else { __label__ = 21; break; }
+    case 16: 
+      var $90=$2;
+      var $91=(($90)|0);
+      var $92=HEAPU32[(($91)>>2)];
+      var $93=$2;
+      var $94=(($93+4)|0);
+      var $95=HEAPU32[(($94)>>2)];
+      var $96=(($92)>>>0) < (($95)>>>0);
+      if ($96) { __label__ = 17; break; } else { __label__ = 20; break; }
+    case 17: 
+      var $98=$2;
+      var $99=(($98)|0);
+      var $100=HEAP32[(($99)>>2)];
+      var $101=(($100+1)|0);
+      var $102=$2;
+      var $103=(($102+4)|0);
+      var $104=HEAPU32[(($103)>>2)];
+      var $105=(($101)>>>0) < (($104)>>>0);
+      if ($105) { __label__ = 18; break; } else { __label__ = 20; break; }
+    case 18: 
+      var $107=$2;
+      var $108=(($107)|0);
+      var $109=HEAP32[(($108)>>2)];
+      var $110=HEAP8[($109)];
+      var $111=(($110 << 24) >> 24);
+      var $112=(($111)|0)==92;
+      if ($112) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 19: 
+      var $114=$2;
+      var $115=(($114)|0);
+      var $116=HEAP32[(($115)>>2)];
+      var $117=(($116+1)|0);
+      var $118=HEAP8[($117)];
+      var $119=(($118 << 24) >> 24);
+      var $120=(($119)|0)==41;
+      if ($120) { __label__ = 21; break; } else { __label__ = 20; break; }
+    case 20: 
+      var $122=$2;
+      _p_bre($122, 92, 41);
+      __label__ = 21; break;
+    case 21: 
+      var $124=$subno;
+      var $125=(($124)|0) < 10;
+      if ($125) { __label__ = 22; break; } else { __label__ = 23; break; }
+    case 22: 
+      var $127=$2;
+      var $128=(($127+20)|0);
+      var $129=HEAP32[(($128)>>2)];
+      var $130=$subno;
+      var $131=$2;
+      var $132=(($131+72)|0);
+      var $133=(($132+($130<<2))|0);
+      HEAP32[(($133)>>2)]=$129;
+      __label__ = 23; break;
+    case 23: 
+      var $135=$2;
+      var $136=$subno;
+      _doemit($135, 1879048192, $136);
+      var $137=$2;
+      var $138=(($137)|0);
+      var $139=HEAPU32[(($138)>>2)];
+      var $140=$2;
+      var $141=(($140+4)|0);
+      var $142=HEAPU32[(($141)>>2)];
+      var $143=(($139)>>>0) < (($142)>>>0);
+      if ($143) { __label__ = 24; break; } else { __label__ = 28; break; }
+    case 24: 
+      var $145=$2;
+      var $146=(($145)|0);
+      var $147=HEAP32[(($146)>>2)];
+      var $148=(($147+1)|0);
+      var $149=$2;
+      var $150=(($149+4)|0);
+      var $151=HEAPU32[(($150)>>2)];
+      var $152=(($148)>>>0) < (($151)>>>0);
+      if ($152) { __label__ = 25; break; } else { __label__ = 28; break; }
+    case 25: 
+      var $154=$2;
+      var $155=(($154)|0);
+      var $156=HEAP32[(($155)>>2)];
+      var $157=HEAP8[($156)];
+      var $158=(($157 << 24) >> 24);
+      var $159=(($158)|0)==92;
+      if ($159) { __label__ = 26; break; } else { __label__ = 28; break; }
+    case 26: 
+      var $161=$2;
+      var $162=(($161)|0);
+      var $163=HEAP32[(($162)>>2)];
+      var $164=(($163+1)|0);
+      var $165=HEAP8[($164)];
+      var $166=(($165 << 24) >> 24);
+      var $167=(($166)|0)==41;
+      if ($167) { __label__ = 27; break; } else { __label__ = 28; break; }
+    case 27: 
+      var $169=$2;
+      var $170=(($169)|0);
+      var $171=HEAP32[(($170)>>2)];
+      var $172=(($171+2)|0);
+      HEAP32[(($170)>>2)]=$172;
+      if (1) { var $179 = 1;__label__ = 30; break; } else { __label__ = 29; break; }
+    case 28: 
+      if (0) { var $179 = 1;__label__ = 30; break; } else { __label__ = 29; break; }
+    case 29: 
+      var $175=$2;
+      var $176=_seterr($175, 8);
+      var $177=(($176)|0)!=0;
+      var $179 = $177;__label__ = 30; break;
+    case 30: 
+      var $179;
+      var $180=(($179)&1);
+      __label__ = 40; break;
+    case 31: 
+      var $182=$2;
+      var $183=_seterr($182, 8);
+      __label__ = 40; break;
+    case 32: 
+      var $185=$c;
+      var $186=$185 & -257;
+      var $187=((($186)-(48))|0);
+      $i=$187;
+      var $188=$i;
+      var $189=$2;
+      var $190=(($189+72)|0);
+      var $191=(($190+($188<<2))|0);
+      var $192=HEAP32[(($191)>>2)];
+      var $193=(($192)|0)!=0;
+      if ($193) { __label__ = 33; break; } else { __label__ = 34; break; }
+    case 33: 
+      var $195=$2;
+      var $196=$i;
+      _doemit($195, 939524096, $196);
+      var $197=$2;
+      var $198=$i;
+      var $199=$2;
+      var $200=(($199+32)|0);
+      var $201=(($200+($198<<2))|0);
+      var $202=HEAP32[(($201)>>2)];
+      var $203=((($202)+(1))|0);
+      var $204=$i;
+      var $205=$2;
+      var $206=(($205+72)|0);
+      var $207=(($206+($204<<2))|0);
+      var $208=HEAP32[(($207)>>2)];
+      var $209=_dupl($197, $203, $208);
+      var $210=$2;
+      var $211=$i;
+      _doemit($210, 1073741824, $211);
+      __label__ = 35; break;
+    case 34: 
+      var $213=$2;
+      var $214=_seterr($213, 6);
+      __label__ = 35; break;
+    case 35: 
+      var $216=$2;
+      var $217=(($216+28)|0);
+      var $218=HEAP32[(($217)>>2)];
+      var $219=(($218+72)|0);
+      HEAP32[(($219)>>2)]=1;
+      __label__ = 40; break;
+    case 36: 
+      var $221=$3;
+      var $222=(($221)|0)!=0;
+      if ($222) { var $228 = 1;__label__ = 38; break; } else { __label__ = 37; break; }
+    case 37: 
+      var $224=$2;
+      var $225=_seterr($224, 13);
+      var $226=(($225)|0)!=0;
+      var $228 = $226;__label__ = 38; break;
+    case 38: 
+      var $228;
+      var $229=(($228)&1);
+      __label__ = 39; break;
+    case 39: 
+      var $231=$2;
+      var $232=$c;
+      var $233=(($232) & 255);
+      var $234=(($233 << 24) >> 24);
+      _ordinary($231, $234);
+      __label__ = 40; break;
+    case 40: 
+      var $236=$2;
+      var $237=(($236)|0);
+      var $238=HEAPU32[(($237)>>2)];
+      var $239=$2;
+      var $240=(($239+4)|0);
+      var $241=HEAPU32[(($240)>>2)];
+      var $242=(($238)>>>0) < (($241)>>>0);
+      if ($242) { __label__ = 41; break; } else { __label__ = 43; break; }
+    case 41: 
+      var $244=$2;
+      var $245=(($244)|0);
+      var $246=HEAP32[(($245)>>2)];
+      var $247=HEAP8[($246)];
+      var $248=(($247 << 24) >> 24);
+      var $249=(($248)|0)==42;
+      if ($249) { __label__ = 42; break; } else { __label__ = 43; break; }
+    case 42: 
+      var $251=$2;
+      var $252=(($251)|0);
+      var $253=HEAP32[(($252)>>2)];
+      var $254=(($253+1)|0);
+      HEAP32[(($252)>>2)]=$254;
+      if (1) { __label__ = 44; break; } else { __label__ = 45; break; }
+    case 43: 
+      if (0) { __label__ = 44; break; } else { __label__ = 45; break; }
+    case 44: 
+      var $257=$2;
+      var $258=$2;
+      var $259=(($258+20)|0);
+      var $260=HEAP32[(($259)>>2)];
+      var $261=$pos;
+      var $262=((($260)-($261))|0);
+      var $263=((($262)+(1))|0);
+      var $264=$pos;
+      _doinsert($257, 1207959552, $263, $264);
+      var $265=$2;
+      var $266=$2;
+      var $267=(($266+20)|0);
+      var $268=HEAP32[(($267)>>2)];
+      var $269=$pos;
+      var $270=((($268)-($269))|0);
+      _doemit($265, 1342177280, $270);
+      var $271=$2;
+      var $272=$2;
+      var $273=(($272+20)|0);
+      var $274=HEAP32[(($273)>>2)];
+      var $275=$pos;
+      var $276=((($274)-($275))|0);
+      var $277=((($276)+(1))|0);
+      var $278=$pos;
+      _doinsert($271, 1476395008, $277, $278);
+      var $279=$2;
+      var $280=$2;
+      var $281=(($280+20)|0);
+      var $282=HEAP32[(($281)>>2)];
+      var $283=$pos;
+      var $284=((($282)-($283))|0);
+      _doemit($279, 1610612736, $284);
+      __label__ = 86; break;
+    case 45: 
+      var $286=$2;
+      var $287=(($286)|0);
+      var $288=HEAPU32[(($287)>>2)];
+      var $289=$2;
+      var $290=(($289+4)|0);
+      var $291=HEAPU32[(($290)>>2)];
+      var $292=(($288)>>>0) < (($291)>>>0);
+      if ($292) { __label__ = 46; break; } else { __label__ = 50; break; }
+    case 46: 
+      var $294=$2;
+      var $295=(($294)|0);
+      var $296=HEAP32[(($295)>>2)];
+      var $297=(($296+1)|0);
+      var $298=$2;
+      var $299=(($298+4)|0);
+      var $300=HEAPU32[(($299)>>2)];
+      var $301=(($297)>>>0) < (($300)>>>0);
+      if ($301) { __label__ = 47; break; } else { __label__ = 50; break; }
+    case 47: 
+      var $303=$2;
+      var $304=(($303)|0);
+      var $305=HEAP32[(($304)>>2)];
+      var $306=HEAP8[($305)];
+      var $307=(($306 << 24) >> 24);
+      var $308=(($307)|0)==92;
+      if ($308) { __label__ = 48; break; } else { __label__ = 50; break; }
+    case 48: 
+      var $310=$2;
+      var $311=(($310)|0);
+      var $312=HEAP32[(($311)>>2)];
+      var $313=(($312+1)|0);
+      var $314=HEAP8[($313)];
+      var $315=(($314 << 24) >> 24);
+      var $316=(($315)|0)==123;
+      if ($316) { __label__ = 49; break; } else { __label__ = 50; break; }
+    case 49: 
+      var $318=$2;
+      var $319=(($318)|0);
+      var $320=HEAP32[(($319)>>2)];
+      var $321=(($320+2)|0);
+      HEAP32[(($319)>>2)]=$321;
+      if (1) { __label__ = 51; break; } else { __label__ = 82; break; }
+    case 50: 
+      if (0) { __label__ = 51; break; } else { __label__ = 82; break; }
+    case 51: 
+      var $324=$2;
+      var $325=_p_count($324);
+      $count=$325;
+      var $326=$2;
+      var $327=(($326)|0);
+      var $328=HEAPU32[(($327)>>2)];
+      var $329=$2;
+      var $330=(($329+4)|0);
+      var $331=HEAPU32[(($330)>>2)];
+      var $332=(($328)>>>0) < (($331)>>>0);
+      if ($332) { __label__ = 52; break; } else { __label__ = 54; break; }
+    case 52: 
+      var $334=$2;
+      var $335=(($334)|0);
+      var $336=HEAP32[(($335)>>2)];
+      var $337=HEAP8[($336)];
+      var $338=(($337 << 24) >> 24);
+      var $339=(($338)|0)==44;
+      if ($339) { __label__ = 53; break; } else { __label__ = 54; break; }
+    case 53: 
+      var $341=$2;
+      var $342=(($341)|0);
+      var $343=HEAP32[(($342)>>2)];
+      var $344=(($343+1)|0);
+      HEAP32[(($342)>>2)]=$344;
+      if (1) { __label__ = 55; break; } else { __label__ = 62; break; }
+    case 54: 
+      if (0) { __label__ = 55; break; } else { __label__ = 62; break; }
+    case 55: 
+      var $347=$2;
+      var $348=(($347)|0);
+      var $349=HEAPU32[(($348)>>2)];
+      var $350=$2;
+      var $351=(($350+4)|0);
+      var $352=HEAPU32[(($351)>>2)];
+      var $353=(($349)>>>0) < (($352)>>>0);
+      if ($353) { __label__ = 56; break; } else { __label__ = 60; break; }
+    case 56: 
+      var $355=$2;
+      var $356=(($355)|0);
+      var $357=HEAP32[(($356)>>2)];
+      var $358=HEAPU8[($357)];
+      var $359=(($358)&255);
+      var $360=_isdigit($359);
+      var $361=(($360)|0)!=0;
+      if ($361) { __label__ = 57; break; } else { __label__ = 60; break; }
+    case 57: 
+      var $363=$2;
+      var $364=_p_count($363);
+      $count2=$364;
+      var $365=$count;
+      var $366=$count2;
+      var $367=(($365)|0) <= (($366)|0);
+      if ($367) { var $373 = 1;__label__ = 59; break; } else { __label__ = 58; break; }
+    case 58: 
+      var $369=$2;
+      var $370=_seterr($369, 10);
+      var $371=(($370)|0)!=0;
+      var $373 = $371;__label__ = 59; break;
+    case 59: 
+      var $373;
+      var $374=(($373)&1);
+      __label__ = 61; break;
+    case 60: 
+      $count2=256;
+      __label__ = 61; break;
+    case 61: 
+      __label__ = 63; break;
+    case 62: 
+      var $378=$count;
+      $count2=$378;
+      __label__ = 63; break;
+    case 63: 
+      var $380=$2;
+      var $381=$pos;
+      var $382=$count;
+      var $383=$count2;
+      _repeat($380, $381, $382, $383);
+      var $384=$2;
+      var $385=(($384)|0);
+      var $386=HEAPU32[(($385)>>2)];
+      var $387=$2;
+      var $388=(($387+4)|0);
+      var $389=HEAPU32[(($388)>>2)];
+      var $390=(($386)>>>0) < (($389)>>>0);
+      if ($390) { __label__ = 64; break; } else { __label__ = 68; break; }
+    case 64: 
+      var $392=$2;
+      var $393=(($392)|0);
+      var $394=HEAP32[(($393)>>2)];
+      var $395=(($394+1)|0);
+      var $396=$2;
+      var $397=(($396+4)|0);
+      var $398=HEAPU32[(($397)>>2)];
+      var $399=(($395)>>>0) < (($398)>>>0);
+      if ($399) { __label__ = 65; break; } else { __label__ = 68; break; }
+    case 65: 
+      var $401=$2;
+      var $402=(($401)|0);
+      var $403=HEAP32[(($402)>>2)];
+      var $404=HEAP8[($403)];
+      var $405=(($404 << 24) >> 24);
+      var $406=(($405)|0)==92;
+      if ($406) { __label__ = 66; break; } else { __label__ = 68; break; }
+    case 66: 
+      var $408=$2;
+      var $409=(($408)|0);
+      var $410=HEAP32[(($409)>>2)];
+      var $411=(($410+1)|0);
+      var $412=HEAP8[($411)];
+      var $413=(($412 << 24) >> 24);
+      var $414=(($413)|0)==125;
+      if ($414) { __label__ = 67; break; } else { __label__ = 68; break; }
+    case 67: 
+      var $416=$2;
+      var $417=(($416)|0);
+      var $418=HEAP32[(($417)>>2)];
+      var $419=(($418+2)|0);
+      HEAP32[(($417)>>2)]=$419;
+      if (1) { __label__ = 81; break; } else { __label__ = 69; break; }
+    case 68: 
+      if (0) { __label__ = 81; break; } else { __label__ = 69; break; }
+    case 69: 
+      __label__ = 70; break;
+    case 70: 
+      var $423=$2;
+      var $424=(($423)|0);
+      var $425=HEAPU32[(($424)>>2)];
+      var $426=$2;
+      var $427=(($426+4)|0);
+      var $428=HEAPU32[(($427)>>2)];
+      var $429=(($425)>>>0) < (($428)>>>0);
+      if ($429) { __label__ = 71; break; } else { var $466 = 0;__label__ = 76; break; }
+    case 71: 
+      var $431=$2;
+      var $432=(($431)|0);
+      var $433=HEAPU32[(($432)>>2)];
+      var $434=$2;
+      var $435=(($434+4)|0);
+      var $436=HEAPU32[(($435)>>2)];
+      var $437=(($433)>>>0) < (($436)>>>0);
+      if ($437) { __label__ = 72; break; } else { var $463 = 0;__label__ = 75; break; }
+    case 72: 
+      var $439=$2;
+      var $440=(($439)|0);
+      var $441=HEAP32[(($440)>>2)];
+      var $442=(($441+1)|0);
+      var $443=$2;
+      var $444=(($443+4)|0);
+      var $445=HEAPU32[(($444)>>2)];
+      var $446=(($442)>>>0) < (($445)>>>0);
+      if ($446) { __label__ = 73; break; } else { var $463 = 0;__label__ = 75; break; }
+    case 73: 
+      var $448=$2;
+      var $449=(($448)|0);
+      var $450=HEAP32[(($449)>>2)];
+      var $451=HEAP8[($450)];
+      var $452=(($451 << 24) >> 24);
+      var $453=(($452)|0)==92;
+      if ($453) { __label__ = 74; break; } else { var $463 = 0;__label__ = 75; break; }
+    case 74: 
+      var $455=$2;
+      var $456=(($455)|0);
+      var $457=HEAP32[(($456)>>2)];
+      var $458=(($457+1)|0);
+      var $459=HEAP8[($458)];
+      var $460=(($459 << 24) >> 24);
+      var $461=(($460)|0)==125;
+      var $463 = $461;__label__ = 75; break;
+    case 75: 
+      var $463;
+      var $464=$463 ^ 1;
+      var $466 = $464;__label__ = 76; break;
+    case 76: 
+      var $466;
+      if ($466) { __label__ = 77; break; } else { __label__ = 78; break; }
+    case 77: 
+      var $468=$2;
+      var $469=(($468)|0);
+      var $470=HEAP32[(($469)>>2)];
+      var $471=(($470+1)|0);
+      HEAP32[(($469)>>2)]=$471;
+      __label__ = 70; break;
+    case 78: 
+      var $473=$2;
+      var $474=(($473)|0);
+      var $475=HEAPU32[(($474)>>2)];
+      var $476=$2;
+      var $477=(($476+4)|0);
+      var $478=HEAPU32[(($477)>>2)];
+      var $479=(($475)>>>0) < (($478)>>>0);
+      if ($479) { var $485 = 1;__label__ = 80; break; } else { __label__ = 79; break; }
+    case 79: 
+      var $481=$2;
+      var $482=_seterr($481, 9);
+      var $483=(($482)|0)!=0;
+      var $485 = $483;__label__ = 80; break;
+    case 80: 
+      var $485;
+      var $486=(($485)&1);
+      var $487=$2;
+      var $488=_seterr($487, 10);
+      __label__ = 81; break;
+    case 81: 
+      __label__ = 85; break;
+    case 82: 
+      var $491=$c;
+      var $492=(($491)|0)==36;
+      if ($492) { __label__ = 83; break; } else { __label__ = 84; break; }
+    case 83: 
+      $1=1;
+      __label__ = 87; break;
+    case 84: 
+      __label__ = 85; break;
+    case 85: 
+      __label__ = 86; break;
+    case 86: 
+      $1=0;
+      __label__ = 87; break;
+    case 87: 
+      var $498=$1;
+      ;
+      return $498;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_simp_re["X"]=1;
+
+function _nonnewline($p) {
+  var __stackBase__  = STACKTOP; STACKTOP += 4; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
+  var __label__;
+
+  var $1;
+  var $oldnext;
+  var $oldend;
+  var $bracket=__stackBase__;
+  $1=$p;
+  var $2=$1;
+  var $3=(($2)|0);
+  var $4=HEAP32[(($3)>>2)];
+  $oldnext=$4;
+  var $5=$1;
+  var $6=(($5+4)|0);
+  var $7=HEAP32[(($6)>>2)];
+  $oldend=$7;
+  var $8=(($bracket)|0);
+  var $9=$1;
+  var $10=(($9)|0);
+  HEAP32[(($10)>>2)]=$8;
+  var $11=(($bracket)|0);
+  var $12=(($11+3)|0);
+  var $13=$1;
+  var $14=(($13+4)|0);
+  HEAP32[(($14)>>2)]=$12;
+  var $15=(($bracket)|0);
+  HEAP8[($15)]=94;
+  var $16=(($bracket+1)|0);
+  HEAP8[($16)]=10;
+  var $17=(($bracket+2)|0);
+  HEAP8[($17)]=93;
+  var $18=(($bracket+3)|0);
+  HEAP8[($18)]=0;
+  var $19=$1;
+  _p_bracket($19);
+  var $20=$oldnext;
+  var $21=$1;
+  var $22=(($21)|0);
+  HEAP32[(($22)>>2)]=$20;
+  var $23=$oldend;
+  var $24=$1;
+  var $25=(($24+4)|0);
+  HEAP32[(($25)>>2)]=$23;
+  STACKTOP = __stackBase__;
+  return;
+}
+
+
+function _p_bracket($p) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $cs;
+      var $invert;
+      var $i;
+      var $ci;
+      var $i1;
+      $1=$p;
+      $invert=0;
+      var $2=$1;
+      var $3=(($2)|0);
+      var $4=HEAP32[(($3)>>2)];
+      var $5=(($4+5)|0);
+      var $6=$1;
+      var $7=(($6+4)|0);
+      var $8=HEAPU32[(($7)>>2)];
+      var $9=(($5)>>>0) < (($8)>>>0);
+      if ($9) { __label__ = 3; break; } else { __label__ = 5; break; }
+    case 3: 
+      var $11=$1;
+      var $12=(($11)|0);
+      var $13=HEAP32[(($12)>>2)];
+      var $14=_strncmp($13, ((STRING_TABLE.__str356)|0), 6);
+      var $15=(($14)|0)==0;
+      if ($15) { __label__ = 4; break; } else { __label__ = 5; break; }
+    case 4: 
+      var $17=$1;
+      _doemit($17, -1744830464, 0);
+      var $18=$1;
+      var $19=(($18)|0);
+      var $20=HEAP32[(($19)>>2)];
+      var $21=(($20+6)|0);
+      HEAP32[(($19)>>2)]=$21;
+      __label__ = 75; break;
+    case 5: 
+      var $23=$1;
+      var $24=(($23)|0);
+      var $25=HEAP32[(($24)>>2)];
+      var $26=(($25+5)|0);
+      var $27=$1;
+      var $28=(($27+4)|0);
+      var $29=HEAPU32[(($28)>>2)];
+      var $30=(($26)>>>0) < (($29)>>>0);
+      if ($30) { __label__ = 6; break; } else { __label__ = 8; break; }
+    case 6: 
+      var $32=$1;
+      var $33=(($32)|0);
+      var $34=HEAP32[(($33)>>2)];
+      var $35=_strncmp($34, ((STRING_TABLE.__str1357)|0), 6);
+      var $36=(($35)|0)==0;
+      if ($36) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $38=$1;
+      _doemit($38, -1610612736, 0);
+      var $39=$1;
+      var $40=(($39)|0);
+      var $41=HEAP32[(($40)>>2)];
+      var $42=(($41+6)|0);
+      HEAP32[(($40)>>2)]=$42;
+      __label__ = 75; break;
+    case 8: 
+      var $44=$1;
+      var $45=_allocset($44);
+      $cs=$45;
+      var $46=(($45)|0)==0;
+      if ($46) { __label__ = 9; break; } else { __label__ = 10; break; }
+    case 9: 
+      __label__ = 75; break;
+    case 10: 
+      var $49=$1;
+      var $50=(($49)|0);
+      var $51=HEAPU32[(($50)>>2)];
+      var $52=$1;
+      var $53=(($52+4)|0);
+      var $54=HEAPU32[(($53)>>2)];
+      var $55=(($51)>>>0) < (($54)>>>0);
+      if ($55) { __label__ = 11; break; } else { __label__ = 13; break; }
+    case 11: 
+      var $57=$1;
+      var $58=(($57)|0);
+      var $59=HEAP32[(($58)>>2)];
+      var $60=HEAP8[($59)];
+      var $61=(($60 << 24) >> 24);
+      var $62=(($61)|0)==94;
+      if ($62) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      var $64=$1;
+      var $65=(($64)|0);
+      var $66=HEAP32[(($65)>>2)];
+      var $67=(($66+1)|0);
+      HEAP32[(($65)>>2)]=$67;
+      if (1) { __label__ = 14; break; } else { __label__ = 15; break; }
+    case 13: 
+      if (0) { __label__ = 14; break; } else { __label__ = 15; break; }
+    case 14: 
+      var $70=$invert;
+      var $71=((($70)+(1))|0);
+      $invert=$71;
+      __label__ = 15; break;
+    case 15: 
+      var $73=$1;
+      var $74=(($73)|0);
+      var $75=HEAPU32[(($74)>>2)];
+      var $76=$1;
+      var $77=(($76+4)|0);
+      var $78=HEAPU32[(($77)>>2)];
+      var $79=(($75)>>>0) < (($78)>>>0);
+      if ($79) { __label__ = 16; break; } else { __label__ = 18; break; }
+    case 16: 
+      var $81=$1;
+      var $82=(($81)|0);
+      var $83=HEAP32[(($82)>>2)];
+      var $84=HEAP8[($83)];
+      var $85=(($84 << 24) >> 24);
+      var $86=(($85)|0)==93;
+      if ($86) { __label__ = 17; break; } else { __label__ = 18; break; }
+    case 17: 
+      var $88=$1;
+      var $89=(($88)|0);
+      var $90=HEAP32[(($89)>>2)];
+      var $91=(($90+1)|0);
+      HEAP32[(($89)>>2)]=$91;
+      if (1) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 18: 
+      if (0) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 19: 
+      var $94=$cs;
+      var $95=(($94+4)|0);
+      var $96=HEAPU8[($95)];
+      var $97=(($96)&255);
+      var $98=$cs;
+      var $99=(($98)|0);
+      var $100=HEAP32[(($99)>>2)];
+      var $101=(($100+93)|0);
+      var $102=HEAPU8[($101)];
+      var $103=(($102)&255);
+      var $104=$103 | $97;
+      var $105=(($104) & 255);
+      HEAP8[($101)]=$105;
+      var $106=$cs;
+      var $107=(($106+5)|0);
+      var $108=HEAPU8[($107)];
+      var $109=(($108)&255);
+      var $110=((($109)+(93))|0);
+      var $111=(($110) & 255);
+      HEAP8[($107)]=$111;
+      __label__ = 26; break;
+    case 20: 
+      var $113=$1;
+      var $114=(($113)|0);
+      var $115=HEAPU32[(($114)>>2)];
+      var $116=$1;
+      var $117=(($116+4)|0);
+      var $118=HEAPU32[(($117)>>2)];
+      var $119=(($115)>>>0) < (($118)>>>0);
+      if ($119) { __label__ = 21; break; } else { __label__ = 23; break; }
+    case 21: 
+      var $121=$1;
+      var $122=(($121)|0);
+      var $123=HEAP32[(($122)>>2)];
+      var $124=HEAP8[($123)];
+      var $125=(($124 << 24) >> 24);
+      var $126=(($125)|0)==45;
+      if ($126) { __label__ = 22; break; } else { __label__ = 23; break; }
+    case 22: 
+      var $128=$1;
+      var $129=(($128)|0);
+      var $130=HEAP32[(($129)>>2)];
+      var $131=(($130+1)|0);
+      HEAP32[(($129)>>2)]=$131;
+      if (1) { __label__ = 24; break; } else { __label__ = 25; break; }
+    case 23: 
+      if (0) { __label__ = 24; break; } else { __label__ = 25; break; }
+    case 24: 
+      var $134=$cs;
+      var $135=(($134+4)|0);
+      var $136=HEAPU8[($135)];
+      var $137=(($136)&255);
+      var $138=$cs;
+      var $139=(($138)|0);
+      var $140=HEAP32[(($139)>>2)];
+      var $141=(($140+45)|0);
+      var $142=HEAPU8[($141)];
+      var $143=(($142)&255);
+      var $144=$143 | $137;
+      var $145=(($144) & 255);
+      HEAP8[($141)]=$145;
+      var $146=$cs;
+      var $147=(($146+5)|0);
+      var $148=HEAPU8[($147)];
+      var $149=(($148)&255);
+      var $150=((($149)+(45))|0);
+      var $151=(($150) & 255);
+      HEAP8[($147)]=$151;
+      __label__ = 25; break;
+    case 25: 
+      __label__ = 26; break;
+    case 26: 
+      __label__ = 27; break;
+    case 27: 
+      var $155=$1;
+      var $156=(($155)|0);
+      var $157=HEAPU32[(($156)>>2)];
+      var $158=$1;
+      var $159=(($158+4)|0);
+      var $160=HEAPU32[(($159)>>2)];
+      var $161=(($157)>>>0) < (($160)>>>0);
+      if ($161) { __label__ = 28; break; } else { var $205 = 0;__label__ = 34; break; }
+    case 28: 
+      var $163=$1;
+      var $164=(($163)|0);
+      var $165=HEAP32[(($164)>>2)];
+      var $166=HEAP8[($165)];
+      var $167=(($166 << 24) >> 24);
+      var $168=(($167)|0)!=93;
+      if ($168) { __label__ = 29; break; } else { var $205 = 0;__label__ = 34; break; }
+    case 29: 
+      var $170=$1;
+      var $171=(($170)|0);
+      var $172=HEAPU32[(($171)>>2)];
+      var $173=$1;
+      var $174=(($173+4)|0);
+      var $175=HEAPU32[(($174)>>2)];
+      var $176=(($172)>>>0) < (($175)>>>0);
+      if ($176) { __label__ = 30; break; } else { var $202 = 0;__label__ = 33; break; }
+    case 30: 
+      var $178=$1;
+      var $179=(($178)|0);
+      var $180=HEAP32[(($179)>>2)];
+      var $181=(($180+1)|0);
+      var $182=$1;
+      var $183=(($182+4)|0);
+      var $184=HEAPU32[(($183)>>2)];
+      var $185=(($181)>>>0) < (($184)>>>0);
+      if ($185) { __label__ = 31; break; } else { var $202 = 0;__label__ = 33; break; }
+    case 31: 
+      var $187=$1;
+      var $188=(($187)|0);
+      var $189=HEAP32[(($188)>>2)];
+      var $190=HEAP8[($189)];
+      var $191=(($190 << 24) >> 24);
+      var $192=(($191)|0)==45;
+      if ($192) { __label__ = 32; break; } else { var $202 = 0;__label__ = 33; break; }
+    case 32: 
+      var $194=$1;
+      var $195=(($194)|0);
+      var $196=HEAP32[(($195)>>2)];
+      var $197=(($196+1)|0);
+      var $198=HEAP8[($197)];
+      var $199=(($198 << 24) >> 24);
+      var $200=(($199)|0)==93;
+      var $202 = $200;__label__ = 33; break;
+    case 33: 
+      var $202;
+      var $203=$202 ^ 1;
+      var $205 = $203;__label__ = 34; break;
+    case 34: 
+      var $205;
+      if ($205) { __label__ = 35; break; } else { __label__ = 36; break; }
+    case 35: 
+      var $207=$1;
+      var $208=$cs;
+      _p_b_term($207, $208);
+      __label__ = 27; break;
+    case 36: 
+      var $210=$1;
+      var $211=(($210)|0);
+      var $212=HEAPU32[(($211)>>2)];
+      var $213=$1;
+      var $214=(($213+4)|0);
+      var $215=HEAPU32[(($214)>>2)];
+      var $216=(($212)>>>0) < (($215)>>>0);
+      if ($216) { __label__ = 37; break; } else { __label__ = 39; break; }
+    case 37: 
+      var $218=$1;
+      var $219=(($218)|0);
+      var $220=HEAP32[(($219)>>2)];
+      var $221=HEAP8[($220)];
+      var $222=(($221 << 24) >> 24);
+      var $223=(($222)|0)==45;
+      if ($223) { __label__ = 38; break; } else { __label__ = 39; break; }
+    case 38: 
+      var $225=$1;
+      var $226=(($225)|0);
+      var $227=HEAP32[(($226)>>2)];
+      var $228=(($227+1)|0);
+      HEAP32[(($226)>>2)]=$228;
+      if (1) { __label__ = 40; break; } else { __label__ = 41; break; }
+    case 39: 
+      if (0) { __label__ = 40; break; } else { __label__ = 41; break; }
+    case 40: 
+      var $231=$cs;
+      var $232=(($231+4)|0);
+      var $233=HEAPU8[($232)];
+      var $234=(($233)&255);
+      var $235=$cs;
+      var $236=(($235)|0);
+      var $237=HEAP32[(($236)>>2)];
+      var $238=(($237+45)|0);
+      var $239=HEAPU8[($238)];
+      var $240=(($239)&255);
+      var $241=$240 | $234;
+      var $242=(($241) & 255);
+      HEAP8[($238)]=$242;
+      var $243=$cs;
+      var $244=(($243+5)|0);
+      var $245=HEAPU8[($244)];
+      var $246=(($245)&255);
+      var $247=((($246)+(45))|0);
+      var $248=(($247) & 255);
+      HEAP8[($244)]=$248;
+      __label__ = 41; break;
+    case 41: 
+      var $250=$1;
+      var $251=(($250)|0);
+      var $252=HEAPU32[(($251)>>2)];
+      var $253=$1;
+      var $254=(($253+4)|0);
+      var $255=HEAPU32[(($254)>>2)];
+      var $256=(($252)>>>0) < (($255)>>>0);
+      if ($256) { __label__ = 42; break; } else { __label__ = 43; break; }
+    case 42: 
+      var $258=$1;
+      var $259=(($258)|0);
+      var $260=HEAP32[(($259)>>2)];
+      var $261=(($260+1)|0);
+      HEAP32[(($259)>>2)]=$261;
+      var $262=HEAP8[($260)];
+      var $263=(($262 << 24) >> 24);
+      var $264=(($263)|0)==93;
+      if ($264) { var $270 = 1;__label__ = 44; break; } else { __label__ = 43; break; }
+    case 43: 
+      var $266=$1;
+      var $267=_seterr($266, 7);
+      var $268=(($267)|0)!=0;
+      var $270 = $268;__label__ = 44; break;
+    case 44: 
+      var $270;
+      var $271=(($270)&1);
+      var $272=$1;
+      var $273=(($272+8)|0);
+      var $274=HEAP32[(($273)>>2)];
+      var $275=(($274)|0)!=0;
+      if ($275) { __label__ = 45; break; } else { __label__ = 46; break; }
+    case 45: 
+      var $277=$1;
+      var $278=$cs;
+      _freeset($277, $278);
+      __label__ = 75; break;
+    case 46: 
+      var $280=$1;
+      var $281=(($280+28)|0);
+      var $282=HEAP32[(($281)>>2)];
+      var $283=(($282+24)|0);
+      var $284=HEAP32[(($283)>>2)];
+      var $285=$284 & 2;
+      var $286=(($285)|0)!=0;
+      if ($286) { __label__ = 47; break; } else { __label__ = 59; break; }
+    case 47: 
+      var $288=$1;
+      var $289=(($288+28)|0);
+      var $290=HEAP32[(($289)>>2)];
+      var $291=(($290+8)|0);
+      var $292=HEAP32[(($291)>>2)];
+      var $293=((($292)-(1))|0);
+      $i=$293;
+      __label__ = 48; break;
+    case 48: 
+      var $295=$i;
+      var $296=(($295)|0) >= 0;
+      if ($296) { __label__ = 49; break; } else { __label__ = 56; break; }
+    case 49: 
+      var $298=$i;
+      var $299=(($298) & 255);
+      var $300=(($299)&255);
+      var $301=$cs;
+      var $302=(($301)|0);
+      var $303=HEAP32[(($302)>>2)];
+      var $304=(($303+$300)|0);
+      var $305=HEAPU8[($304)];
+      var $306=(($305)&255);
+      var $307=$cs;
+      var $308=(($307+4)|0);
+      var $309=HEAPU8[($308)];
+      var $310=(($309)&255);
+      var $311=$306 & $310;
+      var $312=(($311)|0)!=0;
+      if ($312) { __label__ = 50; break; } else { __label__ = 54; break; }
+    case 50: 
+      var $314=$i;
+      var $315=_isalpha($314);
+      var $316=(($315)|0)!=0;
+      if ($316) { __label__ = 51; break; } else { __label__ = 54; break; }
+    case 51: 
+      var $318=$i;
+      var $319=_othercase($318);
+      var $320=(($319 << 24) >> 24);
+      $ci=$320;
+      var $321=$ci;
+      var $322=$i;
+      var $323=(($321)|0)!=(($322)|0);
+      if ($323) { __label__ = 52; break; } else { __label__ = 53; break; }
+    case 52: 
+      var $325=$cs;
+      var $326=(($325+4)|0);
+      var $327=HEAPU8[($326)];
+      var $328=(($327)&255);
+      var $329=$ci;
+      var $330=(($329) & 255);
+      var $331=(($330)&255);
+      var $332=$cs;
+      var $333=(($332)|0);
+      var $334=HEAP32[(($333)>>2)];
+      var $335=(($334+$331)|0);
+      var $336=HEAPU8[($335)];
+      var $337=(($336)&255);
+      var $338=$337 | $328;
+      var $339=(($338) & 255);
+      HEAP8[($335)]=$339;
+      var $340=$ci;
+      var $341=$cs;
+      var $342=(($341+5)|0);
+      var $343=HEAPU8[($342)];
+      var $344=(($343)&255);
+      var $345=((($344)+($340))|0);
+      var $346=(($345) & 255);
+      HEAP8[($342)]=$346;
+      __label__ = 53; break;
+    case 53: 
+      __label__ = 54; break;
+    case 54: 
+      __label__ = 55; break;
+    case 55: 
+      var $350=$i;
+      var $351=((($350)-(1))|0);
+      $i=$351;
+      __label__ = 48; break;
+    case 56: 
+      var $353=$cs;
+      var $354=(($353+12)|0);
+      var $355=HEAP32[(($354)>>2)];
+      var $356=(($355)|0)!=0;
+      if ($356) { __label__ = 57; break; } else { __label__ = 58; break; }
+    case 57: 
+      var $358=$1;
+      var $359=$cs;
+      _mccase($358, $359);
+      __label__ = 58; break;
+    case 58: 
+      __label__ = 59; break;
+    case 59: 
+      var $362=$invert;
+      var $363=(($362)|0)!=0;
+      if ($363) { __label__ = 60; break; } else { __label__ = 72; break; }
+    case 60: 
+      var $365=$1;
+      var $366=(($365+28)|0);
+      var $367=HEAP32[(($366)>>2)];
+      var $368=(($367+8)|0);
+      var $369=HEAP32[(($368)>>2)];
+      var $370=((($369)-(1))|0);
+      $i1=$370;
+      __label__ = 61; break;
+    case 61: 
+      var $372=$i1;
+      var $373=(($372)|0) >= 0;
+      if ($373) { __label__ = 62; break; } else { __label__ = 67; break; }
+    case 62: 
+      var $375=$i1;
+      var $376=(($375) & 255);
+      var $377=(($376)&255);
+      var $378=$cs;
+      var $379=(($378)|0);
+      var $380=HEAP32[(($379)>>2)];
+      var $381=(($380+$377)|0);
+      var $382=HEAPU8[($381)];
+      var $383=(($382)&255);
+      var $384=$cs;
+      var $385=(($384+4)|0);
+      var $386=HEAPU8[($385)];
+      var $387=(($386)&255);
+      var $388=$383 & $387;
+      var $389=(($388)|0)!=0;
+      if ($389) { __label__ = 63; break; } else { __label__ = 64; break; }
+    case 63: 
+      var $391=$cs;
+      var $392=(($391+4)|0);
+      var $393=HEAPU8[($392)];
+      var $394=(($393)&255);
+      var $395=$394 ^ -1;
+      var $396=$i1;
+      var $397=(($396) & 255);
+      var $398=(($397)&255);
+      var $399=$cs;
+      var $400=(($399)|0);
+      var $401=HEAP32[(($400)>>2)];
+      var $402=(($401+$398)|0);
+      var $403=HEAPU8[($402)];
+      var $404=(($403)&255);
+      var $405=$404 & $395;
+      var $406=(($405) & 255);
+      HEAP8[($402)]=$406;
+      var $407=$i1;
+      var $408=$cs;
+      var $409=(($408+5)|0);
+      var $410=HEAPU8[($409)];
+      var $411=(($410)&255);
+      var $412=((($411)-($407))|0);
+      var $413=(($412) & 255);
+      HEAP8[($409)]=$413;
+      __label__ = 65; break;
+    case 64: 
+      var $415=$cs;
+      var $416=(($415+4)|0);
+      var $417=HEAPU8[($416)];
+      var $418=(($417)&255);
+      var $419=$i1;
+      var $420=(($419) & 255);
+      var $421=(($420)&255);
+      var $422=$cs;
+      var $423=(($422)|0);
+      var $424=HEAP32[(($423)>>2)];
+      var $425=(($424+$421)|0);
+      var $426=HEAPU8[($425)];
+      var $427=(($426)&255);
+      var $428=$427 | $418;
+      var $429=(($428) & 255);
+      HEAP8[($425)]=$429;
+      var $430=$i1;
+      var $431=$cs;
+      var $432=(($431+5)|0);
+      var $433=HEAPU8[($432)];
+      var $434=(($433)&255);
+      var $435=((($434)+($430))|0);
+      var $436=(($435) & 255);
+      HEAP8[($432)]=$436;
+      __label__ = 65; break;
+    case 65: 
+      __label__ = 66; break;
+    case 66: 
+      var $439=$i1;
+      var $440=((($439)-(1))|0);
+      $i1=$440;
+      __label__ = 61; break;
+    case 67: 
+      var $442=$1;
+      var $443=(($442+28)|0);
+      var $444=HEAP32[(($443)>>2)];
+      var $445=(($444+24)|0);
+      var $446=HEAP32[(($445)>>2)];
+      var $447=$446 & 8;
+      var $448=(($447)|0)!=0;
+      if ($448) { __label__ = 68; break; } else { __label__ = 69; break; }
+    case 68: 
+      var $450=$cs;
+      var $451=(($450+4)|0);
+      var $452=HEAPU8[($451)];
+      var $453=(($452)&255);
+      var $454=$453 ^ -1;
+      var $455=$cs;
+      var $456=(($455)|0);
+      var $457=HEAP32[(($456)>>2)];
+      var $458=(($457+10)|0);
+      var $459=HEAPU8[($458)];
+      var $460=(($459)&255);
+      var $461=$460 & $454;
+      var $462=(($461) & 255);
+      HEAP8[($458)]=$462;
+      var $463=$cs;
+      var $464=(($463+5)|0);
+      var $465=HEAPU8[($464)];
+      var $466=(($465)&255);
+      var $467=((($466)-(10))|0);
+      var $468=(($467) & 255);
+      HEAP8[($464)]=$468;
+      __label__ = 69; break;
+    case 69: 
+      var $470=$cs;
+      var $471=(($470+12)|0);
+      var $472=HEAP32[(($471)>>2)];
+      var $473=(($472)|0)!=0;
+      if ($473) { __label__ = 70; break; } else { __label__ = 71; break; }
+    case 70: 
+      var $475=$1;
+      var $476=$cs;
+      _mcinvert($475, $476);
+      __label__ = 71; break;
+    case 71: 
+      __label__ = 72; break;
+    case 72: 
+      var $479=$1;
+      var $480=$cs;
+      var $481=_nch($479, $480);
+      var $482=(($481)|0)==1;
+      if ($482) { __label__ = 73; break; } else { __label__ = 74; break; }
+    case 73: 
+      var $484=$1;
+      var $485=$1;
+      var $486=$cs;
+      var $487=_firstch($485, $486);
+      _ordinary($484, $487);
+      var $488=$1;
+      var $489=$cs;
+      _freeset($488, $489);
+      __label__ = 75; break;
+    case 74: 
+      var $491=$1;
+      var $492=$1;
+      var $493=$cs;
+      var $494=_freezeset($492, $493);
+      _doemit($491, 805306368, $494);
+      __label__ = 75; break;
+    case 75: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_bracket["X"]=1;
+
+function _dupl($p, $start, $finish) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $ret;
+      var $len;
+      $2=$p;
+      $3=$start;
+      $4=$finish;
+      var $5=$2;
+      var $6=(($5+20)|0);
+      var $7=HEAP32[(($6)>>2)];
+      $ret=$7;
+      var $8=$4;
+      var $9=$3;
+      var $10=((($8)-($9))|0);
+      $len=$10;
+      var $11=$len;
+      var $12=(($11)|0)==0;
+      if ($12) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $14=$ret;
+      $1=$14;
+      __label__ = 5; break;
+    case 4: 
+      var $16=$2;
+      var $17=$2;
+      var $18=(($17+16)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=$len;
+      var $21=((($19)+($20))|0);
+      _enlarge($16, $21);
+      var $22=$2;
+      var $23=(($22+12)|0);
+      var $24=HEAP32[(($23)>>2)];
+      var $25=$2;
+      var $26=(($25+20)|0);
+      var $27=HEAP32[(($26)>>2)];
+      var $28=(($24+($27<<2))|0);
+      var $29=$28;
+      var $30=$2;
+      var $31=(($30+12)|0);
+      var $32=HEAP32[(($31)>>2)];
+      var $33=$3;
+      var $34=(($32+($33<<2))|0);
+      var $35=$34;
+      var $36=$len;
+      var $37=((($36<<2))|0);
+      _llvm_memmove_p0i8_p0i8_i32($29, $35, $37, 1, 0);
+      var $38=$len;
+      var $39=$2;
+      var $40=(($39+20)|0);
+      var $41=HEAP32[(($40)>>2)];
+      var $42=((($41)+($38))|0);
+      HEAP32[(($40)>>2)]=$42;
+      var $43=$ret;
+      $1=$43;
+      __label__ = 5; break;
+    case 5: 
+      var $45=$1;
+      ;
+      return $45;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_dupl["X"]=1;
+
+function _ordinary($p, $ch) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $cap;
+      $1=$p;
+      $2=$ch;
+      var $3=$1;
+      var $4=(($3+28)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=(($5+56)|0);
+      var $7=HEAP32[(($6)>>2)];
+      $cap=$7;
+      var $8=$1;
+      var $9=(($8+28)|0);
+      var $10=HEAP32[(($9)>>2)];
+      var $11=(($10+24)|0);
+      var $12=HEAP32[(($11)>>2)];
+      var $13=$12 & 2;
+      var $14=(($13)|0)!=0;
+      if ($14) { __label__ = 3; break; } else { __label__ = 6; break; }
+    case 3: 
+      var $16=$2;
+      var $17=(($16) & 255);
+      var $18=(($17)&255);
+      var $19=_isalpha($18);
+      var $20=(($19)|0)!=0;
+      if ($20) { __label__ = 4; break; } else { __label__ = 6; break; }
+    case 4: 
+      var $22=$2;
+      var $23=_othercase($22);
+      var $24=(($23 << 24) >> 24);
+      var $25=$2;
+      var $26=(($24)|0)!=(($25)|0);
+      if ($26) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $28=$1;
+      var $29=$2;
+      _bothcases($28, $29);
+      __label__ = 9; break;
+    case 6: 
+      var $31=$1;
+      var $32=$2;
+      var $33=(($32) & 255);
+      var $34=(($33)&255);
+      _doemit($31, 268435456, $34);
+      var $35=$2;
+      var $36=$cap;
+      var $37=(($36+$35)|0);
+      var $38=HEAPU8[($37)];
+      var $39=(($38)&255);
+      var $40=(($39)|0)==0;
+      if ($40) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $42=$1;
+      var $43=(($42+28)|0);
+      var $44=HEAP32[(($43)>>2)];
+      var $45=(($44+52)|0);
+      var $46=HEAP32[(($45)>>2)];
+      var $47=((($46)+(1))|0);
+      HEAP32[(($45)>>2)]=$47;
+      var $48=(($46) & 255);
+      var $49=$2;
+      var $50=$cap;
+      var $51=(($50+$49)|0);
+      HEAP8[($51)]=$48;
+      __label__ = 8; break;
+    case 8: 
+      __label__ = 9; break;
+    case 9: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_ordinary["X"]=1;
+
+function _doinsert($p, $op, $opnd, $pos) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $sn;
+      var $s;
+      var $i;
+      $1=$p;
+      $2=$op;
+      $3=$opnd;
+      $4=$pos;
+      var $5=$1;
+      var $6=(($5+8)|0);
+      var $7=HEAP32[(($6)>>2)];
+      var $8=(($7)|0)!=0;
+      if ($8) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 13; break;
+    case 4: 
+      var $11=$1;
+      var $12=(($11+20)|0);
+      var $13=HEAP32[(($12)>>2)];
+      $sn=$13;
+      var $14=$1;
+      var $15=$2;
+      var $16=$3;
+      _doemit($14, $15, $16);
+      var $17=$sn;
+      var $18=$1;
+      var $19=(($18+12)|0);
+      var $20=HEAP32[(($19)>>2)];
+      var $21=(($20+($17<<2))|0);
+      var $22=HEAP32[(($21)>>2)];
+      $s=$22;
+      $i=1;
+      __label__ = 5; break;
+    case 5: 
+      var $24=$i;
+      var $25=(($24)|0) < 10;
+      if ($25) { __label__ = 6; break; } else { __label__ = 12; break; }
+    case 6: 
+      var $27=$i;
+      var $28=$1;
+      var $29=(($28+32)|0);
+      var $30=(($29+($27<<2))|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=$4;
+      var $33=(($31)|0) >= (($32)|0);
+      if ($33) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $35=$i;
+      var $36=$1;
+      var $37=(($36+32)|0);
+      var $38=(($37+($35<<2))|0);
+      var $39=HEAP32[(($38)>>2)];
+      var $40=((($39)+(1))|0);
+      HEAP32[(($38)>>2)]=$40;
+      __label__ = 8; break;
+    case 8: 
+      var $42=$i;
+      var $43=$1;
+      var $44=(($43+72)|0);
+      var $45=(($44+($42<<2))|0);
+      var $46=HEAP32[(($45)>>2)];
+      var $47=$4;
+      var $48=(($46)|0) >= (($47)|0);
+      if ($48) { __label__ = 9; break; } else { __label__ = 10; break; }
+    case 9: 
+      var $50=$i;
+      var $51=$1;
+      var $52=(($51+72)|0);
+      var $53=(($52+($50<<2))|0);
+      var $54=HEAP32[(($53)>>2)];
+      var $55=((($54)+(1))|0);
+      HEAP32[(($53)>>2)]=$55;
+      __label__ = 10; break;
+    case 10: 
+      __label__ = 11; break;
+    case 11: 
+      var $58=$i;
+      var $59=((($58)+(1))|0);
+      $i=$59;
+      __label__ = 5; break;
+    case 12: 
+      var $61=$4;
+      var $62=((($61)+(1))|0);
+      var $63=$1;
+      var $64=(($63+12)|0);
+      var $65=HEAP32[(($64)>>2)];
+      var $66=(($65+($62<<2))|0);
+      var $67=$66;
+      var $68=$4;
+      var $69=$1;
+      var $70=(($69+12)|0);
+      var $71=HEAP32[(($70)>>2)];
+      var $72=(($71+($68<<2))|0);
+      var $73=$72;
+      var $74=$1;
+      var $75=(($74+20)|0);
+      var $76=HEAP32[(($75)>>2)];
+      var $77=$4;
+      var $78=((($76)-($77))|0);
+      var $79=((($78)-(1))|0);
+      var $80=((($79<<2))|0);
+      _llvm_memmove_p0i8_p0i8_i32($67, $73, $80, 1, 0);
+      var $81=$s;
+      var $82=$4;
+      var $83=$1;
+      var $84=(($83+12)|0);
+      var $85=HEAP32[(($84)>>2)];
+      var $86=(($85+($82<<2))|0);
+      HEAP32[(($86)>>2)]=$81;
+      __label__ = 13; break;
+    case 13: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_doinsert["X"]=1;
+
+function _dofwd($p, $pos, $value) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      $1=$p;
+      $2=$pos;
+      $3=$value;
+      var $4=$1;
+      var $5=(($4+8)|0);
+      var $6=HEAP32[(($5)>>2)];
+      var $7=(($6)|0)!=0;
+      if ($7) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 5; break;
+    case 4: 
+      var $10=$2;
+      var $11=$1;
+      var $12=(($11+12)|0);
+      var $13=HEAP32[(($12)>>2)];
+      var $14=(($13+($10<<2))|0);
+      var $15=HEAP32[(($14)>>2)];
+      var $16=$15 & -134217728;
+      var $17=$3;
+      var $18=$16 | $17;
+      var $19=$2;
+      var $20=$1;
+      var $21=(($20+12)|0);
+      var $22=HEAP32[(($21)>>2)];
+      var $23=(($22+($19<<2))|0);
+      HEAP32[(($23)>>2)]=$18;
+      __label__ = 5; break;
+    case 5: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _p_count($p) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $count;
+      var $ndigits;
+      $1=$p;
+      $count=0;
+      $ndigits=0;
+      __label__ = 3; break;
+    case 3: 
+      var $3=$1;
+      var $4=(($3)|0);
+      var $5=HEAPU32[(($4)>>2)];
+      var $6=$1;
+      var $7=(($6+4)|0);
+      var $8=HEAPU32[(($7)>>2)];
+      var $9=(($5)>>>0) < (($8)>>>0);
+      if ($9) { __label__ = 4; break; } else { var $22 = 0;__label__ = 6; break; }
+    case 4: 
+      var $11=$1;
+      var $12=(($11)|0);
+      var $13=HEAP32[(($12)>>2)];
+      var $14=HEAPU8[($13)];
+      var $15=(($14)&255);
+      var $16=_isdigit($15);
+      var $17=(($16)|0)!=0;
+      if ($17) { __label__ = 5; break; } else { var $22 = 0;__label__ = 6; break; }
+    case 5: 
+      var $19=$count;
+      var $20=(($19)|0) <= 255;
+      var $22 = $20;__label__ = 6; break;
+    case 6: 
+      var $22;
+      if ($22) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $24=$count;
+      var $25=((($24)*(10))|0);
+      var $26=$1;
+      var $27=(($26)|0);
+      var $28=HEAP32[(($27)>>2)];
+      var $29=(($28+1)|0);
+      HEAP32[(($27)>>2)]=$29;
+      var $30=HEAP8[($28)];
+      var $31=(($30 << 24) >> 24);
+      var $32=((($31)-(48))|0);
+      var $33=((($25)+($32))|0);
+      $count=$33;
+      var $34=$ndigits;
+      var $35=((($34)+(1))|0);
+      $ndigits=$35;
+      __label__ = 3; break;
+    case 8: 
+      var $37=$ndigits;
+      var $38=(($37)|0) > 0;
+      if ($38) { __label__ = 9; break; } else { __label__ = 10; break; }
+    case 9: 
+      var $40=$count;
+      var $41=(($40)|0) <= 255;
+      if ($41) { var $47 = 1;__label__ = 11; break; } else { __label__ = 10; break; }
+    case 10: 
+      var $43=$1;
+      var $44=_seterr($43, 10);
+      var $45=(($44)|0)!=0;
+      var $47 = $45;__label__ = 11; break;
+    case 11: 
+      var $47;
+      var $48=(($47)&1);
+      var $49=$count;
+      ;
+      return $49;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_count["X"]=1;
+
+function _repeat($p, $start, $from, $to) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $finish;
+      var $copy;
+      $1=$p;
+      $2=$start;
+      $3=$from;
+      $4=$to;
+      var $5=$1;
+      var $6=(($5+20)|0);
+      var $7=HEAP32[(($6)>>2)];
+      $finish=$7;
+      var $8=$1;
+      var $9=(($8+8)|0);
+      var $10=HEAP32[(($9)>>2)];
+      var $11=(($10)|0)!=0;
+      if ($11) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 19; break;
+    case 4: 
+      var $14=$3;
+      var $15=(($14)|0) <= 1;
+      if ($15) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $17=$3;
+      var $23 = $17;__label__ = 7; break;
+    case 6: 
+      var $19=$3;
+      var $20=(($19)|0)==256;
+      var $21=$20 ? 3 : 2;
+      var $23 = $21;__label__ = 7; break;
+    case 7: 
+      var $23;
+      var $24=((($23<<3))|0);
+      var $25=$4;
+      var $26=(($25)|0) <= 1;
+      if ($26) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $28=$4;
+      var $34 = $28;__label__ = 10; break;
+    case 9: 
+      var $30=$4;
+      var $31=(($30)|0)==256;
+      var $32=$31 ? 3 : 2;
+      var $34 = $32;__label__ = 10; break;
+    case 10: 
+      var $34;
+      var $35=((($24)+($34))|0);
+      if ((($35)|0) == 0) {
+        __label__ = 11; break;
+      }
+      else if ((($35)|0) == 1 || (($35)|0) == 2 || (($35)|0) == 3) {
+        __label__ = 12; break;
+      }
+      else if ((($35)|0) == 9) {
+        __label__ = 13; break;
+      }
+      else if ((($35)|0) == 10) {
+        __label__ = 14; break;
+      }
+      else if ((($35)|0) == 11) {
+        __label__ = 15; break;
+      }
+      else if ((($35)|0) == 18) {
+        __label__ = 16; break;
+      }
+      else if ((($35)|0) == 19) {
+        __label__ = 17; break;
+      }
+      else {
+      __label__ = 18; break;
+      }
+      
+    case 11: 
+      var $37=$finish;
+      var $38=$2;
+      var $39=((($37)-($38))|0);
+      var $40=$1;
+      var $41=(($40+20)|0);
+      var $42=HEAP32[(($41)>>2)];
+      var $43=((($42)-($39))|0);
+      HEAP32[(($41)>>2)]=$43;
+      __label__ = 19; break;
+    case 12: 
+      var $45=$1;
+      var $46=$1;
+      var $47=(($46+20)|0);
+      var $48=HEAP32[(($47)>>2)];
+      var $49=$2;
+      var $50=((($48)-($49))|0);
+      var $51=((($50)+(1))|0);
+      var $52=$2;
+      _doinsert($45, 2013265920, $51, $52);
+      var $53=$1;
+      var $54=$2;
+      var $55=((($54)+(1))|0);
+      var $56=$4;
+      _repeat($53, $55, 1, $56);
+      var $57=$1;
+      var $58=$1;
+      var $59=(($58+20)|0);
+      var $60=HEAP32[(($59)>>2)];
+      var $61=$2;
+      var $62=((($60)-($61))|0);
+      _doemit($57, -2147483648, $62);
+      var $63=$1;
+      var $64=$2;
+      var $65=$1;
+      var $66=(($65+20)|0);
+      var $67=HEAP32[(($66)>>2)];
+      var $68=$2;
+      var $69=((($67)-($68))|0);
+      _dofwd($63, $64, $69);
+      var $70=$1;
+      _doemit($70, -2013265920, 0);
+      var $71=$1;
+      var $72=$1;
+      var $73=(($72+20)|0);
+      var $74=HEAP32[(($73)>>2)];
+      var $75=((($74)-(1))|0);
+      var $76=$1;
+      var $77=(($76+20)|0);
+      var $78=HEAP32[(($77)>>2)];
+      var $79=$1;
+      var $80=(($79+20)|0);
+      var $81=HEAP32[(($80)>>2)];
+      var $82=((($81)-(1))|0);
+      var $83=((($78)-($82))|0);
+      _dofwd($71, $75, $83);
+      var $84=$1;
+      var $85=$1;
+      var $86=(($85+20)|0);
+      var $87=HEAP32[(($86)>>2)];
+      var $88=$1;
+      var $89=(($88+20)|0);
+      var $90=HEAP32[(($89)>>2)];
+      var $91=((($90)-(2))|0);
+      var $92=((($87)-($91))|0);
+      _doemit($84, -1879048192, $92);
+      __label__ = 19; break;
+    case 13: 
+      __label__ = 19; break;
+    case 14: 
+      var $95=$1;
+      var $96=$1;
+      var $97=(($96+20)|0);
+      var $98=HEAP32[(($97)>>2)];
+      var $99=$2;
+      var $100=((($98)-($99))|0);
+      var $101=((($100)+(1))|0);
+      var $102=$2;
+      _doinsert($95, 2013265920, $101, $102);
+      var $103=$1;
+      var $104=$1;
+      var $105=(($104+20)|0);
+      var $106=HEAP32[(($105)>>2)];
+      var $107=$2;
+      var $108=((($106)-($107))|0);
+      _doemit($103, -2147483648, $108);
+      var $109=$1;
+      var $110=$2;
+      var $111=$1;
+      var $112=(($111+20)|0);
+      var $113=HEAP32[(($112)>>2)];
+      var $114=$2;
+      var $115=((($113)-($114))|0);
+      _dofwd($109, $110, $115);
+      var $116=$1;
+      _doemit($116, -2013265920, 0);
+      var $117=$1;
+      var $118=$1;
+      var $119=(($118+20)|0);
+      var $120=HEAP32[(($119)>>2)];
+      var $121=((($120)-(1))|0);
+      var $122=$1;
+      var $123=(($122+20)|0);
+      var $124=HEAP32[(($123)>>2)];
+      var $125=$1;
+      var $126=(($125+20)|0);
+      var $127=HEAP32[(($126)>>2)];
+      var $128=((($127)-(1))|0);
+      var $129=((($124)-($128))|0);
+      _dofwd($117, $121, $129);
+      var $130=$1;
+      var $131=$1;
+      var $132=(($131+20)|0);
+      var $133=HEAP32[(($132)>>2)];
+      var $134=$1;
+      var $135=(($134+20)|0);
+      var $136=HEAP32[(($135)>>2)];
+      var $137=((($136)-(2))|0);
+      var $138=((($133)-($137))|0);
+      _doemit($130, -1879048192, $138);
+      var $139=$1;
+      var $140=$2;
+      var $141=((($140)+(1))|0);
+      var $142=$finish;
+      var $143=((($142)+(1))|0);
+      var $144=_dupl($139, $141, $143);
+      $copy=$144;
+      var $145=$1;
+      var $146=$copy;
+      var $147=$4;
+      var $148=((($147)-(1))|0);
+      _repeat($145, $146, 1, $148);
+      __label__ = 19; break;
+    case 15: 
+      var $150=$1;
+      var $151=$1;
+      var $152=(($151+20)|0);
+      var $153=HEAP32[(($152)>>2)];
+      var $154=$2;
+      var $155=((($153)-($154))|0);
+      var $156=((($155)+(1))|0);
+      var $157=$2;
+      _doinsert($150, 1207959552, $156, $157);
+      var $158=$1;
+      var $159=$1;
+      var $160=(($159+20)|0);
+      var $161=HEAP32[(($160)>>2)];
+      var $162=$2;
+      var $163=((($161)-($162))|0);
+      _doemit($158, 1342177280, $163);
+      __label__ = 19; break;
+    case 16: 
+      var $165=$1;
+      var $166=$2;
+      var $167=$finish;
+      var $168=_dupl($165, $166, $167);
+      $copy=$168;
+      var $169=$1;
+      var $170=$copy;
+      var $171=$3;
+      var $172=((($171)-(1))|0);
+      var $173=$4;
+      var $174=((($173)-(1))|0);
+      _repeat($169, $170, $172, $174);
+      __label__ = 19; break;
+    case 17: 
+      var $176=$1;
+      var $177=$2;
+      var $178=$finish;
+      var $179=_dupl($176, $177, $178);
+      $copy=$179;
+      var $180=$1;
+      var $181=$copy;
+      var $182=$3;
+      var $183=((($182)-(1))|0);
+      var $184=$4;
+      _repeat($180, $181, $183, $184);
+      __label__ = 19; break;
+    case 18: 
+      var $186=$1;
+      var $187=_seterr($186, 15);
+      __label__ = 19; break;
+    case 19: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_repeat["X"]=1;
+
+function _othercase($ch) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      $2=$ch;
+      var $3=$2;
+      var $4=(($3) & 255);
+      var $5=(($4)&255);
+      $2=$5;
+      var $6=$2;
+      var $7=_isupper($6);
+      var $8=(($7)|0)!=0;
+      if ($8) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $10=$2;
+      var $11=_tolower($10);
+      var $12=(($11) & 255);
+      $1=$12;
+      __label__ = 7; break;
+    case 4: 
+      var $14=$2;
+      var $15=_islower($14);
+      var $16=(($15)|0)!=0;
+      if ($16) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $18=$2;
+      var $19=_toupper($18);
+      var $20=(($19) & 255);
+      $1=$20;
+      __label__ = 7; break;
+    case 6: 
+      var $22=$2;
+      var $23=(($22) & 255);
+      $1=$23;
+      __label__ = 7; break;
+    case 7: 
+      var $25=$1;
+      ;
+      return $25;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _bothcases($p, $ch) {
+  var __stackBase__  = STACKTOP; STACKTOP += 4; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
+  var __label__;
+
+  var $1;
+  var $2;
+  var $oldnext;
+  var $oldend;
+  var $bracket=__stackBase__;
+  $1=$p;
+  $2=$ch;
+  var $3=$1;
+  var $4=(($3)|0);
+  var $5=HEAP32[(($4)>>2)];
+  $oldnext=$5;
+  var $6=$1;
+  var $7=(($6+4)|0);
+  var $8=HEAP32[(($7)>>2)];
+  $oldend=$8;
+  var $9=$2;
+  var $10=(($9) & 255);
+  var $11=(($10)&255);
+  $2=$11;
+  var $12=(($bracket)|0);
+  var $13=$1;
+  var $14=(($13)|0);
+  HEAP32[(($14)>>2)]=$12;
+  var $15=(($bracket)|0);
+  var $16=(($15+2)|0);
+  var $17=$1;
+  var $18=(($17+4)|0);
+  HEAP32[(($18)>>2)]=$16;
+  var $19=$2;
+  var $20=(($19) & 255);
+  var $21=(($bracket)|0);
+  HEAP8[($21)]=$20;
+  var $22=(($bracket+1)|0);
+  HEAP8[($22)]=93;
+  var $23=(($bracket+2)|0);
+  HEAP8[($23)]=0;
+  var $24=$1;
+  _p_bracket($24);
+  var $25=$oldnext;
+  var $26=$1;
+  var $27=(($26)|0);
+  HEAP32[(($27)>>2)]=$25;
+  var $28=$oldend;
+  var $29=$1;
+  var $30=(($29+4)|0);
+  HEAP32[(($30)>>2)]=$28;
+  STACKTOP = __stackBase__;
+  return;
+}
+
+
+function _allocset($p) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $no;
+      var $nc;
+      var $nbytes;
+      var $cs;
+      var $css;
+      var $i;
+      var $ptr;
+      $2=$p;
+      var $3=$2;
+      var $4=(($3+28)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=(($5+12)|0);
+      var $7=HEAP32[(($6)>>2)];
+      var $8=((($7)+(1))|0);
+      HEAP32[(($6)>>2)]=$8;
+      $no=$7;
+      var $9=$2;
+      var $10=(($9+28)|0);
+      var $11=HEAP32[(($10)>>2)];
+      var $12=(($11+8)|0);
+      var $13=HEAP32[(($12)>>2)];
+      $css=$13;
+      var $14=$no;
+      var $15=$2;
+      var $16=(($15+24)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=(($14)|0) >= (($17)|0);
+      if ($18) { __label__ = 3; break; } else { __label__ = 12; break; }
+    case 3: 
+      var $20=$2;
+      var $21=(($20+24)|0);
+      var $22=HEAP32[(($21)>>2)];
+      var $23=((($22)+(8))|0);
+      HEAP32[(($21)>>2)]=$23;
+      var $24=$2;
+      var $25=(($24+24)|0);
+      var $26=HEAP32[(($25)>>2)];
+      $nc=$26;
+      var $27=$nc;
+      var $28=Math.floor(((($27)>>>0))/(8));
+      var $29=$css;
+      var $30=((($28)*($29))|0);
+      $nbytes=$30;
+      var $31=$2;
+      var $32=(($31+28)|0);
+      var $33=HEAP32[(($32)>>2)];
+      var $34=(($33+16)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=$35;
+      var $37=$nc;
+      var $38=((($37<<4))|0);
+      var $39=_realloc($36, $38);
+      var $40=$39;
+      var $41=$40;
+      $ptr=$41;
+      var $42=$ptr;
+      var $43=(($42)|0)==0;
+      if ($43) { __label__ = 4; break; } else { __label__ = 5; break; }
+    case 4: 
+      __label__ = 16; break;
+    case 5: 
+      var $46=$ptr;
+      var $47=$46;
+      var $48=$2;
+      var $49=(($48+28)|0);
+      var $50=HEAP32[(($49)>>2)];
+      var $51=(($50+16)|0);
+      HEAP32[(($51)>>2)]=$47;
+      var $52=$2;
+      var $53=(($52+28)|0);
+      var $54=HEAP32[(($53)>>2)];
+      var $55=(($54+20)|0);
+      var $56=HEAP32[(($55)>>2)];
+      var $57=$nbytes;
+      var $58=_realloc($56, $57);
+      $ptr=$58;
+      var $59=$ptr;
+      var $60=(($59)|0)==0;
+      if ($60) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      __label__ = 16; break;
+    case 7: 
+      var $63=$ptr;
+      var $64=$2;
+      var $65=(($64+28)|0);
+      var $66=HEAP32[(($65)>>2)];
+      var $67=(($66+20)|0);
+      HEAP32[(($67)>>2)]=$63;
+      $i=0;
+      __label__ = 8; break;
+    case 8: 
+      var $69=$i;
+      var $70=$no;
+      var $71=(($69)|0) < (($70)|0);
+      if ($71) { __label__ = 9; break; } else { __label__ = 11; break; }
+    case 9: 
+      var $73=$2;
+      var $74=(($73+28)|0);
+      var $75=HEAP32[(($74)>>2)];
+      var $76=(($75+20)|0);
+      var $77=HEAP32[(($76)>>2)];
+      var $78=$css;
+      var $79=$i;
+      var $80=((((($79)|0))/(8))&-1);
+      var $81=((($78)*($80))|0);
+      var $82=(($77+$81)|0);
+      var $83=$i;
+      var $84=$2;
+      var $85=(($84+28)|0);
+      var $86=HEAP32[(($85)>>2)];
+      var $87=(($86+16)|0);
+      var $88=HEAP32[(($87)>>2)];
+      var $89=(($88+($83<<4))|0);
+      var $90=(($89)|0);
+      HEAP32[(($90)>>2)]=$82;
+      __label__ = 10; break;
+    case 10: 
+      var $92=$i;
+      var $93=((($92)+(1))|0);
+      $i=$93;
+      __label__ = 8; break;
+    case 11: 
+      var $95=$2;
+      var $96=(($95+28)|0);
+      var $97=HEAP32[(($96)>>2)];
+      var $98=(($97+20)|0);
+      var $99=HEAP32[(($98)>>2)];
+      var $100=$nbytes;
+      var $101=$css;
+      var $102=((($100)-($101))|0);
+      var $103=(($99+$102)|0);
+      var $104=$css;
+      _memset($103, 0, $104, 1);
+      __label__ = 12; break;
+    case 12: 
+      var $106=$2;
+      var $107=(($106+28)|0);
+      var $108=HEAP32[(($107)>>2)];
+      var $109=(($108+16)|0);
+      var $110=HEAP32[(($109)>>2)];
+      var $111=(($110)|0)==0;
+      if ($111) { __label__ = 14; break; } else { __label__ = 13; break; }
+    case 13: 
+      var $113=$2;
+      var $114=(($113+28)|0);
+      var $115=HEAP32[(($114)>>2)];
+      var $116=(($115+20)|0);
+      var $117=HEAP32[(($116)>>2)];
+      var $118=(($117)|0)==0;
+      if ($118) { __label__ = 14; break; } else { __label__ = 15; break; }
+    case 14: 
+      __label__ = 16; break;
+    case 15: 
+      var $121=$no;
+      var $122=$2;
+      var $123=(($122+28)|0);
+      var $124=HEAP32[(($123)>>2)];
+      var $125=(($124+16)|0);
+      var $126=HEAP32[(($125)>>2)];
+      var $127=(($126+($121<<4))|0);
+      $cs=$127;
+      var $128=$2;
+      var $129=(($128+28)|0);
+      var $130=HEAP32[(($129)>>2)];
+      var $131=(($130+20)|0);
+      var $132=HEAP32[(($131)>>2)];
+      var $133=$css;
+      var $134=$no;
+      var $135=((((($134)|0))/(8))&-1);
+      var $136=((($133)*($135))|0);
+      var $137=(($132+$136)|0);
+      var $138=$cs;
+      var $139=(($138)|0);
+      HEAP32[(($139)>>2)]=$137;
+      var $140=$no;
+      var $141=((($140)|0))%(8);
+      var $142=1 << $141;
+      var $143=(($142) & 255);
+      var $144=$cs;
+      var $145=(($144+4)|0);
+      HEAP8[($145)]=$143;
+      var $146=$cs;
+      var $147=(($146+5)|0);
+      HEAP8[($147)]=0;
+      var $148=$cs;
+      var $149=(($148+8)|0);
+      HEAP32[(($149)>>2)]=0;
+      var $150=$cs;
+      var $151=(($150+12)|0);
+      HEAP32[(($151)>>2)]=0;
+      var $152=$cs;
+      $1=$152;
+      __label__ = 17; break;
+    case 16: 
+      var $154=$2;
+      var $155=(($154+28)|0);
+      var $156=HEAP32[(($155)>>2)];
+      var $157=(($156+16)|0);
+      var $158=HEAP32[(($157)>>2)];
+      var $159=$158;
+      _free($159);
+      var $160=$2;
+      var $161=(($160+28)|0);
+      var $162=HEAP32[(($161)>>2)];
+      var $163=(($162+16)|0);
+      HEAP32[(($163)>>2)]=0;
+      var $164=$2;
+      var $165=(($164+28)|0);
+      var $166=HEAP32[(($165)>>2)];
+      var $167=(($166+20)|0);
+      var $168=HEAP32[(($167)>>2)];
+      _free($168);
+      var $169=$2;
+      var $170=(($169+28)|0);
+      var $171=HEAP32[(($170)>>2)];
+      var $172=(($171+20)|0);
+      HEAP32[(($172)>>2)]=0;
+      var $173=$2;
+      var $174=_seterr($173, 12);
+      $1=0;
+      __label__ = 17; break;
+    case 17: 
+      var $176=$1;
+      ;
+      return $176;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_allocset["X"]=1;
+
+function _mccase($p, $cs) {
+  ;
+  var __label__;
+
+  var $1;
+  var $2;
+  $1=$p;
+  $2=$cs;
+  ;
+  return;
+}
+
+
+function _mcinvert($p, $cs) {
+  ;
+  var __label__;
+
+  var $1;
+  var $2;
+  $1=$p;
+  $2=$cs;
+  ;
+  return;
+}
+
+
+function _freeset($p, $cs) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $i;
+      var $top;
+      var $css;
+      $1=$p;
+      $2=$cs;
+      var $3=$1;
+      var $4=(($3+28)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=(($5+12)|0);
+      var $7=HEAP32[(($6)>>2)];
+      var $8=$1;
+      var $9=(($8+28)|0);
+      var $10=HEAP32[(($9)>>2)];
+      var $11=(($10+16)|0);
+      var $12=HEAP32[(($11)>>2)];
+      var $13=(($12+($7<<4))|0);
+      $top=$13;
+      var $14=$1;
+      var $15=(($14+28)|0);
+      var $16=HEAP32[(($15)>>2)];
+      var $17=(($16+8)|0);
+      var $18=HEAP32[(($17)>>2)];
+      $css=$18;
+      $i=0;
+      __label__ = 3; break;
+    case 3: 
+      var $20=$i;
+      var $21=$css;
+      var $22=(($20)>>>0) < (($21)>>>0);
+      if ($22) { __label__ = 4; break; } else { __label__ = 6; break; }
+    case 4: 
+      var $24=$2;
+      var $25=(($24+4)|0);
+      var $26=HEAPU8[($25)];
+      var $27=(($26)&255);
+      var $28=$27 ^ -1;
+      var $29=$i;
+      var $30=(($29) & 255);
+      var $31=(($30)&255);
+      var $32=$2;
+      var $33=(($32)|0);
+      var $34=HEAP32[(($33)>>2)];
+      var $35=(($34+$31)|0);
+      var $36=HEAPU8[($35)];
+      var $37=(($36)&255);
+      var $38=$37 & $28;
+      var $39=(($38) & 255);
+      HEAP8[($35)]=$39;
+      var $40=$i;
+      var $41=$2;
+      var $42=(($41+5)|0);
+      var $43=HEAPU8[($42)];
+      var $44=(($43)&255);
+      var $45=((($44)-($40))|0);
+      var $46=(($45) & 255);
+      HEAP8[($42)]=$46;
+      __label__ = 5; break;
+    case 5: 
+      var $48=$i;
+      var $49=((($48)+(1))|0);
+      $i=$49;
+      __label__ = 3; break;
+    case 6: 
+      var $51=$2;
+      var $52=$top;
+      var $53=((($52)-(16))|0);
+      var $54=(($51)|0)==(($53)|0);
+      if ($54) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $56=$1;
+      var $57=(($56+28)|0);
+      var $58=HEAP32[(($57)>>2)];
+      var $59=(($58+12)|0);
+      var $60=HEAP32[(($59)>>2)];
+      var $61=((($60)-(1))|0);
+      HEAP32[(($59)>>2)]=$61;
+      __label__ = 8; break;
+    case 8: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_freeset["X"]=1;
+
+function _nch($p, $cs) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $i;
+      var $css;
+      var $n;
+      $1=$p;
+      $2=$cs;
+      var $3=$1;
+      var $4=(($3+28)|0);
+      var $5=HEAP32[(($4)>>2)];
+      var $6=(($5+8)|0);
+      var $7=HEAP32[(($6)>>2)];
+      $css=$7;
+      $n=0;
+      $i=0;
+      __label__ = 3; break;
+    case 3: 
+      var $9=$i;
+      var $10=$css;
+      var $11=(($9)>>>0) < (($10)>>>0);
+      if ($11) { __label__ = 4; break; } else { __label__ = 8; break; }
+    case 4: 
+      var $13=$i;
+      var $14=(($13) & 255);
+      var $15=(($14)&255);
+      var $16=$2;
+      var $17=(($16)|0);
+      var $18=HEAP32[(($17)>>2)];
+      var $19=(($18+$15)|0);
+      var $20=HEAPU8[($19)];
+      var $21=(($20)&255);
+      var $22=$2;
+      var $23=(($22+4)|0);
+      var $24=HEAPU8[($23)];
+      var $25=(($24)&255);
+      var $26=$21 & $25;
+      var $27=(($26)|0)!=0;
+      if ($27) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $29=$n;
+      var $30=((($29)+(1))|0);
+      $n=$30;
+      __label__ = 6; break;
+    case 6: 
+      __label__ = 7; break;
+    case 7: 
+      var $33=$i;
+      var $34=((($33)+(1))|0);
+      $i=$34;
+      __label__ = 3; break;
+    case 8: 
+      var $36=$n;
+      ;
+      return $36;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _firstch($p, $cs) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $i;
+      var $css;
+      $2=$p;
+      $3=$cs;
+      var $4=$2;
+      var $5=(($4+28)|0);
+      var $6=HEAP32[(($5)>>2)];
+      var $7=(($6+8)|0);
+      var $8=HEAP32[(($7)>>2)];
+      $css=$8;
+      $i=0;
+      __label__ = 3; break;
+    case 3: 
+      var $10=$i;
+      var $11=$css;
+      var $12=(($10)>>>0) < (($11)>>>0);
+      if ($12) { __label__ = 4; break; } else { __label__ = 8; break; }
+    case 4: 
+      var $14=$i;
+      var $15=(($14) & 255);
+      var $16=(($15)&255);
+      var $17=$3;
+      var $18=(($17)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=(($19+$16)|0);
+      var $21=HEAPU8[($20)];
+      var $22=(($21)&255);
+      var $23=$3;
+      var $24=(($23+4)|0);
+      var $25=HEAPU8[($24)];
+      var $26=(($25)&255);
+      var $27=$22 & $26;
+      var $28=(($27)|0)!=0;
+      if ($28) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $30=$i;
+      var $31=(($30) & 255);
+      var $32=(($31 << 24) >> 24);
+      $1=$32;
+      __label__ = 9; break;
+    case 6: 
+      __label__ = 7; break;
+    case 7: 
+      var $35=$i;
+      var $36=((($35)+(1))|0);
+      $i=$36;
+      __label__ = 3; break;
+    case 8: 
+      $1=0;
+      __label__ = 9; break;
+    case 9: 
+      var $39=$1;
+      ;
+      return $39;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _p_b_term($p, $cs) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $c;
+      var $start;
+      var $finish;
+      var $i;
+      $1=$p;
+      $2=$cs;
+      var $3=$1;
+      var $4=(($3)|0);
+      var $5=HEAPU32[(($4)>>2)];
+      var $6=$1;
+      var $7=(($6+4)|0);
+      var $8=HEAPU32[(($7)>>2)];
+      var $9=(($5)>>>0) < (($8)>>>0);
+      if ($9) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $11=$1;
+      var $12=(($11)|0);
+      var $13=HEAP32[(($12)>>2)];
+      var $14=HEAP8[($13)];
+      var $15=(($14 << 24) >> 24);
+      var $18 = $15;__label__ = 5; break;
+    case 4: 
+      var $18 = 0;__label__ = 5; break;
+    case 5: 
+      var $18;
+      if ((($18)|0) == 91) {
+        __label__ = 6; break;
+      }
+      else if ((($18)|0) == 45) {
+        __label__ = 10; break;
+      }
+      else {
+      __label__ = 11; break;
+      }
+      
+    case 6: 
+      var $20=$1;
+      var $21=(($20)|0);
+      var $22=HEAP32[(($21)>>2)];
+      var $23=(($22+1)|0);
+      var $24=$1;
+      var $25=(($24+4)|0);
+      var $26=HEAPU32[(($25)>>2)];
+      var $27=(($23)>>>0) < (($26)>>>0);
+      if ($27) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $29=$1;
+      var $30=(($29)|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=(($31+1)|0);
+      var $33=HEAP8[($32)];
+      var $34=(($33 << 24) >> 24);
+      var $37 = $34;__label__ = 9; break;
+    case 8: 
+      var $37 = 0;__label__ = 9; break;
+    case 9: 
+      var $37;
+      var $38=(($37) & 255);
+      $c=$38;
+      __label__ = 12; break;
+    case 10: 
+      var $40=$1;
+      var $41=_seterr($40, 11);
+      __label__ = 62; break;
+    case 11: 
+      $c=0;
+      __label__ = 12; break;
+    case 12: 
+      var $44=$c;
+      var $45=(($44 << 24) >> 24);
+      if ((($45)|0) == 58) {
+        __label__ = 13; break;
+      }
+      else if ((($45)|0) == 61) {
+        __label__ = 28; break;
+      }
+      else {
+      __label__ = 43; break;
+      }
+      
+    case 13: 
+      var $47=$1;
+      var $48=(($47)|0);
+      var $49=HEAP32[(($48)>>2)];
+      var $50=(($49+2)|0);
+      HEAP32[(($48)>>2)]=$50;
+      var $51=$1;
+      var $52=(($51)|0);
+      var $53=HEAPU32[(($52)>>2)];
+      var $54=$1;
+      var $55=(($54+4)|0);
+      var $56=HEAPU32[(($55)>>2)];
+      var $57=(($53)>>>0) < (($56)>>>0);
+      if ($57) { var $63 = 1;__label__ = 15; break; } else { __label__ = 14; break; }
+    case 14: 
+      var $59=$1;
+      var $60=_seterr($59, 7);
+      var $61=(($60)|0)!=0;
+      var $63 = $61;__label__ = 15; break;
+    case 15: 
+      var $63;
+      var $64=(($63)&1);
+      var $65=$1;
+      var $66=(($65)|0);
+      var $67=HEAP32[(($66)>>2)];
+      var $68=HEAP8[($67)];
+      $c=$68;
+      var $69=$c;
+      var $70=(($69 << 24) >> 24);
+      var $71=(($70)|0)!=45;
+      if ($71) { __label__ = 16; break; } else { __label__ = 17; break; }
+    case 16: 
+      var $73=$c;
+      var $74=(($73 << 24) >> 24);
+      var $75=(($74)|0)!=93;
+      if ($75) { var $81 = 1;__label__ = 18; break; } else { __label__ = 17; break; }
+    case 17: 
+      var $77=$1;
+      var $78=_seterr($77, 4);
+      var $79=(($78)|0)!=0;
+      var $81 = $79;__label__ = 18; break;
+    case 18: 
+      var $81;
+      var $82=(($81)&1);
+      var $83=$1;
+      var $84=$2;
+      _p_b_cclass($83, $84);
+      var $85=$1;
+      var $86=(($85)|0);
+      var $87=HEAPU32[(($86)>>2)];
+      var $88=$1;
+      var $89=(($88+4)|0);
+      var $90=HEAPU32[(($89)>>2)];
+      var $91=(($87)>>>0) < (($90)>>>0);
+      if ($91) { var $97 = 1;__label__ = 20; break; } else { __label__ = 19; break; }
+    case 19: 
+      var $93=$1;
+      var $94=_seterr($93, 7);
+      var $95=(($94)|0)!=0;
+      var $97 = $95;__label__ = 20; break;
+    case 20: 
+      var $97;
+      var $98=(($97)&1);
+      var $99=$1;
+      var $100=(($99)|0);
+      var $101=HEAPU32[(($100)>>2)];
+      var $102=$1;
+      var $103=(($102+4)|0);
+      var $104=HEAPU32[(($103)>>2)];
+      var $105=(($101)>>>0) < (($104)>>>0);
+      if ($105) { __label__ = 21; break; } else { __label__ = 25; break; }
+    case 21: 
+      var $107=$1;
+      var $108=(($107)|0);
+      var $109=HEAP32[(($108)>>2)];
+      var $110=(($109+1)|0);
+      var $111=$1;
+      var $112=(($111+4)|0);
+      var $113=HEAPU32[(($112)>>2)];
+      var $114=(($110)>>>0) < (($113)>>>0);
+      if ($114) { __label__ = 22; break; } else { __label__ = 25; break; }
+    case 22: 
+      var $116=$1;
+      var $117=(($116)|0);
+      var $118=HEAP32[(($117)>>2)];
+      var $119=HEAP8[($118)];
+      var $120=(($119 << 24) >> 24);
+      var $121=(($120)|0)==58;
+      if ($121) { __label__ = 23; break; } else { __label__ = 25; break; }
+    case 23: 
+      var $123=$1;
+      var $124=(($123)|0);
+      var $125=HEAP32[(($124)>>2)];
+      var $126=(($125+1)|0);
+      var $127=HEAP8[($126)];
+      var $128=(($127 << 24) >> 24);
+      var $129=(($128)|0)==93;
+      if ($129) { __label__ = 24; break; } else { __label__ = 25; break; }
+    case 24: 
+      var $131=$1;
+      var $132=(($131)|0);
+      var $133=HEAP32[(($132)>>2)];
+      var $134=(($133+2)|0);
+      HEAP32[(($132)>>2)]=$134;
+      if (1) { var $141 = 1;__label__ = 27; break; } else { __label__ = 26; break; }
+    case 25: 
+      if (0) { var $141 = 1;__label__ = 27; break; } else { __label__ = 26; break; }
+    case 26: 
+      var $137=$1;
+      var $138=_seterr($137, 4);
+      var $139=(($138)|0)!=0;
+      var $141 = $139;__label__ = 27; break;
+    case 27: 
+      var $141;
+      var $142=(($141)&1);
+      __label__ = 62; break;
+    case 28: 
+      var $144=$1;
+      var $145=(($144)|0);
+      var $146=HEAP32[(($145)>>2)];
+      var $147=(($146+2)|0);
+      HEAP32[(($145)>>2)]=$147;
+      var $148=$1;
+      var $149=(($148)|0);
+      var $150=HEAPU32[(($149)>>2)];
+      var $151=$1;
+      var $152=(($151+4)|0);
+      var $153=HEAPU32[(($152)>>2)];
+      var $154=(($150)>>>0) < (($153)>>>0);
+      if ($154) { var $160 = 1;__label__ = 30; break; } else { __label__ = 29; break; }
+    case 29: 
+      var $156=$1;
+      var $157=_seterr($156, 7);
+      var $158=(($157)|0)!=0;
+      var $160 = $158;__label__ = 30; break;
+    case 30: 
+      var $160;
+      var $161=(($160)&1);
+      var $162=$1;
+      var $163=(($162)|0);
+      var $164=HEAP32[(($163)>>2)];
+      var $165=HEAP8[($164)];
+      $c=$165;
+      var $166=$c;
+      var $167=(($166 << 24) >> 24);
+      var $168=(($167)|0)!=45;
+      if ($168) { __label__ = 31; break; } else { __label__ = 32; break; }
+    case 31: 
+      var $170=$c;
+      var $171=(($170 << 24) >> 24);
+      var $172=(($171)|0)!=93;
+      if ($172) { var $178 = 1;__label__ = 33; break; } else { __label__ = 32; break; }
+    case 32: 
+      var $174=$1;
+      var $175=_seterr($174, 3);
+      var $176=(($175)|0)!=0;
+      var $178 = $176;__label__ = 33; break;
+    case 33: 
+      var $178;
+      var $179=(($178)&1);
+      var $180=$1;
+      var $181=$2;
+      _p_b_eclass($180, $181);
+      var $182=$1;
+      var $183=(($182)|0);
+      var $184=HEAPU32[(($183)>>2)];
+      var $185=$1;
+      var $186=(($185+4)|0);
+      var $187=HEAPU32[(($186)>>2)];
+      var $188=(($184)>>>0) < (($187)>>>0);
+      if ($188) { var $194 = 1;__label__ = 35; break; } else { __label__ = 34; break; }
+    case 34: 
+      var $190=$1;
+      var $191=_seterr($190, 7);
+      var $192=(($191)|0)!=0;
+      var $194 = $192;__label__ = 35; break;
+    case 35: 
+      var $194;
+      var $195=(($194)&1);
+      var $196=$1;
+      var $197=(($196)|0);
+      var $198=HEAPU32[(($197)>>2)];
+      var $199=$1;
+      var $200=(($199+4)|0);
+      var $201=HEAPU32[(($200)>>2)];
+      var $202=(($198)>>>0) < (($201)>>>0);
+      if ($202) { __label__ = 36; break; } else { __label__ = 40; break; }
+    case 36: 
+      var $204=$1;
+      var $205=(($204)|0);
+      var $206=HEAP32[(($205)>>2)];
+      var $207=(($206+1)|0);
+      var $208=$1;
+      var $209=(($208+4)|0);
+      var $210=HEAPU32[(($209)>>2)];
+      var $211=(($207)>>>0) < (($210)>>>0);
+      if ($211) { __label__ = 37; break; } else { __label__ = 40; break; }
+    case 37: 
+      var $213=$1;
+      var $214=(($213)|0);
+      var $215=HEAP32[(($214)>>2)];
+      var $216=HEAP8[($215)];
+      var $217=(($216 << 24) >> 24);
+      var $218=(($217)|0)==61;
+      if ($218) { __label__ = 38; break; } else { __label__ = 40; break; }
+    case 38: 
+      var $220=$1;
+      var $221=(($220)|0);
+      var $222=HEAP32[(($221)>>2)];
+      var $223=(($222+1)|0);
+      var $224=HEAP8[($223)];
+      var $225=(($224 << 24) >> 24);
+      var $226=(($225)|0)==93;
+      if ($226) { __label__ = 39; break; } else { __label__ = 40; break; }
+    case 39: 
+      var $228=$1;
+      var $229=(($228)|0);
+      var $230=HEAP32[(($229)>>2)];
+      var $231=(($230+2)|0);
+      HEAP32[(($229)>>2)]=$231;
+      if (1) { var $238 = 1;__label__ = 42; break; } else { __label__ = 41; break; }
+    case 40: 
+      if (0) { var $238 = 1;__label__ = 42; break; } else { __label__ = 41; break; }
+    case 41: 
+      var $234=$1;
+      var $235=_seterr($234, 3);
+      var $236=(($235)|0)!=0;
+      var $238 = $236;__label__ = 42; break;
+    case 42: 
+      var $238;
+      var $239=(($238)&1);
+      __label__ = 62; break;
+    case 43: 
+      var $241=$1;
+      var $242=_p_b_symbol($241);
+      $start=$242;
+      var $243=$1;
+      var $244=(($243)|0);
+      var $245=HEAPU32[(($244)>>2)];
+      var $246=$1;
+      var $247=(($246+4)|0);
+      var $248=HEAPU32[(($247)>>2)];
+      var $249=(($245)>>>0) < (($248)>>>0);
+      if ($249) { __label__ = 44; break; } else { __label__ = 54; break; }
+    case 44: 
+      var $251=$1;
+      var $252=(($251)|0);
+      var $253=HEAP32[(($252)>>2)];
+      var $254=HEAP8[($253)];
+      var $255=(($254 << 24) >> 24);
+      var $256=(($255)|0)==45;
+      if ($256) { __label__ = 45; break; } else { __label__ = 54; break; }
+    case 45: 
+      var $258=$1;
+      var $259=(($258)|0);
+      var $260=HEAP32[(($259)>>2)];
+      var $261=(($260+1)|0);
+      var $262=$1;
+      var $263=(($262+4)|0);
+      var $264=HEAPU32[(($263)>>2)];
+      var $265=(($261)>>>0) < (($264)>>>0);
+      if ($265) { __label__ = 46; break; } else { __label__ = 54; break; }
+    case 46: 
+      var $267=$1;
+      var $268=(($267)|0);
+      var $269=HEAP32[(($268)>>2)];
+      var $270=(($269+1)|0);
+      var $271=HEAP8[($270)];
+      var $272=(($271 << 24) >> 24);
+      var $273=(($272)|0)!=93;
+      if ($273) { __label__ = 47; break; } else { __label__ = 54; break; }
+    case 47: 
+      var $275=$1;
+      var $276=(($275)|0);
+      var $277=HEAP32[(($276)>>2)];
+      var $278=(($277+1)|0);
+      HEAP32[(($276)>>2)]=$278;
+      var $279=$1;
+      var $280=(($279)|0);
+      var $281=HEAPU32[(($280)>>2)];
+      var $282=$1;
+      var $283=(($282+4)|0);
+      var $284=HEAPU32[(($283)>>2)];
+      var $285=(($281)>>>0) < (($284)>>>0);
+      if ($285) { __label__ = 48; break; } else { __label__ = 50; break; }
+    case 48: 
+      var $287=$1;
+      var $288=(($287)|0);
+      var $289=HEAP32[(($288)>>2)];
+      var $290=HEAP8[($289)];
+      var $291=(($290 << 24) >> 24);
+      var $292=(($291)|0)==45;
+      if ($292) { __label__ = 49; break; } else { __label__ = 50; break; }
+    case 49: 
+      var $294=$1;
+      var $295=(($294)|0);
+      var $296=HEAP32[(($295)>>2)];
+      var $297=(($296+1)|0);
+      HEAP32[(($295)>>2)]=$297;
+      if (1) { __label__ = 51; break; } else { __label__ = 52; break; }
+    case 50: 
+      if (0) { __label__ = 51; break; } else { __label__ = 52; break; }
+    case 51: 
+      $finish=45;
+      __label__ = 53; break;
+    case 52: 
+      var $301=$1;
+      var $302=_p_b_symbol($301);
+      $finish=$302;
+      __label__ = 53; break;
+    case 53: 
+      __label__ = 55; break;
+    case 54: 
+      var $305=$start;
+      $finish=$305;
+      __label__ = 55; break;
+    case 55: 
+      var $307=$start;
+      var $308=(($307 << 24) >> 24);
+      var $309=$finish;
+      var $310=(($309 << 24) >> 24);
+      var $311=(($308)|0) <= (($310)|0);
+      if ($311) { var $317 = 1;__label__ = 57; break; } else { __label__ = 56; break; }
+    case 56: 
+      var $313=$1;
+      var $314=_seterr($313, 11);
+      var $315=(($314)|0)!=0;
+      var $317 = $315;__label__ = 57; break;
+    case 57: 
+      var $317;
+      var $318=(($317)&1);
+      var $319=$start;
+      var $320=(($319 << 24) >> 24);
+      $i=$320;
+      __label__ = 58; break;
+    case 58: 
+      var $322=$i;
+      var $323=$finish;
+      var $324=(($323 << 24) >> 24);
+      var $325=(($322)|0) <= (($324)|0);
+      if ($325) { __label__ = 59; break; } else { __label__ = 61; break; }
+    case 59: 
+      var $327=$2;
+      var $328=(($327+4)|0);
+      var $329=HEAPU8[($328)];
+      var $330=(($329)&255);
+      var $331=$i;
+      var $332=(($331) & 255);
+      var $333=(($332)&255);
+      var $334=$2;
+      var $335=(($334)|0);
+      var $336=HEAP32[(($335)>>2)];
+      var $337=(($336+$333)|0);
+      var $338=HEAPU8[($337)];
+      var $339=(($338)&255);
+      var $340=$339 | $330;
+      var $341=(($340) & 255);
+      HEAP8[($337)]=$341;
+      var $342=$i;
+      var $343=$2;
+      var $344=(($343+5)|0);
+      var $345=HEAPU8[($344)];
+      var $346=(($345)&255);
+      var $347=((($346)+($342))|0);
+      var $348=(($347) & 255);
+      HEAP8[($344)]=$348;
+      __label__ = 60; break;
+    case 60: 
+      var $350=$i;
+      var $351=((($350)+(1))|0);
+      $i=$351;
+      __label__ = 58; break;
+    case 61: 
+      __label__ = 62; break;
+    case 62: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_b_term["X"]=1;
+
+function _freezeset($p, $cs) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $h;
+      var $i;
+      var $top;
+      var $cs2;
+      var $css;
+      $1=$p;
+      $2=$cs;
+      var $3=$2;
+      var $4=(($3+5)|0);
+      var $5=HEAP8[($4)];
+      $h=$5;
+      var $6=$1;
+      var $7=(($6+28)|0);
+      var $8=HEAP32[(($7)>>2)];
+      var $9=(($8+12)|0);
+      var $10=HEAP32[(($9)>>2)];
+      var $11=$1;
+      var $12=(($11+28)|0);
+      var $13=HEAP32[(($12)>>2)];
+      var $14=(($13+16)|0);
+      var $15=HEAP32[(($14)>>2)];
+      var $16=(($15+($10<<4))|0);
+      $top=$16;
+      var $17=$1;
+      var $18=(($17+28)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=(($19+8)|0);
+      var $21=HEAP32[(($20)>>2)];
+      $css=$21;
+      var $22=$1;
+      var $23=(($22+28)|0);
+      var $24=HEAP32[(($23)>>2)];
+      var $25=(($24+16)|0);
+      var $26=HEAP32[(($25)>>2)];
+      var $27=(($26)|0);
+      $cs2=$27;
+      __label__ = 3; break;
+    case 3: 
+      var $29=$cs2;
+      var $30=$top;
+      var $31=(($29)>>>0) < (($30)>>>0);
+      if ($31) { __label__ = 4; break; } else { __label__ = 17; break; }
+    case 4: 
+      var $33=$cs2;
+      var $34=(($33+5)|0);
+      var $35=HEAPU8[($34)];
+      var $36=(($35)&255);
+      var $37=$h;
+      var $38=(($37)&255);
+      var $39=(($36)|0)==(($38)|0);
+      if ($39) { __label__ = 5; break; } else { __label__ = 15; break; }
+    case 5: 
+      var $41=$cs2;
+      var $42=$2;
+      var $43=(($41)|0)!=(($42)|0);
+      if ($43) { __label__ = 6; break; } else { __label__ = 15; break; }
+    case 6: 
+      $i=0;
+      __label__ = 7; break;
+    case 7: 
+      var $46=$i;
+      var $47=$css;
+      var $48=(($46)>>>0) < (($47)>>>0);
+      if ($48) { __label__ = 8; break; } else { __label__ = 12; break; }
+    case 8: 
+      var $50=$i;
+      var $51=(($50) & 255);
+      var $52=(($51)&255);
+      var $53=$cs2;
+      var $54=(($53)|0);
+      var $55=HEAP32[(($54)>>2)];
+      var $56=(($55+$52)|0);
+      var $57=HEAPU8[($56)];
+      var $58=(($57)&255);
+      var $59=$cs2;
+      var $60=(($59+4)|0);
+      var $61=HEAPU8[($60)];
+      var $62=(($61)&255);
+      var $63=$58 & $62;
+      var $64=(($63)|0)!=0;
+      var $65=$64 ^ 1;
+      var $66=$65 ^ 1;
+      var $67=(($66)&1);
+      var $68=$i;
+      var $69=(($68) & 255);
+      var $70=(($69)&255);
+      var $71=$2;
+      var $72=(($71)|0);
+      var $73=HEAP32[(($72)>>2)];
+      var $74=(($73+$70)|0);
+      var $75=HEAPU8[($74)];
+      var $76=(($75)&255);
+      var $77=$2;
+      var $78=(($77+4)|0);
+      var $79=HEAPU8[($78)];
+      var $80=(($79)&255);
+      var $81=$76 & $80;
+      var $82=(($81)|0)!=0;
+      var $83=$82 ^ 1;
+      var $84=$83 ^ 1;
+      var $85=(($84)&1);
+      var $86=(($67)|0)!=(($85)|0);
+      if ($86) { __label__ = 9; break; } else { __label__ = 10; break; }
+    case 9: 
+      __label__ = 12; break;
+    case 10: 
+      __label__ = 11; break;
+    case 11: 
+      var $90=$i;
+      var $91=((($90)+(1))|0);
+      $i=$91;
+      __label__ = 7; break;
+    case 12: 
+      var $93=$i;
+      var $94=$css;
+      var $95=(($93)|0)==(($94)|0);
+      if ($95) { __label__ = 13; break; } else { __label__ = 14; break; }
+    case 13: 
+      __label__ = 17; break;
+    case 14: 
+      __label__ = 15; break;
+    case 15: 
+      __label__ = 16; break;
+    case 16: 
+      var $100=$cs2;
+      var $101=(($100+16)|0);
+      $cs2=$101;
+      __label__ = 3; break;
+    case 17: 
+      var $103=$cs2;
+      var $104=$top;
+      var $105=(($103)>>>0) < (($104)>>>0);
+      if ($105) { __label__ = 18; break; } else { __label__ = 19; break; }
+    case 18: 
+      var $107=$1;
+      var $108=$2;
+      _freeset($107, $108);
+      var $109=$cs2;
+      $2=$109;
+      __label__ = 19; break;
+    case 19: 
+      var $111=$2;
+      var $112=$1;
+      var $113=(($112+28)|0);
+      var $114=HEAP32[(($113)>>2)];
+      var $115=(($114+16)|0);
+      var $116=HEAP32[(($115)>>2)];
+      var $117=$111;
+      var $118=$116;
+      var $119=((($117)-($118))|0);
+      var $120=((((($119)|0))/(16))&-1);
+      ;
+      return $120;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_freezeset["X"]=1;
+
+function _p_b_cclass($p, $cs) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $sp;
+      var $cp;
+      var $len;
+      var $u;
+      var $c;
+      $1=$p;
+      $2=$cs;
+      var $3=$1;
+      var $4=(($3)|0);
+      var $5=HEAP32[(($4)>>2)];
+      $sp=$5;
+      __label__ = 3; break;
+    case 3: 
+      var $7=$1;
+      var $8=(($7)|0);
+      var $9=HEAPU32[(($8)>>2)];
+      var $10=$1;
+      var $11=(($10+4)|0);
+      var $12=HEAPU32[(($11)>>2)];
+      var $13=(($9)>>>0) < (($12)>>>0);
+      if ($13) { __label__ = 4; break; } else { var $23 = 0;__label__ = 5; break; }
+    case 4: 
+      var $15=$1;
+      var $16=(($15)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=HEAPU8[($17)];
+      var $19=(($18)&255);
+      var $20=_isalpha($19);
+      var $21=(($20)|0)!=0;
+      var $23 = $21;__label__ = 5; break;
+    case 5: 
+      var $23;
+      if ($23) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      var $25=$1;
+      var $26=(($25)|0);
+      var $27=HEAP32[(($26)>>2)];
+      var $28=(($27+1)|0);
+      HEAP32[(($26)>>2)]=$28;
+      __label__ = 3; break;
+    case 7: 
+      var $30=$1;
+      var $31=(($30)|0);
+      var $32=HEAP32[(($31)>>2)];
+      var $33=$sp;
+      var $34=$32;
+      var $35=$33;
+      var $36=((($34)-($35))|0);
+      $len=$36;
+      $cp=((_cclasses)|0);
+      __label__ = 8; break;
+    case 8: 
+      var $38=$cp;
+      var $39=(($38)|0);
+      var $40=HEAP32[(($39)>>2)];
+      var $41=(($40)|0)!=0;
+      if ($41) { __label__ = 9; break; } else { __label__ = 14; break; }
+    case 9: 
+      var $43=$cp;
+      var $44=(($43)|0);
+      var $45=HEAP32[(($44)>>2)];
+      var $46=$sp;
+      var $47=$len;
+      var $48=_strncmp($45, $46, $47);
+      var $49=(($48)|0)==0;
+      if ($49) { __label__ = 10; break; } else { __label__ = 12; break; }
+    case 10: 
+      var $51=$len;
+      var $52=$cp;
+      var $53=(($52)|0);
+      var $54=HEAP32[(($53)>>2)];
+      var $55=(($54+$51)|0);
+      var $56=HEAP8[($55)];
+      var $57=(($56 << 24) >> 24);
+      var $58=(($57)|0)==0;
+      if ($58) { __label__ = 11; break; } else { __label__ = 12; break; }
+    case 11: 
+      __label__ = 14; break;
+    case 12: 
+      __label__ = 13; break;
+    case 13: 
+      var $62=$cp;
+      var $63=(($62+12)|0);
+      $cp=$63;
+      __label__ = 8; break;
+    case 14: 
+      var $65=$cp;
+      var $66=(($65)|0);
+      var $67=HEAP32[(($66)>>2)];
+      var $68=(($67)|0)==0;
+      if ($68) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      var $70=$1;
+      var $71=_seterr($70, 4);
+      __label__ = 23; break;
+    case 16: 
+      var $73=$cp;
+      var $74=(($73+4)|0);
+      var $75=HEAP32[(($74)>>2)];
+      $u=$75;
+      __label__ = 17; break;
+    case 17: 
+      var $77=$u;
+      var $78=(($77+1)|0);
+      $u=$78;
+      var $79=HEAP8[($77)];
+      $c=$79;
+      var $80=(($79 << 24) >> 24);
+      var $81=(($80)|0)!=0;
+      if ($81) { __label__ = 18; break; } else { __label__ = 19; break; }
+    case 18: 
+      var $83=$2;
+      var $84=(($83+4)|0);
+      var $85=HEAPU8[($84)];
+      var $86=(($85)&255);
+      var $87=$c;
+      var $88=(($87)&255);
+      var $89=$2;
+      var $90=(($89)|0);
+      var $91=HEAP32[(($90)>>2)];
+      var $92=(($91+$88)|0);
+      var $93=HEAPU8[($92)];
+      var $94=(($93)&255);
+      var $95=$94 | $86;
+      var $96=(($95) & 255);
+      HEAP8[($92)]=$96;
+      var $97=$c;
+      var $98=(($97 << 24) >> 24);
+      var $99=$2;
+      var $100=(($99+5)|0);
+      var $101=HEAPU8[($100)];
+      var $102=(($101)&255);
+      var $103=((($102)+($98))|0);
+      var $104=(($103) & 255);
+      HEAP8[($100)]=$104;
+      __label__ = 17; break;
+    case 19: 
+      var $106=$cp;
+      var $107=(($106+8)|0);
+      var $108=HEAP32[(($107)>>2)];
+      $u=$108;
+      __label__ = 20; break;
+    case 20: 
+      var $110=$u;
+      var $111=HEAP8[($110)];
+      var $112=(($111 << 24) >> 24);
+      var $113=(($112)|0)!=0;
+      if ($113) { __label__ = 21; break; } else { __label__ = 23; break; }
+    case 21: 
+      var $115=$1;
+      var $116=$2;
+      var $117=$u;
+      _mcadd($115, $116, $117);
+      __label__ = 22; break;
+    case 22: 
+      var $119=$u;
+      var $120=_strlen($119);
+      var $121=((($120)+(1))|0);
+      var $122=$u;
+      var $123=(($122+$121)|0);
+      $u=$123;
+      __label__ = 20; break;
+    case 23: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_b_cclass["X"]=1;
+
+function _p_b_eclass($p, $cs) {
+  ;
+  var __label__;
+
+  var $1;
+  var $2;
+  var $c;
+  $1=$p;
+  $2=$cs;
+  var $3=$1;
+  var $4=_p_b_coll_elem($3, 61);
+  $c=$4;
+  var $5=$2;
+  var $6=(($5+4)|0);
+  var $7=HEAPU8[($6)];
+  var $8=(($7)&255);
+  var $9=$c;
+  var $10=(($9)&255);
+  var $11=$2;
+  var $12=(($11)|0);
+  var $13=HEAP32[(($12)>>2)];
+  var $14=(($13+$10)|0);
+  var $15=HEAPU8[($14)];
+  var $16=(($15)&255);
+  var $17=$16 | $8;
+  var $18=(($17) & 255);
+  HEAP8[($14)]=$18;
+  var $19=$c;
+  var $20=(($19 << 24) >> 24);
+  var $21=$2;
+  var $22=(($21+5)|0);
+  var $23=HEAPU8[($22)];
+  var $24=(($23)&255);
+  var $25=((($24)+($20))|0);
+  var $26=(($25) & 255);
+  HEAP8[($22)]=$26;
+  ;
+  return;
+}
+
+
+function _p_b_symbol($p) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $value;
+      $2=$p;
+      var $3=$2;
+      var $4=(($3)|0);
+      var $5=HEAPU32[(($4)>>2)];
+      var $6=$2;
+      var $7=(($6+4)|0);
+      var $8=HEAPU32[(($7)>>2)];
+      var $9=(($5)>>>0) < (($8)>>>0);
+      if ($9) { var $15 = 1;__label__ = 4; break; } else { __label__ = 3; break; }
+    case 3: 
+      var $11=$2;
+      var $12=_seterr($11, 7);
+      var $13=(($12)|0)!=0;
+      var $15 = $13;__label__ = 4; break;
+    case 4: 
+      var $15;
+      var $16=(($15)&1);
+      var $17=$2;
+      var $18=(($17)|0);
+      var $19=HEAPU32[(($18)>>2)];
+      var $20=$2;
+      var $21=(($20+4)|0);
+      var $22=HEAPU32[(($21)>>2)];
+      var $23=(($19)>>>0) < (($22)>>>0);
+      if ($23) { __label__ = 5; break; } else { __label__ = 9; break; }
+    case 5: 
+      var $25=$2;
+      var $26=(($25)|0);
+      var $27=HEAP32[(($26)>>2)];
+      var $28=(($27+1)|0);
+      var $29=$2;
+      var $30=(($29+4)|0);
+      var $31=HEAPU32[(($30)>>2)];
+      var $32=(($28)>>>0) < (($31)>>>0);
+      if ($32) { __label__ = 6; break; } else { __label__ = 9; break; }
+    case 6: 
+      var $34=$2;
+      var $35=(($34)|0);
+      var $36=HEAP32[(($35)>>2)];
+      var $37=HEAP8[($36)];
+      var $38=(($37 << 24) >> 24);
+      var $39=(($38)|0)==91;
+      if ($39) { __label__ = 7; break; } else { __label__ = 9; break; }
+    case 7: 
+      var $41=$2;
+      var $42=(($41)|0);
+      var $43=HEAP32[(($42)>>2)];
+      var $44=(($43+1)|0);
+      var $45=HEAP8[($44)];
+      var $46=(($45 << 24) >> 24);
+      var $47=(($46)|0)==46;
+      if ($47) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $49=$2;
+      var $50=(($49)|0);
+      var $51=HEAP32[(($50)>>2)];
+      var $52=(($51+2)|0);
+      HEAP32[(($50)>>2)]=$52;
+      if (1) { __label__ = 11; break; } else { __label__ = 10; break; }
+    case 9: 
+      if (0) { __label__ = 11; break; } else { __label__ = 10; break; }
+    case 10: 
+      var $55=$2;
+      var $56=(($55)|0);
+      var $57=HEAP32[(($56)>>2)];
+      var $58=(($57+1)|0);
+      HEAP32[(($56)>>2)]=$58;
+      var $59=HEAP8[($57)];
+      $1=$59;
+      __label__ = 19; break;
+    case 11: 
+      var $61=$2;
+      var $62=_p_b_coll_elem($61, 46);
+      $value=$62;
+      var $63=$2;
+      var $64=(($63)|0);
+      var $65=HEAPU32[(($64)>>2)];
+      var $66=$2;
+      var $67=(($66+4)|0);
+      var $68=HEAPU32[(($67)>>2)];
+      var $69=(($65)>>>0) < (($68)>>>0);
+      if ($69) { __label__ = 12; break; } else { __label__ = 16; break; }
+    case 12: 
+      var $71=$2;
+      var $72=(($71)|0);
+      var $73=HEAP32[(($72)>>2)];
+      var $74=(($73+1)|0);
+      var $75=$2;
+      var $76=(($75+4)|0);
+      var $77=HEAPU32[(($76)>>2)];
+      var $78=(($74)>>>0) < (($77)>>>0);
+      if ($78) { __label__ = 13; break; } else { __label__ = 16; break; }
+    case 13: 
+      var $80=$2;
+      var $81=(($80)|0);
+      var $82=HEAP32[(($81)>>2)];
+      var $83=HEAP8[($82)];
+      var $84=(($83 << 24) >> 24);
+      var $85=(($84)|0)==46;
+      if ($85) { __label__ = 14; break; } else { __label__ = 16; break; }
+    case 14: 
+      var $87=$2;
+      var $88=(($87)|0);
+      var $89=HEAP32[(($88)>>2)];
+      var $90=(($89+1)|0);
+      var $91=HEAP8[($90)];
+      var $92=(($91 << 24) >> 24);
+      var $93=(($92)|0)==93;
+      if ($93) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      var $95=$2;
+      var $96=(($95)|0);
+      var $97=HEAP32[(($96)>>2)];
+      var $98=(($97+2)|0);
+      HEAP32[(($96)>>2)]=$98;
+      if (1) { var $105 = 1;__label__ = 18; break; } else { __label__ = 17; break; }
+    case 16: 
+      if (0) { var $105 = 1;__label__ = 18; break; } else { __label__ = 17; break; }
+    case 17: 
+      var $101=$2;
+      var $102=_seterr($101, 3);
+      var $103=(($102)|0)!=0;
+      var $105 = $103;__label__ = 18; break;
+    case 18: 
+      var $105;
+      var $106=(($105)&1);
+      var $107=$value;
+      $1=$107;
+      __label__ = 19; break;
+    case 19: 
+      var $109=$1;
+      ;
+      return $109;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_b_symbol["X"]=1;
+
+function _p_b_coll_elem($p, $endc) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $sp;
+      var $cp;
+      var $len;
+      $2=$p;
+      $3=$endc;
+      var $4=$2;
+      var $5=(($4)|0);
+      var $6=HEAP32[(($5)>>2)];
+      $sp=$6;
+      __label__ = 3; break;
+    case 3: 
+      var $8=$2;
+      var $9=(($8)|0);
+      var $10=HEAPU32[(($9)>>2)];
+      var $11=$2;
+      var $12=(($11+4)|0);
+      var $13=HEAPU32[(($12)>>2)];
+      var $14=(($10)>>>0) < (($13)>>>0);
+      if ($14) { __label__ = 4; break; } else { var $52 = 0;__label__ = 9; break; }
+    case 4: 
+      var $16=$2;
+      var $17=(($16)|0);
+      var $18=HEAPU32[(($17)>>2)];
+      var $19=$2;
+      var $20=(($19+4)|0);
+      var $21=HEAPU32[(($20)>>2)];
+      var $22=(($18)>>>0) < (($21)>>>0);
+      if ($22) { __label__ = 5; break; } else { var $49 = 0;__label__ = 8; break; }
+    case 5: 
+      var $24=$2;
+      var $25=(($24)|0);
+      var $26=HEAP32[(($25)>>2)];
+      var $27=(($26+1)|0);
+      var $28=$2;
+      var $29=(($28+4)|0);
+      var $30=HEAPU32[(($29)>>2)];
+      var $31=(($27)>>>0) < (($30)>>>0);
+      if ($31) { __label__ = 6; break; } else { var $49 = 0;__label__ = 8; break; }
+    case 6: 
+      var $33=$2;
+      var $34=(($33)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=HEAP8[($35)];
+      var $37=(($36 << 24) >> 24);
+      var $38=$3;
+      var $39=(($37)|0)==(($38)|0);
+      if ($39) { __label__ = 7; break; } else { var $49 = 0;__label__ = 8; break; }
+    case 7: 
+      var $41=$2;
+      var $42=(($41)|0);
+      var $43=HEAP32[(($42)>>2)];
+      var $44=(($43+1)|0);
+      var $45=HEAP8[($44)];
+      var $46=(($45 << 24) >> 24);
+      var $47=(($46)|0)==93;
+      var $49 = $47;__label__ = 8; break;
+    case 8: 
+      var $49;
+      var $50=$49 ^ 1;
+      var $52 = $50;__label__ = 9; break;
+    case 9: 
+      var $52;
+      if ($52) { __label__ = 10; break; } else { __label__ = 11; break; }
+    case 10: 
+      var $54=$2;
+      var $55=(($54)|0);
+      var $56=HEAP32[(($55)>>2)];
+      var $57=(($56+1)|0);
+      HEAP32[(($55)>>2)]=$57;
+      __label__ = 3; break;
+    case 11: 
+      var $59=$2;
+      var $60=(($59)|0);
+      var $61=HEAPU32[(($60)>>2)];
+      var $62=$2;
+      var $63=(($62+4)|0);
+      var $64=HEAPU32[(($63)>>2)];
+      var $65=(($61)>>>0) < (($64)>>>0);
+      if ($65) { __label__ = 13; break; } else { __label__ = 12; break; }
+    case 12: 
+      var $67=$2;
+      var $68=_seterr($67, 7);
+      $1=0;
+      __label__ = 23; break;
+    case 13: 
+      var $70=$2;
+      var $71=(($70)|0);
+      var $72=HEAP32[(($71)>>2)];
+      var $73=$sp;
+      var $74=$72;
+      var $75=$73;
+      var $76=((($74)-($75))|0);
+      $len=$76;
+      $cp=((_cnames)|0);
+      __label__ = 14; break;
+    case 14: 
+      var $78=$cp;
+      var $79=(($78)|0);
+      var $80=HEAP32[(($79)>>2)];
+      var $81=(($80)|0)!=0;
+      if ($81) { __label__ = 15; break; } else { __label__ = 20; break; }
+    case 15: 
+      var $83=$cp;
+      var $84=(($83)|0);
+      var $85=HEAP32[(($84)>>2)];
+      var $86=$sp;
+      var $87=$len;
+      var $88=_strncmp($85, $86, $87);
+      var $89=(($88)|0)==0;
+      if ($89) { __label__ = 16; break; } else { __label__ = 18; break; }
+    case 16: 
+      var $91=$len;
+      var $92=$cp;
+      var $93=(($92)|0);
+      var $94=HEAP32[(($93)>>2)];
+      var $95=(($94+$91)|0);
+      var $96=HEAP8[($95)];
+      var $97=(($96 << 24) >> 24);
+      var $98=(($97)|0)==0;
+      if ($98) { __label__ = 17; break; } else { __label__ = 18; break; }
+    case 17: 
+      var $100=$cp;
+      var $101=(($100+4)|0);
+      var $102=HEAP8[($101)];
+      $1=$102;
+      __label__ = 23; break;
+    case 18: 
+      __label__ = 19; break;
+    case 19: 
+      var $105=$cp;
+      var $106=(($105+8)|0);
+      $cp=$106;
+      __label__ = 14; break;
+    case 20: 
+      var $108=$len;
+      var $109=(($108)|0)==1;
+      if ($109) { __label__ = 21; break; } else { __label__ = 22; break; }
+    case 21: 
+      var $111=$sp;
+      var $112=HEAP8[($111)];
+      $1=$112;
+      __label__ = 23; break;
+    case 22: 
+      var $114=$2;
+      var $115=_seterr($114, 3);
+      $1=0;
+      __label__ = 23; break;
+    case 23: 
+      var $117=$1;
+      ;
+      return $117;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_b_coll_elem["X"]=1;
+
+function _mcadd($p, $cs, $cp) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $oldend;
+      var $np;
+      $1=$p;
+      $2=$cs;
+      $3=$cp;
+      var $4=$2;
+      var $5=(($4+8)|0);
+      var $6=HEAP32[(($5)>>2)];
+      $oldend=$6;
+      var $7=$3;
+      var $8=_strlen($7);
+      var $9=((($8)+(1))|0);
+      var $10=$2;
+      var $11=(($10+8)|0);
+      var $12=HEAP32[(($11)>>2)];
+      var $13=((($12)+($9))|0);
+      HEAP32[(($11)>>2)]=$13;
+      var $14=$2;
+      var $15=(($14+12)|0);
+      var $16=HEAP32[(($15)>>2)];
+      var $17=$2;
+      var $18=(($17+8)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=_realloc($16, $19);
+      $np=$20;
+      var $21=$np;
+      var $22=(($21)|0)==0;
+      if ($22) { __label__ = 3; break; } else { __label__ = 6; break; }
+    case 3: 
+      var $24=$2;
+      var $25=(($24+12)|0);
+      var $26=HEAP32[(($25)>>2)];
+      var $27=(($26)|0)!=0;
+      if ($27) { __label__ = 4; break; } else { __label__ = 5; break; }
+    case 4: 
+      var $29=$2;
+      var $30=(($29+12)|0);
+      var $31=HEAP32[(($30)>>2)];
+      _free($31);
+      __label__ = 5; break;
+    case 5: 
+      var $33=$2;
+      var $34=(($33+12)|0);
+      HEAP32[(($34)>>2)]=0;
+      var $35=$1;
+      var $36=_seterr($35, 12);
+      __label__ = 7; break;
+    case 6: 
+      var $38=$np;
+      var $39=$2;
+      var $40=(($39+12)|0);
+      HEAP32[(($40)>>2)]=$38;
+      var $41=$2;
+      var $42=(($41+12)|0);
+      var $43=HEAP32[(($42)>>2)];
+      var $44=$oldend;
+      var $45=(($43+$44)|0);
+      var $46=((($45)-(1))|0);
+      var $47=$3;
+      var $48=$2;
+      var $49=(($48+8)|0);
+      var $50=HEAP32[(($49)>>2)];
+      var $51=$oldend;
+      var $52=((($50)-($51))|0);
+      var $53=((($52)+(1))|0);
+      var $54=_llvm_strlcpy($46, $47, $53);
+      __label__ = 7; break;
+    case 7: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_mcadd["X"]=1;
+
+function _p_ere_exp($p) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $c;
+      var $pos;
+      var $count;
+      var $count2;
+      var $subno;
+      var $wascaret;
+      $1=$p;
+      $wascaret=0;
+      var $2=$1;
+      var $3=(($2)|0);
+      var $4=HEAP32[(($3)>>2)];
+      var $5=(($4+1)|0);
+      HEAP32[(($3)>>2)]=$5;
+      var $6=HEAP8[($4)];
+      $c=$6;
+      var $7=$1;
+      var $8=(($7+20)|0);
+      var $9=HEAP32[(($8)>>2)];
+      $pos=$9;
+      var $10=$c;
+      var $11=(($10 << 24) >> 24);
+      if ((($11)|0) == 40) {
+        __label__ = 3; break;
+      }
+      else if ((($11)|0) == 41) {
+        __label__ = 16; break;
+      }
+      else if ((($11)|0) == 94) {
+        __label__ = 17; break;
+      }
+      else if ((($11)|0) == 36) {
+        __label__ = 18; break;
+      }
+      else if ((($11)|0) == 124) {
+        __label__ = 19; break;
+      }
+      else if ((($11)|0) == 42 || (($11)|0) == 43 || (($11)|0) == 63) {
+        __label__ = 20; break;
+      }
+      else if ((($11)|0) == 46) {
+        __label__ = 21; break;
+      }
+      else if ((($11)|0) == 91) {
+        __label__ = 25; break;
+      }
+      else if ((($11)|0) == 92) {
+        __label__ = 26; break;
+      }
+      else if ((($11)|0) == 123) {
+        __label__ = 29; break;
+      }
+      else {
+      __label__ = 33; break;
+      }
+      
+    case 3: 
+      var $13=$1;
+      var $14=(($13)|0);
+      var $15=HEAPU32[(($14)>>2)];
+      var $16=$1;
+      var $17=(($16+4)|0);
+      var $18=HEAPU32[(($17)>>2)];
+      var $19=(($15)>>>0) < (($18)>>>0);
+      if ($19) { var $25 = 1;__label__ = 5; break; } else { __label__ = 4; break; }
+    case 4: 
+      var $21=$1;
+      var $22=_seterr($21, 8);
+      var $23=(($22)|0)!=0;
+      var $25 = $23;__label__ = 5; break;
+    case 5: 
+      var $25;
+      var $26=(($25)&1);
+      var $27=$1;
+      var $28=(($27+28)|0);
+      var $29=HEAP32[(($28)>>2)];
+      var $30=(($29+68)|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=((($31)+(1))|0);
+      HEAP32[(($30)>>2)]=$32;
+      var $33=$1;
+      var $34=(($33+28)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=(($35+68)|0);
+      var $37=HEAP32[(($36)>>2)];
+      $subno=$37;
+      var $38=$subno;
+      var $39=(($38)|0) < 10;
+      if ($39) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      var $41=$1;
+      var $42=(($41+20)|0);
+      var $43=HEAP32[(($42)>>2)];
+      var $44=$subno;
+      var $45=$1;
+      var $46=(($45+32)|0);
+      var $47=(($46+($44<<2))|0);
+      HEAP32[(($47)>>2)]=$43;
+      __label__ = 7; break;
+    case 7: 
+      var $49=$1;
+      var $50=$subno;
+      _doemit($49, 1744830464, $50);
+      var $51=$1;
+      var $52=(($51)|0);
+      var $53=HEAPU32[(($52)>>2)];
+      var $54=$1;
+      var $55=(($54+4)|0);
+      var $56=HEAPU32[(($55)>>2)];
+      var $57=(($53)>>>0) < (($56)>>>0);
+      if ($57) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $59=$1;
+      var $60=(($59)|0);
+      var $61=HEAP32[(($60)>>2)];
+      var $62=HEAP8[($61)];
+      var $63=(($62 << 24) >> 24);
+      var $64=(($63)|0)==41;
+      if ($64) { __label__ = 10; break; } else { __label__ = 9; break; }
+    case 9: 
+      var $66=$1;
+      _p_ere($66, 41);
+      __label__ = 10; break;
+    case 10: 
+      var $68=$subno;
+      var $69=(($68)|0) < 10;
+      if ($69) { __label__ = 11; break; } else { __label__ = 12; break; }
+    case 11: 
+      var $71=$1;
+      var $72=(($71+20)|0);
+      var $73=HEAP32[(($72)>>2)];
+      var $74=$subno;
+      var $75=$1;
+      var $76=(($75+72)|0);
+      var $77=(($76+($74<<2))|0);
+      HEAP32[(($77)>>2)]=$73;
+      __label__ = 12; break;
+    case 12: 
+      var $79=$1;
+      var $80=$subno;
+      _doemit($79, 1879048192, $80);
+      var $81=$1;
+      var $82=(($81)|0);
+      var $83=HEAPU32[(($82)>>2)];
+      var $84=$1;
+      var $85=(($84+4)|0);
+      var $86=HEAPU32[(($85)>>2)];
+      var $87=(($83)>>>0) < (($86)>>>0);
+      if ($87) { __label__ = 13; break; } else { __label__ = 14; break; }
+    case 13: 
+      var $89=$1;
+      var $90=(($89)|0);
+      var $91=HEAP32[(($90)>>2)];
+      var $92=(($91+1)|0);
+      HEAP32[(($90)>>2)]=$92;
+      var $93=HEAP8[($91)];
+      var $94=(($93 << 24) >> 24);
+      var $95=(($94)|0)==41;
+      if ($95) { var $101 = 1;__label__ = 15; break; } else { __label__ = 14; break; }
+    case 14: 
+      var $97=$1;
+      var $98=_seterr($97, 8);
+      var $99=(($98)|0)!=0;
+      var $101 = $99;__label__ = 15; break;
+    case 15: 
+      var $101;
+      var $102=(($101)&1);
+      __label__ = 34; break;
+    case 16: 
+      var $104=$1;
+      var $105=_seterr($104, 8);
+      __label__ = 34; break;
+    case 17: 
+      var $107=$1;
+      _doemit($107, 402653184, 0);
+      var $108=$1;
+      var $109=(($108+28)|0);
+      var $110=HEAP32[(($109)>>2)];
+      var $111=(($110+40)|0);
+      var $112=HEAP32[(($111)>>2)];
+      var $113=$112 | 1;
+      HEAP32[(($111)>>2)]=$113;
+      var $114=$1;
+      var $115=(($114+28)|0);
+      var $116=HEAP32[(($115)>>2)];
+      var $117=(($116+44)|0);
+      var $118=HEAP32[(($117)>>2)];
+      var $119=((($118)+(1))|0);
+      HEAP32[(($117)>>2)]=$119;
+      $wascaret=1;
+      __label__ = 34; break;
+    case 18: 
+      var $121=$1;
+      _doemit($121, 536870912, 0);
+      var $122=$1;
+      var $123=(($122+28)|0);
+      var $124=HEAP32[(($123)>>2)];
+      var $125=(($124+40)|0);
+      var $126=HEAP32[(($125)>>2)];
+      var $127=$126 | 2;
+      HEAP32[(($125)>>2)]=$127;
+      var $128=$1;
+      var $129=(($128+28)|0);
+      var $130=HEAP32[(($129)>>2)];
+      var $131=(($130+48)|0);
+      var $132=HEAP32[(($131)>>2)];
+      var $133=((($132)+(1))|0);
+      HEAP32[(($131)>>2)]=$133;
+      __label__ = 34; break;
+    case 19: 
+      var $135=$1;
+      var $136=_seterr($135, 14);
+      __label__ = 34; break;
+    case 20: 
+      var $138=$1;
+      var $139=_seterr($138, 13);
+      __label__ = 34; break;
+    case 21: 
+      var $141=$1;
+      var $142=(($141+28)|0);
+      var $143=HEAP32[(($142)>>2)];
+      var $144=(($143+24)|0);
+      var $145=HEAP32[(($144)>>2)];
+      var $146=$145 & 8;
+      var $147=(($146)|0)!=0;
+      if ($147) { __label__ = 22; break; } else { __label__ = 23; break; }
+    case 22: 
+      var $149=$1;
+      _nonnewline($149);
+      __label__ = 24; break;
+    case 23: 
+      var $151=$1;
+      _doemit($151, 671088640, 0);
+      __label__ = 24; break;
+    case 24: 
+      __label__ = 34; break;
+    case 25: 
+      var $154=$1;
+      _p_bracket($154);
+      __label__ = 34; break;
+    case 26: 
+      var $156=$1;
+      var $157=(($156)|0);
+      var $158=HEAPU32[(($157)>>2)];
+      var $159=$1;
+      var $160=(($159+4)|0);
+      var $161=HEAPU32[(($160)>>2)];
+      var $162=(($158)>>>0) < (($161)>>>0);
+      if ($162) { var $168 = 1;__label__ = 28; break; } else { __label__ = 27; break; }
+    case 27: 
+      var $164=$1;
+      var $165=_seterr($164, 5);
+      var $166=(($165)|0)!=0;
+      var $168 = $166;__label__ = 28; break;
+    case 28: 
+      var $168;
+      var $169=(($168)&1);
+      var $170=$1;
+      var $171=(($170)|0);
+      var $172=HEAPU32[(($171)>>2)];
+      var $173=(($172+1)|0);
+      HEAP32[(($171)>>2)]=$173;
+      var $174=HEAP8[($172)];
+      $c=$174;
+      var $175=$1;
+      var $176=$c;
+      var $177=(($176 << 24) >> 24);
+      _ordinary($175, $177);
+      __label__ = 34; break;
+    case 29: 
+      var $179=$1;
+      var $180=(($179)|0);
+      var $181=HEAPU32[(($180)>>2)];
+      var $182=$1;
+      var $183=(($182+4)|0);
+      var $184=HEAPU32[(($183)>>2)];
+      var $185=(($181)>>>0) < (($184)>>>0);
+      if ($185) { __label__ = 30; break; } else { var $199 = 1;__label__ = 32; break; }
+    case 30: 
+      var $187=$1;
+      var $188=(($187)|0);
+      var $189=HEAP32[(($188)>>2)];
+      var $190=HEAPU8[($189)];
+      var $191=(($190)&255);
+      var $192=_isdigit($191);
+      var $193=(($192)|0)!=0;
+      if ($193) { __label__ = 31; break; } else { var $199 = 1;__label__ = 32; break; }
+    case 31: 
+      var $195=$1;
+      var $196=_seterr($195, 13);
+      var $197=(($196)|0)!=0;
+      var $199 = $197;__label__ = 32; break;
+    case 32: 
+      var $199;
+      var $200=(($199)&1);
+      __label__ = 33; break;
+    case 33: 
+      var $202=$1;
+      var $203=$c;
+      var $204=(($203 << 24) >> 24);
+      _ordinary($202, $204);
+      __label__ = 34; break;
+    case 34: 
+      var $206=$1;
+      var $207=(($206)|0);
+      var $208=HEAPU32[(($207)>>2)];
+      var $209=$1;
+      var $210=(($209+4)|0);
+      var $211=HEAPU32[(($210)>>2)];
+      var $212=(($208)>>>0) < (($211)>>>0);
+      if ($212) { __label__ = 36; break; } else { __label__ = 35; break; }
+    case 35: 
+      __label__ = 83; break;
+    case 36: 
+      var $215=$1;
+      var $216=(($215)|0);
+      var $217=HEAP32[(($216)>>2)];
+      var $218=HEAP8[($217)];
+      $c=$218;
+      var $219=$c;
+      var $220=(($219 << 24) >> 24);
+      var $221=(($220)|0)==42;
+      if ($221) { __label__ = 43; break; } else { __label__ = 37; break; }
+    case 37: 
+      var $223=$c;
+      var $224=(($223 << 24) >> 24);
+      var $225=(($224)|0)==43;
+      if ($225) { __label__ = 43; break; } else { __label__ = 38; break; }
+    case 38: 
+      var $227=$c;
+      var $228=(($227 << 24) >> 24);
+      var $229=(($228)|0)==63;
+      if ($229) { __label__ = 43; break; } else { __label__ = 39; break; }
+    case 39: 
+      var $231=$c;
+      var $232=(($231 << 24) >> 24);
+      var $233=(($232)|0)==123;
+      if ($233) { __label__ = 40; break; } else { __label__ = 42; break; }
+    case 40: 
+      var $235=$1;
+      var $236=(($235)|0);
+      var $237=HEAP32[(($236)>>2)];
+      var $238=(($237+1)|0);
+      var $239=$1;
+      var $240=(($239+4)|0);
+      var $241=HEAPU32[(($240)>>2)];
+      var $242=(($238)>>>0) < (($241)>>>0);
+      if ($242) { __label__ = 41; break; } else { __label__ = 42; break; }
+    case 41: 
+      var $244=$1;
+      var $245=(($244)|0);
+      var $246=HEAP32[(($245)>>2)];
+      var $247=(($246+1)|0);
+      var $248=HEAPU8[($247)];
+      var $249=(($248)&255);
+      var $250=_isdigit($249);
+      var $251=(($250)|0)!=0;
+      if ($251) { __label__ = 43; break; } else { __label__ = 42; break; }
+    case 42: 
+      __label__ = 83; break;
+    case 43: 
+      var $254=$1;
+      var $255=(($254)|0);
+      var $256=HEAP32[(($255)>>2)];
+      var $257=(($256+1)|0);
+      HEAP32[(($255)>>2)]=$257;
+      var $258=$wascaret;
+      var $259=(($258)|0)!=0;
+      if ($259) { __label__ = 44; break; } else { var $265 = 1;__label__ = 45; break; }
+    case 44: 
+      var $261=$1;
+      var $262=_seterr($261, 13);
+      var $263=(($262)|0)!=0;
+      var $265 = $263;__label__ = 45; break;
+    case 45: 
+      var $265;
+      var $266=(($265)&1);
+      var $267=$c;
+      var $268=(($267 << 24) >> 24);
+      if ((($268)|0) == 42) {
+        __label__ = 46; break;
+      }
+      else if ((($268)|0) == 43) {
+        __label__ = 47; break;
+      }
+      else if ((($268)|0) == 63) {
+        __label__ = 48; break;
+      }
+      else if ((($268)|0) == 123) {
+        __label__ = 49; break;
+      }
+      else {
+      __label__ = 73; break;
+      }
+      
+    case 46: 
+      var $270=$1;
+      var $271=$1;
+      var $272=(($271+20)|0);
+      var $273=HEAP32[(($272)>>2)];
+      var $274=$pos;
+      var $275=((($273)-($274))|0);
+      var $276=((($275)+(1))|0);
+      var $277=$pos;
+      _doinsert($270, 1207959552, $276, $277);
+      var $278=$1;
+      var $279=$1;
+      var $280=(($279+20)|0);
+      var $281=HEAP32[(($280)>>2)];
+      var $282=$pos;
+      var $283=((($281)-($282))|0);
+      _doemit($278, 1342177280, $283);
+      var $284=$1;
+      var $285=$1;
+      var $286=(($285+20)|0);
+      var $287=HEAP32[(($286)>>2)];
+      var $288=$pos;
+      var $289=((($287)-($288))|0);
+      var $290=((($289)+(1))|0);
+      var $291=$pos;
+      _doinsert($284, 1476395008, $290, $291);
+      var $292=$1;
+      var $293=$1;
+      var $294=(($293+20)|0);
+      var $295=HEAP32[(($294)>>2)];
+      var $296=$pos;
+      var $297=((($295)-($296))|0);
+      _doemit($292, 1610612736, $297);
+      __label__ = 73; break;
+    case 47: 
+      var $299=$1;
+      var $300=$1;
+      var $301=(($300+20)|0);
+      var $302=HEAP32[(($301)>>2)];
+      var $303=$pos;
+      var $304=((($302)-($303))|0);
+      var $305=((($304)+(1))|0);
+      var $306=$pos;
+      _doinsert($299, 1207959552, $305, $306);
+      var $307=$1;
+      var $308=$1;
+      var $309=(($308+20)|0);
+      var $310=HEAP32[(($309)>>2)];
+      var $311=$pos;
+      var $312=((($310)-($311))|0);
+      _doemit($307, 1342177280, $312);
+      __label__ = 73; break;
+    case 48: 
+      var $314=$1;
+      var $315=$1;
+      var $316=(($315+20)|0);
+      var $317=HEAP32[(($316)>>2)];
+      var $318=$pos;
+      var $319=((($317)-($318))|0);
+      var $320=((($319)+(1))|0);
+      var $321=$pos;
+      _doinsert($314, 2013265920, $320, $321);
+      var $322=$1;
+      var $323=$1;
+      var $324=(($323+20)|0);
+      var $325=HEAP32[(($324)>>2)];
+      var $326=$pos;
+      var $327=((($325)-($326))|0);
+      _doemit($322, -2147483648, $327);
+      var $328=$1;
+      var $329=$pos;
+      var $330=$1;
+      var $331=(($330+20)|0);
+      var $332=HEAP32[(($331)>>2)];
+      var $333=$pos;
+      var $334=((($332)-($333))|0);
+      _dofwd($328, $329, $334);
+      var $335=$1;
+      _doemit($335, -2013265920, 0);
+      var $336=$1;
+      var $337=$1;
+      var $338=(($337+20)|0);
+      var $339=HEAP32[(($338)>>2)];
+      var $340=((($339)-(1))|0);
+      var $341=$1;
+      var $342=(($341+20)|0);
+      var $343=HEAP32[(($342)>>2)];
+      var $344=$1;
+      var $345=(($344+20)|0);
+      var $346=HEAP32[(($345)>>2)];
+      var $347=((($346)-(1))|0);
+      var $348=((($343)-($347))|0);
+      _dofwd($336, $340, $348);
+      var $349=$1;
+      var $350=$1;
+      var $351=(($350+20)|0);
+      var $352=HEAP32[(($351)>>2)];
+      var $353=$1;
+      var $354=(($353+20)|0);
+      var $355=HEAP32[(($354)>>2)];
+      var $356=((($355)-(2))|0);
+      var $357=((($352)-($356))|0);
+      _doemit($349, -1879048192, $357);
+      __label__ = 73; break;
+    case 49: 
+      var $359=$1;
+      var $360=_p_count($359);
+      $count=$360;
+      var $361=$1;
+      var $362=(($361)|0);
+      var $363=HEAPU32[(($362)>>2)];
+      var $364=$1;
+      var $365=(($364+4)|0);
+      var $366=HEAPU32[(($365)>>2)];
+      var $367=(($363)>>>0) < (($366)>>>0);
+      if ($367) { __label__ = 50; break; } else { __label__ = 52; break; }
+    case 50: 
+      var $369=$1;
+      var $370=(($369)|0);
+      var $371=HEAP32[(($370)>>2)];
+      var $372=HEAP8[($371)];
+      var $373=(($372 << 24) >> 24);
+      var $374=(($373)|0)==44;
+      if ($374) { __label__ = 51; break; } else { __label__ = 52; break; }
+    case 51: 
+      var $376=$1;
+      var $377=(($376)|0);
+      var $378=HEAP32[(($377)>>2)];
+      var $379=(($378+1)|0);
+      HEAP32[(($377)>>2)]=$379;
+      if (1) { __label__ = 53; break; } else { __label__ = 59; break; }
+    case 52: 
+      if (0) { __label__ = 53; break; } else { __label__ = 59; break; }
+    case 53: 
+      var $382=$1;
+      var $383=(($382)|0);
+      var $384=HEAP32[(($383)>>2)];
+      var $385=HEAPU8[($384)];
+      var $386=(($385)&255);
+      var $387=_isdigit($386);
+      var $388=(($387)|0)!=0;
+      if ($388) { __label__ = 54; break; } else { __label__ = 57; break; }
+    case 54: 
+      var $390=$1;
+      var $391=_p_count($390);
+      $count2=$391;
+      var $392=$count;
+      var $393=$count2;
+      var $394=(($392)|0) <= (($393)|0);
+      if ($394) { var $400 = 1;__label__ = 56; break; } else { __label__ = 55; break; }
+    case 55: 
+      var $396=$1;
+      var $397=_seterr($396, 10);
+      var $398=(($397)|0)!=0;
+      var $400 = $398;__label__ = 56; break;
+    case 56: 
+      var $400;
+      var $401=(($400)&1);
+      __label__ = 58; break;
+    case 57: 
+      $count2=256;
+      __label__ = 58; break;
+    case 58: 
+      __label__ = 60; break;
+    case 59: 
+      var $405=$count;
+      $count2=$405;
+      __label__ = 60; break;
+    case 60: 
+      var $407=$1;
+      var $408=$pos;
+      var $409=$count;
+      var $410=$count2;
+      _repeat($407, $408, $409, $410);
+      var $411=$1;
+      var $412=(($411)|0);
+      var $413=HEAPU32[(($412)>>2)];
+      var $414=$1;
+      var $415=(($414+4)|0);
+      var $416=HEAPU32[(($415)>>2)];
+      var $417=(($413)>>>0) < (($416)>>>0);
+      if ($417) { __label__ = 61; break; } else { __label__ = 63; break; }
+    case 61: 
+      var $419=$1;
+      var $420=(($419)|0);
+      var $421=HEAP32[(($420)>>2)];
+      var $422=HEAP8[($421)];
+      var $423=(($422 << 24) >> 24);
+      var $424=(($423)|0)==125;
+      if ($424) { __label__ = 62; break; } else { __label__ = 63; break; }
+    case 62: 
+      var $426=$1;
+      var $427=(($426)|0);
+      var $428=HEAP32[(($427)>>2)];
+      var $429=(($428+1)|0);
+      HEAP32[(($427)>>2)]=$429;
+      if (1) { __label__ = 72; break; } else { __label__ = 64; break; }
+    case 63: 
+      if (0) { __label__ = 72; break; } else { __label__ = 64; break; }
+    case 64: 
+      __label__ = 65; break;
+    case 65: 
+      var $433=$1;
+      var $434=(($433)|0);
+      var $435=HEAPU32[(($434)>>2)];
+      var $436=$1;
+      var $437=(($436+4)|0);
+      var $438=HEAPU32[(($437)>>2)];
+      var $439=(($435)>>>0) < (($438)>>>0);
+      if ($439) { __label__ = 66; break; } else { var $448 = 0;__label__ = 67; break; }
+    case 66: 
+      var $441=$1;
+      var $442=(($441)|0);
+      var $443=HEAP32[(($442)>>2)];
+      var $444=HEAP8[($443)];
+      var $445=(($444 << 24) >> 24);
+      var $446=(($445)|0)!=125;
+      var $448 = $446;__label__ = 67; break;
+    case 67: 
+      var $448;
+      if ($448) { __label__ = 68; break; } else { __label__ = 69; break; }
+    case 68: 
+      var $450=$1;
+      var $451=(($450)|0);
+      var $452=HEAP32[(($451)>>2)];
+      var $453=(($452+1)|0);
+      HEAP32[(($451)>>2)]=$453;
+      __label__ = 65; break;
+    case 69: 
+      var $455=$1;
+      var $456=(($455)|0);
+      var $457=HEAPU32[(($456)>>2)];
+      var $458=$1;
+      var $459=(($458+4)|0);
+      var $460=HEAPU32[(($459)>>2)];
+      var $461=(($457)>>>0) < (($460)>>>0);
+      if ($461) { var $467 = 1;__label__ = 71; break; } else { __label__ = 70; break; }
+    case 70: 
+      var $463=$1;
+      var $464=_seterr($463, 9);
+      var $465=(($464)|0)!=0;
+      var $467 = $465;__label__ = 71; break;
+    case 71: 
+      var $467;
+      var $468=(($467)&1);
+      var $469=$1;
+      var $470=_seterr($469, 10);
+      __label__ = 72; break;
+    case 72: 
+      __label__ = 73; break;
+    case 73: 
+      var $473=$1;
+      var $474=(($473)|0);
+      var $475=HEAPU32[(($474)>>2)];
+      var $476=$1;
+      var $477=(($476+4)|0);
+      var $478=HEAPU32[(($477)>>2)];
+      var $479=(($475)>>>0) < (($478)>>>0);
+      if ($479) { __label__ = 75; break; } else { __label__ = 74; break; }
+    case 74: 
+      __label__ = 83; break;
+    case 75: 
+      var $482=$1;
+      var $483=(($482)|0);
+      var $484=HEAP32[(($483)>>2)];
+      var $485=HEAP8[($484)];
+      $c=$485;
+      var $486=$c;
+      var $487=(($486 << 24) >> 24);
+      var $488=(($487)|0)==42;
+      if ($488) { __label__ = 82; break; } else { __label__ = 76; break; }
+    case 76: 
+      var $490=$c;
+      var $491=(($490 << 24) >> 24);
+      var $492=(($491)|0)==43;
+      if ($492) { __label__ = 82; break; } else { __label__ = 77; break; }
+    case 77: 
+      var $494=$c;
+      var $495=(($494 << 24) >> 24);
+      var $496=(($495)|0)==63;
+      if ($496) { __label__ = 82; break; } else { __label__ = 78; break; }
+    case 78: 
+      var $498=$c;
+      var $499=(($498 << 24) >> 24);
+      var $500=(($499)|0)==123;
+      if ($500) { __label__ = 79; break; } else { __label__ = 81; break; }
+    case 79: 
+      var $502=$1;
+      var $503=(($502)|0);
+      var $504=HEAP32[(($503)>>2)];
+      var $505=(($504+1)|0);
+      var $506=$1;
+      var $507=(($506+4)|0);
+      var $508=HEAPU32[(($507)>>2)];
+      var $509=(($505)>>>0) < (($508)>>>0);
+      if ($509) { __label__ = 80; break; } else { __label__ = 81; break; }
+    case 80: 
+      var $511=$1;
+      var $512=(($511)|0);
+      var $513=HEAP32[(($512)>>2)];
+      var $514=(($513+1)|0);
+      var $515=HEAPU8[($514)];
+      var $516=(($515)&255);
+      var $517=_isdigit($516);
+      var $518=(($517)|0)!=0;
+      if ($518) { __label__ = 82; break; } else { __label__ = 81; break; }
+    case 81: 
+      __label__ = 83; break;
+    case 82: 
+      var $521=$1;
+      var $522=_seterr($521, 13);
+      __label__ = 83; break;
+    case 83: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_p_ere_exp["X"]=1;
+
+function _llvm_regerror($errcode, $preg, $errbuf, $errbuf_size) {
+  var __stackBase__  = STACKTOP; STACKTOP += 52; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $r;
+      var $len;
+      var $target;
+      var $s;
+      var $convbuf=__stackBase__;
+      $1=$errcode;
+      $2=$preg;
+      $3=$errbuf;
+      $4=$errbuf_size;
+      var $5=$1;
+      var $6=$5 & -257;
+      $target=$6;
+      var $7=$1;
+      var $8=(($7)|0)==255;
+      if ($8) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $10=$2;
+      var $11=(($convbuf)|0);
+      var $12=_regatoi($10, $11, 50);
+      $s=$12;
+      __label__ = 17; break;
+    case 4: 
+      $r=((_rerrs)|0);
+      __label__ = 5; break;
+    case 5: 
+      var $15=$r;
+      var $16=(($15)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=(($17)|0)!=0;
+      if ($18) { __label__ = 6; break; } else { __label__ = 10; break; }
+    case 6: 
+      var $20=$r;
+      var $21=(($20)|0);
+      var $22=HEAP32[(($21)>>2)];
+      var $23=$target;
+      var $24=(($22)|0)==(($23)|0);
+      if ($24) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      __label__ = 10; break;
+    case 8: 
+      __label__ = 9; break;
+    case 9: 
+      var $28=$r;
+      var $29=(($28+12)|0);
+      $r=$29;
+      __label__ = 5; break;
+    case 10: 
+      var $31=$1;
+      var $32=$31 & 256;
+      var $33=(($32)|0)!=0;
+      if ($33) { __label__ = 11; break; } else { __label__ = 15; break; }
+    case 11: 
+      var $35=$r;
+      var $36=(($35)|0);
+      var $37=HEAP32[(($36)>>2)];
+      var $38=(($37)|0)!=0;
+      if ($38) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      var $40=(($convbuf)|0);
+      var $41=$r;
+      var $42=(($41+4)|0);
+      var $43=HEAP32[(($42)>>2)];
+      var $44=_llvm_strlcpy($40, $43, 50);
+      __label__ = 14; break;
+    case 13: 
+      var $46=(($convbuf)|0);
+      var $47=$target;
+      var $48=_snprintf($46, 50, ((STRING_TABLE.__str442)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$47,tempInt));
+      __label__ = 14; break;
+    case 14: 
+      var $50=(($convbuf)|0);
+      $s=$50;
+      __label__ = 16; break;
+    case 15: 
+      var $52=$r;
+      var $53=(($52+8)|0);
+      var $54=HEAP32[(($53)>>2)];
+      $s=$54;
+      __label__ = 16; break;
+    case 16: 
+      __label__ = 17; break;
+    case 17: 
+      var $57=$s;
+      var $58=_strlen($57);
+      var $59=((($58)+(1))|0);
+      $len=$59;
+      var $60=$4;
+      var $61=(($60)>>>0) > 0;
+      if ($61) { __label__ = 18; break; } else { __label__ = 19; break; }
+    case 18: 
+      var $63=$3;
+      var $64=$s;
+      var $65=$4;
+      var $66=_llvm_strlcpy($63, $64, $65);
+      __label__ = 19; break;
+    case 19: 
+      var $68=$len;
+      STACKTOP = __stackBase__;
+      return $68;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_llvm_regerror["X"]=1;
+
+function _regatoi($preg, $localbuf, $localbufsize) {
+  var __stackBase__  = STACKTOP; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $r;
+      $2=$preg;
+      $3=$localbuf;
+      $4=$localbufsize;
+      $r=((_rerrs)|0);
+      __label__ = 3; break;
+    case 3: 
+      var $6=$r;
+      var $7=(($6)|0);
+      var $8=HEAP32[(($7)>>2)];
+      var $9=(($8)|0)!=0;
+      if ($9) { __label__ = 4; break; } else { __label__ = 8; break; }
+    case 4: 
+      var $11=$r;
+      var $12=(($11+4)|0);
+      var $13=HEAP32[(($12)>>2)];
+      var $14=$2;
+      var $15=(($14+8)|0);
+      var $16=HEAP32[(($15)>>2)];
+      var $17=_strcmp($13, $16);
+      var $18=(($17)|0)==0;
+      if ($18) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      __label__ = 8; break;
+    case 6: 
+      __label__ = 7; break;
+    case 7: 
+      var $22=$r;
+      var $23=(($22+12)|0);
+      $r=$23;
+      __label__ = 3; break;
+    case 8: 
+      var $25=$r;
+      var $26=(($25)|0);
+      var $27=HEAP32[(($26)>>2)];
+      var $28=(($27)|0)==0;
+      if ($28) { __label__ = 9; break; } else { __label__ = 10; break; }
+    case 9: 
+      $1=((STRING_TABLE.__str1443)|0);
+      __label__ = 11; break;
+    case 10: 
+      var $31=$3;
+      var $32=$4;
+      var $33=$r;
+      var $34=(($33)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=_snprintf($31, $32, ((STRING_TABLE.__str2444)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$35,tempInt));
+      var $37=$3;
+      $1=$37;
+      __label__ = 11; break;
+    case 11: 
+      var $39=$1;
+      STACKTOP = __stackBase__;
+      return $39;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+
+
+function _llvm_regexec($preg, $string, $nmatch, $pmatch, $eflags) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $g;
+      $2=$preg;
+      $3=$string;
+      $4=$nmatch;
+      $5=$pmatch;
+      $6=$eflags;
+      var $7=$2;
+      var $8=(($7+12)|0);
+      var $9=HEAP32[(($8)>>2)];
+      $g=$9;
+      var $10=$2;
+      var $11=(($10)|0);
+      var $12=HEAP32[(($11)>>2)];
+      var $13=(($12)|0)!=62053;
+      if ($13) { __label__ = 4; break; } else { __label__ = 3; break; }
+    case 3: 
+      var $15=$g;
+      var $16=(($15)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=(($17)|0)!=53829;
+      if ($18) { __label__ = 4; break; } else { __label__ = 5; break; }
+    case 4: 
+      $1=2;
+      __label__ = 11; break;
+    case 5: 
+      var $21=$g;
+      var $22=(($21+40)|0);
+      var $23=HEAP32[(($22)>>2)];
+      var $24=$23 & 4;
+      var $25=(($24)|0)!=0;
+      if ($25) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      $1=2;
+      __label__ = 11; break;
+    case 7: 
+      var $28=$6;
+      var $29=$28 & 7;
+      $6=$29;
+      var $30=$g;
+      var $31=(($30+28)|0);
+      var $32=HEAP32[(($31)>>2)];
+      var $33=(($32)|0) <= 32;
+      if ($33) { __label__ = 8; break; } else { __label__ = 10; break; }
+    case 8: 
+      var $35=$6;
+      var $36=$35 & 512;
+      var $37=(($36)|0)!=0;
+      if ($37) { __label__ = 10; break; } else { __label__ = 9; break; }
+    case 9: 
+      var $39=$g;
+      var $40=$3;
+      var $41=$4;
+      var $42=$5;
+      var $43=$6;
+      var $44=_smatcher($39, $40, $41, $42, $43);
+      $1=$44;
+      __label__ = 11; break;
+    case 10: 
+      var $46=$g;
+      var $47=$3;
+      var $48=$4;
+      var $49=$5;
+      var $50=$6;
+      var $51=_lmatcher($46, $47, $48, $49, $50);
+      $1=$51;
+      __label__ = 11; break;
+    case 11: 
+      var $53=$1;
+      ;
+      return $53;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_llvm_regexec["X"]=1;
+
+function _smatcher($g, $string, $nmatch, $pmatch, $eflags) {
+  var __stackBase__  = STACKTOP; STACKTOP += 52; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $endp;
+      var $i;
+      var $mv=__stackBase__;
+      var $m;
+      var $dp;
+      var $gf;
+      var $gl;
+      var $start;
+      var $stop;
+      $2=$g;
+      $3=$string;
+      $4=$nmatch;
+      $5=$pmatch;
+      $6=$eflags;
+      $m=$mv;
+      var $7=$2;
+      var $8=(($7+32)|0);
+      var $9=HEAP32[(($8)>>2)];
+      var $10=((($9)+(1))|0);
+      $gf=$10;
+      var $11=$2;
+      var $12=(($11+36)|0);
+      var $13=HEAP32[(($12)>>2)];
+      $gl=$13;
+      var $14=$2;
+      var $15=(($14+24)|0);
+      var $16=HEAP32[(($15)>>2)];
+      var $17=$16 & 4;
+      var $18=(($17)|0)!=0;
+      if ($18) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      $4=0;
+      __label__ = 4; break;
+    case 4: 
+      var $21=$6;
+      var $22=$21 & 4;
+      var $23=(($22)|0)!=0;
+      if ($23) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $25=$3;
+      var $26=$5;
+      var $27=(($26)|0);
+      var $28=(($27)|0);
+      var $29=HEAP32[(($28)>>2)];
+      var $30=(($25+$29)|0);
+      $start=$30;
+      var $31=$3;
+      var $32=$5;
+      var $33=(($32)|0);
+      var $34=(($33+4)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=(($31+$35)|0);
+      $stop=$36;
+      __label__ = 7; break;
+    case 6: 
+      var $38=$3;
+      $start=$38;
+      var $39=$start;
+      var $40=$start;
+      var $41=_strlen($40);
+      var $42=(($39+$41)|0);
+      $stop=$42;
+      __label__ = 7; break;
+    case 7: 
+      var $44=$stop;
+      var $45=$start;
+      var $46=(($44)>>>0) < (($45)>>>0);
+      if ($46) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      $1=16;
+      __label__ = 82; break;
+    case 9: 
+      var $49=$2;
+      var $50=(($49+60)|0);
+      var $51=HEAP32[(($50)>>2)];
+      var $52=(($51)|0)!=0;
+      if ($52) { __label__ = 10; break; } else { __label__ = 21; break; }
+    case 10: 
+      var $54=$start;
+      $dp=$54;
+      __label__ = 11; break;
+    case 11: 
+      var $56=$dp;
+      var $57=$stop;
+      var $58=(($56)>>>0) < (($57)>>>0);
+      if ($58) { __label__ = 12; break; } else { __label__ = 18; break; }
+    case 12: 
+      var $60=$dp;
+      var $61=HEAP8[($60)];
+      var $62=(($61 << 24) >> 24);
+      var $63=$2;
+      var $64=(($63+60)|0);
+      var $65=HEAP32[(($64)>>2)];
+      var $66=(($65)|0);
+      var $67=HEAP8[($66)];
+      var $68=(($67 << 24) >> 24);
+      var $69=(($62)|0)==(($68)|0);
+      if ($69) { __label__ = 13; break; } else { __label__ = 16; break; }
+    case 13: 
+      var $71=$stop;
+      var $72=$dp;
+      var $73=$71;
+      var $74=$72;
+      var $75=((($73)-($74))|0);
+      var $76=$2;
+      var $77=(($76+64)|0);
+      var $78=HEAP32[(($77)>>2)];
+      var $79=(($75)|0) >= (($78)|0);
+      if ($79) { __label__ = 14; break; } else { __label__ = 16; break; }
+    case 14: 
+      var $81=$dp;
+      var $82=$2;
+      var $83=(($82+60)|0);
+      var $84=HEAP32[(($83)>>2)];
+      var $85=$2;
+      var $86=(($85+64)|0);
+      var $87=HEAP32[(($86)>>2)];
+      var $88=_memcmp($81, $84, $87);
+      var $89=(($88)|0)==0;
+      if ($89) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      __label__ = 18; break;
+    case 16: 
+      __label__ = 17; break;
+    case 17: 
+      var $93=$dp;
+      var $94=(($93+1)|0);
+      $dp=$94;
+      __label__ = 11; break;
+    case 18: 
+      var $96=$dp;
+      var $97=$stop;
+      var $98=(($96)|0)==(($97)|0);
+      if ($98) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 19: 
+      $1=1;
+      __label__ = 82; break;
+    case 20: 
+      __label__ = 21; break;
+    case 21: 
+      var $102=$2;
+      var $103=$m;
+      var $104=(($103)|0);
+      HEAP32[(($104)>>2)]=$102;
+      var $105=$6;
+      var $106=$m;
+      var $107=(($106+4)|0);
+      HEAP32[(($107)>>2)]=$105;
+      var $108=$m;
+      var $109=(($108+8)|0);
+      HEAP32[(($109)>>2)]=0;
+      var $110=$m;
+      var $111=(($110+28)|0);
+      HEAP32[(($111)>>2)]=0;
+      var $112=$3;
+      var $113=$m;
+      var $114=(($113+12)|0);
+      HEAP32[(($114)>>2)]=$112;
+      var $115=$start;
+      var $116=$m;
+      var $117=(($116+16)|0);
+      HEAP32[(($117)>>2)]=$115;
+      var $118=$stop;
+      var $119=$m;
+      var $120=(($119+20)|0);
+      HEAP32[(($120)>>2)]=$118;
+      var $121=$m;
+      var $122=(($121+36)|0);
+      HEAP32[(($122)>>2)]=0;
+      var $123=$m;
+      var $124=(($123+40)|0);
+      HEAP32[(($124)>>2)]=0;
+      var $125=$m;
+      var $126=(($125+44)|0);
+      HEAP32[(($126)>>2)]=0;
+      var $127=$m;
+      var $128=(($127+48)|0);
+      HEAP32[(($128)>>2)]=0;
+      var $129=$m;
+      var $130=(($129+48)|0);
+      HEAP32[(($130)>>2)]=0;
+      __label__ = 22; break;
+    case 22: 
+      var $132=$m;
+      var $133=$start;
+      var $134=$stop;
+      var $135=$gf;
+      var $136=$gl;
+      var $137=_sfast($132, $133, $134, $135, $136);
+      $endp=$137;
+      var $138=$endp;
+      var $139=(($138)|0)==0;
+      if ($139) { __label__ = 23; break; } else { __label__ = 24; break; }
+    case 23: 
+      var $141=$m;
+      var $142=(($141+8)|0);
+      var $143=HEAP32[(($142)>>2)];
+      var $144=$143;
+      _free($144);
+      var $145=$m;
+      var $146=(($145+28)|0);
+      var $147=HEAP32[(($146)>>2)];
+      var $148=$147;
+      _free($148);
+      $1=1;
+      __label__ = 82; break;
+    case 24: 
+      var $150=$4;
+      var $151=(($150)|0)==0;
+      if ($151) { __label__ = 25; break; } else { __label__ = 27; break; }
+    case 25: 
+      var $153=$2;
+      var $154=(($153+72)|0);
+      var $155=HEAP32[(($154)>>2)];
+      var $156=(($155)|0)!=0;
+      if ($156) { __label__ = 27; break; } else { __label__ = 26; break; }
+    case 26: 
+      __label__ = 66; break;
+    case 27: 
+      __label__ = 28; break;
+    case 28: 
+      var $160=$m;
+      var $161=$m;
+      var $162=(($161+24)|0);
+      var $163=HEAP32[(($162)>>2)];
+      var $164=$stop;
+      var $165=$gf;
+      var $166=$gl;
+      var $167=_sslow($160, $163, $164, $165, $166);
+      $endp=$167;
+      var $168=$endp;
+      var $169=(($168)|0)!=0;
+      if ($169) { __label__ = 29; break; } else { __label__ = 30; break; }
+    case 29: 
+      __label__ = 31; break;
+    case 30: 
+      var $172=$m;
+      var $173=(($172+24)|0);
+      var $174=HEAP32[(($173)>>2)];
+      var $175=(($174+1)|0);
+      HEAP32[(($173)>>2)]=$175;
+      __label__ = 28; break;
+    case 31: 
+      var $177=$4;
+      var $178=(($177)|0)==1;
+      if ($178) { __label__ = 32; break; } else { __label__ = 34; break; }
+    case 32: 
+      var $180=$2;
+      var $181=(($180+72)|0);
+      var $182=HEAP32[(($181)>>2)];
+      var $183=(($182)|0)!=0;
+      if ($183) { __label__ = 34; break; } else { __label__ = 33; break; }
+    case 33: 
+      __label__ = 66; break;
+    case 34: 
+      var $186=$m;
+      var $187=(($186+8)|0);
+      var $188=HEAP32[(($187)>>2)];
+      var $189=(($188)|0)==0;
+      if ($189) { __label__ = 35; break; } else { __label__ = 36; break; }
+    case 35: 
+      var $191=$m;
+      var $192=(($191)|0);
+      var $193=HEAP32[(($192)>>2)];
+      var $194=(($193+68)|0);
+      var $195=HEAP32[(($194)>>2)];
+      var $196=((($195)+(1))|0);
+      var $197=((($196<<3))|0);
+      var $198=_malloc($197);
+      var $199=$198;
+      var $200=$m;
+      var $201=(($200+8)|0);
+      HEAP32[(($201)>>2)]=$199;
+      __label__ = 36; break;
+    case 36: 
+      var $203=$m;
+      var $204=(($203+8)|0);
+      var $205=HEAP32[(($204)>>2)];
+      var $206=(($205)|0)==0;
+      if ($206) { __label__ = 37; break; } else { __label__ = 38; break; }
+    case 37: 
+      $1=12;
+      __label__ = 82; break;
+    case 38: 
+      $i=1;
+      __label__ = 39; break;
+    case 39: 
+      var $210=$i;
+      var $211=$m;
+      var $212=(($211)|0);
+      var $213=HEAP32[(($212)>>2)];
+      var $214=(($213+68)|0);
+      var $215=HEAPU32[(($214)>>2)];
+      var $216=(($210)>>>0) <= (($215)>>>0);
+      if ($216) { __label__ = 40; break; } else { __label__ = 42; break; }
+    case 40: 
+      var $218=$i;
+      var $219=$m;
+      var $220=(($219+8)|0);
+      var $221=HEAP32[(($220)>>2)];
+      var $222=(($221+($218<<3))|0);
+      var $223=(($222+4)|0);
+      HEAP32[(($223)>>2)]=-1;
+      var $224=$i;
+      var $225=$m;
+      var $226=(($225+8)|0);
+      var $227=HEAP32[(($226)>>2)];
+      var $228=(($227+($224<<3))|0);
+      var $229=(($228)|0);
+      HEAP32[(($229)>>2)]=-1;
+      __label__ = 41; break;
+    case 41: 
+      var $231=$i;
+      var $232=((($231)+(1))|0);
+      $i=$232;
+      __label__ = 39; break;
+    case 42: 
+      var $234=$2;
+      var $235=(($234+72)|0);
+      var $236=HEAP32[(($235)>>2)];
+      var $237=(($236)|0)!=0;
+      if ($237) { __label__ = 45; break; } else { __label__ = 43; break; }
+    case 43: 
+      var $239=$m;
+      var $240=(($239+4)|0);
+      var $241=HEAP32[(($240)>>2)];
+      var $242=$241 & 1024;
+      var $243=(($242)|0)!=0;
+      if ($243) { __label__ = 45; break; } else { __label__ = 44; break; }
+    case 44: 
+      var $245=$m;
+      var $246=$m;
+      var $247=(($246+24)|0);
+      var $248=HEAP32[(($247)>>2)];
+      var $249=$endp;
+      var $250=$gf;
+      var $251=$gl;
+      var $252=_sdissect($245, $248, $249, $250, $251);
+      $dp=$252;
+      __label__ = 52; break;
+    case 45: 
+      var $254=$2;
+      var $255=(($254+76)|0);
+      var $256=HEAP32[(($255)>>2)];
+      var $257=(($256)|0) > 0;
+      if ($257) { __label__ = 46; break; } else { __label__ = 48; break; }
+    case 46: 
+      var $259=$m;
+      var $260=(($259+28)|0);
+      var $261=HEAP32[(($260)>>2)];
+      var $262=(($261)|0)==0;
+      if ($262) { __label__ = 47; break; } else { __label__ = 48; break; }
+    case 47: 
+      var $264=$2;
+      var $265=(($264+76)|0);
+      var $266=HEAP32[(($265)>>2)];
+      var $267=((($266)+(1))|0);
+      var $268=((($267<<2))|0);
+      var $269=_malloc($268);
+      var $270=$269;
+      var $271=$m;
+      var $272=(($271+28)|0);
+      HEAP32[(($272)>>2)]=$270;
+      __label__ = 48; break;
+    case 48: 
+      var $274=$2;
+      var $275=(($274+76)|0);
+      var $276=HEAP32[(($275)>>2)];
+      var $277=(($276)|0) > 0;
+      if ($277) { __label__ = 49; break; } else { __label__ = 51; break; }
+    case 49: 
+      var $279=$m;
+      var $280=(($279+28)|0);
+      var $281=HEAP32[(($280)>>2)];
+      var $282=(($281)|0)==0;
+      if ($282) { __label__ = 50; break; } else { __label__ = 51; break; }
+    case 50: 
+      var $284=$m;
+      var $285=(($284+8)|0);
+      var $286=HEAP32[(($285)>>2)];
+      var $287=$286;
+      _free($287);
+      $1=12;
+      __label__ = 82; break;
+    case 51: 
+      var $289=$m;
+      var $290=$m;
+      var $291=(($290+24)|0);
+      var $292=HEAP32[(($291)>>2)];
+      var $293=$endp;
+      var $294=$gf;
+      var $295=$gl;
+      var $296=_sbackref($289, $292, $293, $294, $295, 0, 0);
+      $dp=$296;
+      __label__ = 52; break;
+    case 52: 
+      var $298=$dp;
+      var $299=(($298)|0)!=0;
+      if ($299) { __label__ = 53; break; } else { __label__ = 54; break; }
+    case 53: 
+      __label__ = 66; break;
+    case 54: 
+      __label__ = 55; break;
+    case 55: 
+      var $303=$dp;
+      var $304=(($303)|0)!=0;
+      if ($304) { __label__ = 57; break; } else { __label__ = 56; break; }
+    case 56: 
+      var $306=$endp;
+      var $307=$m;
+      var $308=(($307+24)|0);
+      var $309=HEAPU32[(($308)>>2)];
+      var $310=(($306)>>>0) <= (($309)>>>0);
+      if ($310) { __label__ = 57; break; } else { __label__ = 58; break; }
+    case 57: 
+      __label__ = 61; break;
+    case 58: 
+      var $313=$m;
+      var $314=$m;
+      var $315=(($314+24)|0);
+      var $316=HEAP32[(($315)>>2)];
+      var $317=$endp;
+      var $318=((($317)-(1))|0);
+      var $319=$gf;
+      var $320=$gl;
+      var $321=_sslow($313, $316, $318, $319, $320);
+      $endp=$321;
+      var $322=$endp;
+      var $323=(($322)|0)==0;
+      if ($323) { __label__ = 59; break; } else { __label__ = 60; break; }
+    case 59: 
+      __label__ = 61; break;
+    case 60: 
+      var $326=$m;
+      var $327=$m;
+      var $328=(($327+24)|0);
+      var $329=HEAP32[(($328)>>2)];
+      var $330=$endp;
+      var $331=$gf;
+      var $332=$gl;
+      var $333=_sbackref($326, $329, $330, $331, $332, 0, 0);
+      $dp=$333;
+      __label__ = 55; break;
+    case 61: 
+      var $335=$dp;
+      var $336=(($335)|0)!=0;
+      if ($336) { __label__ = 62; break; } else { __label__ = 63; break; }
+    case 62: 
+      __label__ = 66; break;
+    case 63: 
+      var $339=$m;
+      var $340=(($339+24)|0);
+      var $341=HEAP32[(($340)>>2)];
+      var $342=$stop;
+      var $343=(($341)|0)==(($342)|0);
+      if ($343) { __label__ = 64; break; } else { __label__ = 65; break; }
+    case 64: 
+      __label__ = 66; break;
+    case 65: 
+      var $346=$m;
+      var $347=(($346+24)|0);
+      var $348=HEAP32[(($347)>>2)];
+      var $349=(($348+1)|0);
+      $start=$349;
+      __label__ = 22; break;
+    case 66: 
+      var $351=$4;
+      var $352=(($351)>>>0) > 0;
+      if ($352) { __label__ = 67; break; } else { __label__ = 68; break; }
+    case 67: 
+      var $354=$m;
+      var $355=(($354+24)|0);
+      var $356=HEAP32[(($355)>>2)];
+      var $357=$m;
+      var $358=(($357+12)|0);
+      var $359=HEAP32[(($358)>>2)];
+      var $360=$356;
+      var $361=$359;
+      var $362=((($360)-($361))|0);
+      var $363=$5;
+      var $364=(($363)|0);
+      var $365=(($364)|0);
+      HEAP32[(($365)>>2)]=$362;
+      var $366=$endp;
+      var $367=$m;
+      var $368=(($367+12)|0);
+      var $369=HEAP32[(($368)>>2)];
+      var $370=$366;
+      var $371=$369;
+      var $372=((($370)-($371))|0);
+      var $373=$5;
+      var $374=(($373)|0);
+      var $375=(($374+4)|0);
+      HEAP32[(($375)>>2)]=$372;
+      __label__ = 68; break;
+    case 68: 
+      var $377=$4;
+      var $378=(($377)>>>0) > 1;
+      if ($378) { __label__ = 69; break; } else { __label__ = 77; break; }
+    case 69: 
+      $i=1;
+      __label__ = 70; break;
+    case 70: 
+      var $381=$i;
+      var $382=$4;
+      var $383=(($381)>>>0) < (($382)>>>0);
+      if ($383) { __label__ = 71; break; } else { __label__ = 76; break; }
+    case 71: 
+      var $385=$i;
+      var $386=$m;
+      var $387=(($386)|0);
+      var $388=HEAP32[(($387)>>2)];
+      var $389=(($388+68)|0);
+      var $390=HEAPU32[(($389)>>2)];
+      var $391=(($385)>>>0) <= (($390)>>>0);
+      if ($391) { __label__ = 72; break; } else { __label__ = 73; break; }
+    case 72: 
+      var $393=$i;
+      var $394=$5;
+      var $395=(($394+($393<<3))|0);
+      var $396=$i;
+      var $397=$m;
+      var $398=(($397+8)|0);
+      var $399=HEAP32[(($398)>>2)];
+      var $400=(($399+($396<<3))|0);
+      var $401=$395;
+      var $402=$400;
+      assert(8 % 1 === 0, 'memcpy given ' + 8 + ' bytes to copy. Problem with quantum=1 corrections perhaps?');HEAP32[(($401)>>2)]=HEAP32[(($402)>>2)];HEAP32[((($401)+(4))>>2)]=HEAP32[((($402)+(4))>>2)];
+      __label__ = 74; break;
+    case 73: 
+      var $404=$i;
+      var $405=$5;
+      var $406=(($405+($404<<3))|0);
+      var $407=(($406)|0);
+      HEAP32[(($407)>>2)]=-1;
+      var $408=$i;
+      var $409=$5;
+      var $410=(($409+($408<<3))|0);
+      var $411=(($410+4)|0);
+      HEAP32[(($411)>>2)]=-1;
+      __label__ = 74; break;
+    case 74: 
+      __label__ = 75; break;
+    case 75: 
+      var $414=$i;
+      var $415=((($414)+(1))|0);
+      $i=$415;
+      __label__ = 70; break;
+    case 76: 
+      __label__ = 77; break;
+    case 77: 
+      var $418=$m;
+      var $419=(($418+8)|0);
+      var $420=HEAP32[(($419)>>2)];
+      var $421=(($420)|0)!=0;
+      if ($421) { __label__ = 78; break; } else { __label__ = 79; break; }
+    case 78: 
+      var $423=$m;
+      var $424=(($423+8)|0);
+      var $425=HEAP32[(($424)>>2)];
+      var $426=$425;
+      _free($426);
+      __label__ = 79; break;
+    case 79: 
+      var $428=$m;
+      var $429=(($428+28)|0);
+      var $430=HEAP32[(($429)>>2)];
+      var $431=(($430)|0)!=0;
+      if ($431) { __label__ = 80; break; } else { __label__ = 81; break; }
+    case 80: 
+      var $433=$m;
+      var $434=(($433+28)|0);
+      var $435=HEAP32[(($434)>>2)];
+      var $436=$435;
+      _free($436);
+      __label__ = 81; break;
+    case 81: 
+      $1=0;
+      __label__ = 82; break;
+    case 82: 
+      var $439=$1;
+      STACKTOP = __stackBase__;
+      return $439;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_smatcher["X"]=1;
+
+function _lmatcher($g, $string, $nmatch, $pmatch, $eflags) {
+  var __stackBase__  = STACKTOP; STACKTOP += 56; assert(STACKTOP % 4 == 0, "Stack is unaligned"); assert(STACKTOP < STACK_MAX, "Ran out of stack");
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $endp;
+      var $i;
+      var $mv=__stackBase__;
+      var $m;
+      var $dp;
+      var $gf;
+      var $gl;
+      var $start;
+      var $stop;
+      $2=$g;
+      $3=$string;
+      $4=$nmatch;
+      $5=$pmatch;
+      $6=$eflags;
+      $m=$mv;
+      var $7=$2;
+      var $8=(($7+32)|0);
+      var $9=HEAP32[(($8)>>2)];
+      var $10=((($9)+(1))|0);
+      $gf=$10;
+      var $11=$2;
+      var $12=(($11+36)|0);
+      var $13=HEAP32[(($12)>>2)];
+      $gl=$13;
+      var $14=$2;
+      var $15=(($14+24)|0);
+      var $16=HEAP32[(($15)>>2)];
+      var $17=$16 & 4;
+      var $18=(($17)|0)!=0;
+      if ($18) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      $4=0;
+      __label__ = 4; break;
+    case 4: 
+      var $21=$6;
+      var $22=$21 & 4;
+      var $23=(($22)|0)!=0;
+      if ($23) { __label__ = 5; break; } else { __label__ = 6; break; }
+    case 5: 
+      var $25=$3;
+      var $26=$5;
+      var $27=(($26)|0);
+      var $28=(($27)|0);
+      var $29=HEAP32[(($28)>>2)];
+      var $30=(($25+$29)|0);
+      $start=$30;
+      var $31=$3;
+      var $32=$5;
+      var $33=(($32)|0);
+      var $34=(($33+4)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=(($31+$35)|0);
+      $stop=$36;
+      __label__ = 7; break;
+    case 6: 
+      var $38=$3;
+      $start=$38;
+      var $39=$start;
+      var $40=$start;
+      var $41=_strlen($40);
+      var $42=(($39+$41)|0);
+      $stop=$42;
+      __label__ = 7; break;
+    case 7: 
+      var $44=$stop;
+      var $45=$start;
+      var $46=(($44)>>>0) < (($45)>>>0);
+      if ($46) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      $1=16;
+      __label__ = 84; break;
+    case 9: 
+      var $49=$2;
+      var $50=(($49+60)|0);
+      var $51=HEAP32[(($50)>>2)];
+      var $52=(($51)|0)!=0;
+      if ($52) { __label__ = 10; break; } else { __label__ = 21; break; }
+    case 10: 
+      var $54=$start;
+      $dp=$54;
+      __label__ = 11; break;
+    case 11: 
+      var $56=$dp;
+      var $57=$stop;
+      var $58=(($56)>>>0) < (($57)>>>0);
+      if ($58) { __label__ = 12; break; } else { __label__ = 18; break; }
+    case 12: 
+      var $60=$dp;
+      var $61=HEAP8[($60)];
+      var $62=(($61 << 24) >> 24);
+      var $63=$2;
+      var $64=(($63+60)|0);
+      var $65=HEAP32[(($64)>>2)];
+      var $66=(($65)|0);
+      var $67=HEAP8[($66)];
+      var $68=(($67 << 24) >> 24);
+      var $69=(($62)|0)==(($68)|0);
+      if ($69) { __label__ = 13; break; } else { __label__ = 16; break; }
+    case 13: 
+      var $71=$stop;
+      var $72=$dp;
+      var $73=$71;
+      var $74=$72;
+      var $75=((($73)-($74))|0);
+      var $76=$2;
+      var $77=(($76+64)|0);
+      var $78=HEAP32[(($77)>>2)];
+      var $79=(($75)|0) >= (($78)|0);
+      if ($79) { __label__ = 14; break; } else { __label__ = 16; break; }
+    case 14: 
+      var $81=$dp;
+      var $82=$2;
+      var $83=(($82+60)|0);
+      var $84=HEAP32[(($83)>>2)];
+      var $85=$2;
+      var $86=(($85+64)|0);
+      var $87=HEAP32[(($86)>>2)];
+      var $88=_memcmp($81, $84, $87);
+      var $89=(($88)|0)==0;
+      if ($89) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      __label__ = 18; break;
+    case 16: 
+      __label__ = 17; break;
+    case 17: 
+      var $93=$dp;
+      var $94=(($93+1)|0);
+      $dp=$94;
+      __label__ = 11; break;
+    case 18: 
+      var $96=$dp;
+      var $97=$stop;
+      var $98=(($96)|0)==(($97)|0);
+      if ($98) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 19: 
+      $1=1;
+      __label__ = 84; break;
+    case 20: 
+      __label__ = 21; break;
+    case 21: 
+      var $102=$2;
+      var $103=$m;
+      var $104=(($103)|0);
+      HEAP32[(($104)>>2)]=$102;
+      var $105=$6;
+      var $106=$m;
+      var $107=(($106+4)|0);
+      HEAP32[(($107)>>2)]=$105;
+      var $108=$m;
+      var $109=(($108+8)|0);
+      HEAP32[(($109)>>2)]=0;
+      var $110=$m;
+      var $111=(($110+28)|0);
+      HEAP32[(($111)>>2)]=0;
+      var $112=$3;
+      var $113=$m;
+      var $114=(($113+12)|0);
+      HEAP32[(($114)>>2)]=$112;
+      var $115=$start;
+      var $116=$m;
+      var $117=(($116+16)|0);
+      HEAP32[(($117)>>2)]=$115;
+      var $118=$stop;
+      var $119=$m;
+      var $120=(($119+20)|0);
+      HEAP32[(($120)>>2)]=$118;
+      var $121=$m;
+      var $122=(($121)|0);
+      var $123=HEAP32[(($122)>>2)];
+      var $124=(($123+28)|0);
+      var $125=HEAP32[(($124)>>2)];
+      var $126=((($125<<2))|0);
+      var $127=_malloc($126);
+      var $128=$m;
+      var $129=(($128+36)|0);
+      HEAP32[(($129)>>2)]=$127;
+      var $130=$m;
+      var $131=(($130+36)|0);
+      var $132=HEAP32[(($131)>>2)];
+      var $133=(($132)|0)==0;
+      if ($133) { __label__ = 22; break; } else { __label__ = 23; break; }
+    case 22: 
+      $1=12;
+      __label__ = 84; break;
+    case 23: 
+      var $136=$m;
+      var $137=(($136+32)|0);
+      HEAP32[(($137)>>2)]=0;
+      var $138=$m;
+      var $139=(($138+32)|0);
+      var $140=HEAP32[(($139)>>2)];
+      var $141=((($140)+(1))|0);
+      HEAP32[(($139)>>2)]=$141;
+      var $142=$m;
+      var $143=(($142)|0);
+      var $144=HEAP32[(($143)>>2)];
+      var $145=(($144+28)|0);
+      var $146=HEAP32[(($145)>>2)];
+      var $147=((($140)*($146))|0);
+      var $148=$m;
+      var $149=(($148+36)|0);
+      var $150=HEAP32[(($149)>>2)];
+      var $151=(($150+$147)|0);
+      var $152=$m;
+      var $153=(($152+40)|0);
+      HEAP32[(($153)>>2)]=$151;
+      var $154=$m;
+      var $155=(($154+32)|0);
+      var $156=HEAP32[(($155)>>2)];
+      var $157=((($156)+(1))|0);
+      HEAP32[(($155)>>2)]=$157;
+      var $158=$m;
+      var $159=(($158)|0);
+      var $160=HEAP32[(($159)>>2)];
+      var $161=(($160+28)|0);
+      var $162=HEAP32[(($161)>>2)];
+      var $163=((($156)*($162))|0);
+      var $164=$m;
+      var $165=(($164+36)|0);
+      var $166=HEAP32[(($165)>>2)];
+      var $167=(($166+$163)|0);
+      var $168=$m;
+      var $169=(($168+44)|0);
+      HEAP32[(($169)>>2)]=$167;
+      var $170=$m;
+      var $171=(($170+32)|0);
+      var $172=HEAP32[(($171)>>2)];
+      var $173=((($172)+(1))|0);
+      HEAP32[(($171)>>2)]=$173;
+      var $174=$m;
+      var $175=(($174)|0);
+      var $176=HEAP32[(($175)>>2)];
+      var $177=(($176+28)|0);
+      var $178=HEAP32[(($177)>>2)];
+      var $179=((($172)*($178))|0);
+      var $180=$m;
+      var $181=(($180+36)|0);
+      var $182=HEAP32[(($181)>>2)];
+      var $183=(($182+$179)|0);
+      var $184=$m;
+      var $185=(($184+48)|0);
+      HEAP32[(($185)>>2)]=$183;
+      var $186=$m;
+      var $187=(($186+32)|0);
+      var $188=HEAP32[(($187)>>2)];
+      var $189=((($188)+(1))|0);
+      HEAP32[(($187)>>2)]=$189;
+      var $190=$m;
+      var $191=(($190)|0);
+      var $192=HEAP32[(($191)>>2)];
+      var $193=(($192+28)|0);
+      var $194=HEAP32[(($193)>>2)];
+      var $195=((($188)*($194))|0);
+      var $196=$m;
+      var $197=(($196+36)|0);
+      var $198=HEAP32[(($197)>>2)];
+      var $199=(($198+$195)|0);
+      var $200=$m;
+      var $201=(($200+52)|0);
+      HEAP32[(($201)>>2)]=$199;
+      var $202=$m;
+      var $203=(($202+52)|0);
+      var $204=HEAP32[(($203)>>2)];
+      var $205=$m;
+      var $206=(($205)|0);
+      var $207=HEAP32[(($206)>>2)];
+      var $208=(($207+28)|0);
+      var $209=HEAP32[(($208)>>2)];
+      _memset($204, 0, $209, 1);
+      __label__ = 24; break;
+    case 24: 
+      var $211=$m;
+      var $212=$start;
+      var $213=$stop;
+      var $214=$gf;
+      var $215=$gl;
+      var $216=_lfast($211, $212, $213, $214, $215);
+      $endp=$216;
+      var $217=$endp;
+      var $218=(($217)|0)==0;
+      if ($218) { __label__ = 25; break; } else { __label__ = 26; break; }
+    case 25: 
+      var $220=$m;
+      var $221=(($220+8)|0);
+      var $222=HEAP32[(($221)>>2)];
+      var $223=$222;
+      _free($223);
+      var $224=$m;
+      var $225=(($224+28)|0);
+      var $226=HEAP32[(($225)>>2)];
+      var $227=$226;
+      _free($227);
+      var $228=$m;
+      var $229=(($228+36)|0);
+      var $230=HEAP32[(($229)>>2)];
+      _free($230);
+      $1=1;
+      __label__ = 84; break;
+    case 26: 
+      var $232=$4;
+      var $233=(($232)|0)==0;
+      if ($233) { __label__ = 27; break; } else { __label__ = 29; break; }
+    case 27: 
+      var $235=$2;
+      var $236=(($235+72)|0);
+      var $237=HEAP32[(($236)>>2)];
+      var $238=(($237)|0)!=0;
+      if ($238) { __label__ = 29; break; } else { __label__ = 28; break; }
+    case 28: 
+      __label__ = 68; break;
+    case 29: 
+      __label__ = 30; break;
+    case 30: 
+      var $242=$m;
+      var $243=$m;
+      var $244=(($243+24)|0);
+      var $245=HEAP32[(($244)>>2)];
+      var $246=$stop;
+      var $247=$gf;
+      var $248=$gl;
+      var $249=_lslow($242, $245, $246, $247, $248);
+      $endp=$249;
+      var $250=$endp;
+      var $251=(($250)|0)!=0;
+      if ($251) { __label__ = 31; break; } else { __label__ = 32; break; }
+    case 31: 
+      __label__ = 33; break;
+    case 32: 
+      var $254=$m;
+      var $255=(($254+24)|0);
+      var $256=HEAP32[(($255)>>2)];
+      var $257=(($256+1)|0);
+      HEAP32[(($255)>>2)]=$257;
+      __label__ = 30; break;
+    case 33: 
+      var $259=$4;
+      var $260=(($259)|0)==1;
+      if ($260) { __label__ = 34; break; } else { __label__ = 36; break; }
+    case 34: 
+      var $262=$2;
+      var $263=(($262+72)|0);
+      var $264=HEAP32[(($263)>>2)];
+      var $265=(($264)|0)!=0;
+      if ($265) { __label__ = 36; break; } else { __label__ = 35; break; }
+    case 35: 
+      __label__ = 68; break;
+    case 36: 
+      var $268=$m;
+      var $269=(($268+8)|0);
+      var $270=HEAP32[(($269)>>2)];
+      var $271=(($270)|0)==0;
+      if ($271) { __label__ = 37; break; } else { __label__ = 38; break; }
+    case 37: 
+      var $273=$m;
+      var $274=(($273)|0);
+      var $275=HEAP32[(($274)>>2)];
+      var $276=(($275+68)|0);
+      var $277=HEAP32[(($276)>>2)];
+      var $278=((($277)+(1))|0);
+      var $279=((($278<<3))|0);
+      var $280=_malloc($279);
+      var $281=$280;
+      var $282=$m;
+      var $283=(($282+8)|0);
+      HEAP32[(($283)>>2)]=$281;
+      __label__ = 38; break;
+    case 38: 
+      var $285=$m;
+      var $286=(($285+8)|0);
+      var $287=HEAP32[(($286)>>2)];
+      var $288=(($287)|0)==0;
+      if ($288) { __label__ = 39; break; } else { __label__ = 40; break; }
+    case 39: 
+      var $290=$m;
+      var $291=(($290+36)|0);
+      var $292=HEAP32[(($291)>>2)];
+      _free($292);
+      $1=12;
+      __label__ = 84; break;
+    case 40: 
+      $i=1;
+      __label__ = 41; break;
+    case 41: 
+      var $295=$i;
+      var $296=$m;
+      var $297=(($296)|0);
+      var $298=HEAP32[(($297)>>2)];
+      var $299=(($298+68)|0);
+      var $300=HEAPU32[(($299)>>2)];
+      var $301=(($295)>>>0) <= (($300)>>>0);
+      if ($301) { __label__ = 42; break; } else { __label__ = 44; break; }
+    case 42: 
+      var $303=$i;
+      var $304=$m;
+      var $305=(($304+8)|0);
+      var $306=HEAP32[(($305)>>2)];
+      var $307=(($306+($303<<3))|0);
+      var $308=(($307+4)|0);
+      HEAP32[(($308)>>2)]=-1;
+      var $309=$i;
+      var $310=$m;
+      var $311=(($310+8)|0);
+      var $312=HEAP32[(($311)>>2)];
+      var $313=(($312+($309<<3))|0);
+      var $314=(($313)|0);
+      HEAP32[(($314)>>2)]=-1;
+      __label__ = 43; break;
+    case 43: 
+      var $316=$i;
+      var $317=((($316)+(1))|0);
+      $i=$317;
+      __label__ = 41; break;
+    case 44: 
+      var $319=$2;
+      var $320=(($319+72)|0);
+      var $321=HEAP32[(($320)>>2)];
+      var $322=(($321)|0)!=0;
+      if ($322) { __label__ = 47; break; } else { __label__ = 45; break; }
+    case 45: 
+      var $324=$m;
+      var $325=(($324+4)|0);
+      var $326=HEAP32[(($325)>>2)];
+      var $327=$326 & 1024;
+      var $328=(($327)|0)!=0;
+      if ($328) { __label__ = 47; break; } else { __label__ = 46; break; }
+    case 46: 
+      var $330=$m;
+      var $331=$m;
+      var $332=(($331+24)|0);
+      var $333=HEAP32[(($332)>>2)];
+      var $334=$endp;
+      var $335=$gf;
+      var $336=$gl;
+      var $337=_ldissect($330, $333, $334, $335, $336);
+      $dp=$337;
+      __label__ = 54; break;
+    case 47: 
+      var $339=$2;
+      var $340=(($339+76)|0);
+      var $341=HEAP32[(($340)>>2)];
+      var $342=(($341)|0) > 0;
+      if ($342) { __label__ = 48; break; } else { __label__ = 50; break; }
+    case 48: 
+      var $344=$m;
+      var $345=(($344+28)|0);
+      var $346=HEAP32[(($345)>>2)];
+      var $347=(($346)|0)==0;
+      if ($347) { __label__ = 49; break; } else { __label__ = 50; break; }
+    case 49: 
+      var $349=$2;
+      var $350=(($349+76)|0);
+      var $351=HEAP32[(($350)>>2)];
+      var $352=((($351)+(1))|0);
+      var $353=((($352<<2))|0);
+      var $354=_malloc($353);
+      var $355=$354;
+      var $356=$m;
+      var $357=(($356+28)|0);
+      HEAP32[(($357)>>2)]=$355;
+      __label__ = 50; break;
+    case 50: 
+      var $359=$2;
+      var $360=(($359+76)|0);
+      var $361=HEAP32[(($360)>>2)];
+      var $362=(($361)|0) > 0;
+      if ($362) { __label__ = 51; break; } else { __label__ = 53; break; }
+    case 51: 
+      var $364=$m;
+      var $365=(($364+28)|0);
+      var $366=HEAP32[(($365)>>2)];
+      var $367=(($366)|0)==0;
+      if ($367) { __label__ = 52; break; } else { __label__ = 53; break; }
+    case 52: 
+      var $369=$m;
+      var $370=(($369+8)|0);
+      var $371=HEAP32[(($370)>>2)];
+      var $372=$371;
+      _free($372);
+      var $373=$m;
+      var $374=(($373+36)|0);
+      var $375=HEAP32[(($374)>>2)];
+      _free($375);
+      $1=12;
+      __label__ = 84; break;
+    case 53: 
+      var $377=$m;
+      var $378=$m;
+      var $379=(($378+24)|0);
+      var $380=HEAP32[(($379)>>2)];
+      var $381=$endp;
+      var $382=$gf;
+      var $383=$gl;
+      var $384=_lbackref($377, $380, $381, $382, $383, 0, 0);
+      $dp=$384;
+      __label__ = 54; break;
+    case 54: 
+      var $386=$dp;
+      var $387=(($386)|0)!=0;
+      if ($387) { __label__ = 55; break; } else { __label__ = 56; break; }
+    case 55: 
+      __label__ = 68; break;
+    case 56: 
+      __label__ = 57; break;
+    case 57: 
+      var $391=$dp;
+      var $392=(($391)|0)!=0;
+      if ($392) { __label__ = 59; break; } else { __label__ = 58; break; }
+    case 58: 
+      var $394=$endp;
+      var $395=$m;
+      var $396=(($395+24)|0);
+      var $397=HEAPU32[(($396)>>2)];
+      var $398=(($394)>>>0) <= (($397)>>>0);
+      if ($398) { __label__ = 59; break; } else { __label__ = 60; break; }
+    case 59: 
+      __label__ = 63; break;
+    case 60: 
+      var $401=$m;
+      var $402=$m;
+      var $403=(($402+24)|0);
+      var $404=HEAP32[(($403)>>2)];
+      var $405=$endp;
+      var $406=((($405)-(1))|0);
+      var $407=$gf;
+      var $408=$gl;
+      var $409=_lslow($401, $404, $406, $407, $408);
+      $endp=$409;
+      var $410=$endp;
+      var $411=(($410)|0)==0;
+      if ($411) { __label__ = 61; break; } else { __label__ = 62; break; }
+    case 61: 
+      __label__ = 63; break;
+    case 62: 
+      var $414=$m;
+      var $415=$m;
+      var $416=(($415+24)|0);
+      var $417=HEAP32[(($416)>>2)];
+      var $418=$endp;
+      var $419=$gf;
+      var $420=$gl;
+      var $421=_lbackref($414, $417, $418, $419, $420, 0, 0);
+      $dp=$421;
+      __label__ = 57; break;
+    case 63: 
+      var $423=$dp;
+      var $424=(($423)|0)!=0;
+      if ($424) { __label__ = 64; break; } else { __label__ = 65; break; }
+    case 64: 
+      __label__ = 68; break;
+    case 65: 
+      var $427=$m;
+      var $428=(($427+24)|0);
+      var $429=HEAP32[(($428)>>2)];
+      var $430=$stop;
+      var $431=(($429)|0)==(($430)|0);
+      if ($431) { __label__ = 66; break; } else { __label__ = 67; break; }
+    case 66: 
+      __label__ = 68; break;
+    case 67: 
+      var $434=$m;
+      var $435=(($434+24)|0);
+      var $436=HEAP32[(($435)>>2)];
+      var $437=(($436+1)|0);
+      $start=$437;
+      __label__ = 24; break;
+    case 68: 
+      var $439=$4;
+      var $440=(($439)>>>0) > 0;
+      if ($440) { __label__ = 69; break; } else { __label__ = 70; break; }
+    case 69: 
+      var $442=$m;
+      var $443=(($442+24)|0);
+      var $444=HEAP32[(($443)>>2)];
+      var $445=$m;
+      var $446=(($445+12)|0);
+      var $447=HEAP32[(($446)>>2)];
+      var $448=$444;
+      var $449=$447;
+      var $450=((($448)-($449))|0);
+      var $451=$5;
+      var $452=(($451)|0);
+      var $453=(($452)|0);
+      HEAP32[(($453)>>2)]=$450;
+      var $454=$endp;
+      var $455=$m;
+      var $456=(($455+12)|0);
+      var $457=HEAP32[(($456)>>2)];
+      var $458=$454;
+      var $459=$457;
+      var $460=((($458)-($459))|0);
+      var $461=$5;
+      var $462=(($461)|0);
+      var $463=(($462+4)|0);
+      HEAP32[(($463)>>2)]=$460;
+      __label__ = 70; break;
+    case 70: 
+      var $465=$4;
+      var $466=(($465)>>>0) > 1;
+      if ($466) { __label__ = 71; break; } else { __label__ = 79; break; }
+    case 71: 
+      $i=1;
+      __label__ = 72; break;
+    case 72: 
+      var $469=$i;
+      var $470=$4;
+      var $471=(($469)>>>0) < (($470)>>>0);
+      if ($471) { __label__ = 73; break; } else { __label__ = 78; break; }
+    case 73: 
+      var $473=$i;
+      var $474=$m;
+      var $475=(($474)|0);
+      var $476=HEAP32[(($475)>>2)];
+      var $477=(($476+68)|0);
+      var $478=HEAPU32[(($477)>>2)];
+      var $479=(($473)>>>0) <= (($478)>>>0);
+      if ($479) { __label__ = 74; break; } else { __label__ = 75; break; }
+    case 74: 
+      var $481=$i;
+      var $482=$5;
+      var $483=(($482+($481<<3))|0);
+      var $484=$i;
+      var $485=$m;
+      var $486=(($485+8)|0);
+      var $487=HEAP32[(($486)>>2)];
+      var $488=(($487+($484<<3))|0);
+      var $489=$483;
+      var $490=$488;
+      assert(8 % 1 === 0, 'memcpy given ' + 8 + ' bytes to copy. Problem with quantum=1 corrections perhaps?');HEAP32[(($489)>>2)]=HEAP32[(($490)>>2)];HEAP32[((($489)+(4))>>2)]=HEAP32[((($490)+(4))>>2)];
+      __label__ = 76; break;
+    case 75: 
+      var $492=$i;
+      var $493=$5;
+      var $494=(($493+($492<<3))|0);
+      var $495=(($494)|0);
+      HEAP32[(($495)>>2)]=-1;
+      var $496=$i;
+      var $497=$5;
+      var $498=(($497+($496<<3))|0);
+      var $499=(($498+4)|0);
+      HEAP32[(($499)>>2)]=-1;
+      __label__ = 76; break;
+    case 76: 
+      __label__ = 77; break;
+    case 77: 
+      var $502=$i;
+      var $503=((($502)+(1))|0);
+      $i=$503;
+      __label__ = 72; break;
+    case 78: 
+      __label__ = 79; break;
+    case 79: 
+      var $506=$m;
+      var $507=(($506+8)|0);
+      var $508=HEAP32[(($507)>>2)];
+      var $509=(($508)|0)!=0;
+      if ($509) { __label__ = 80; break; } else { __label__ = 81; break; }
+    case 80: 
+      var $511=$m;
+      var $512=(($511+8)|0);
+      var $513=HEAP32[(($512)>>2)];
+      var $514=$513;
+      _free($514);
+      __label__ = 81; break;
+    case 81: 
+      var $516=$m;
+      var $517=(($516+28)|0);
+      var $518=HEAP32[(($517)>>2)];
+      var $519=(($518)|0)!=0;
+      if ($519) { __label__ = 82; break; } else { __label__ = 83; break; }
+    case 82: 
+      var $521=$m;
+      var $522=(($521+28)|0);
+      var $523=HEAP32[(($522)>>2)];
+      var $524=$523;
+      _free($524);
+      __label__ = 83; break;
+    case 83: 
+      var $526=$m;
+      var $527=(($526+36)|0);
+      var $528=HEAP32[(($527)>>2)];
+      _free($528);
+      $1=0;
+      __label__ = 84; break;
+    case 84: 
+      var $530=$1;
+      STACKTOP = __stackBase__;
+      return $530;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_lmatcher["X"]=1;
+
+function _lfast($m, $start, $stop, $startst, $stopst) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $st;
+      var $fresh;
+      var $tmp;
+      var $p;
+      var $c;
+      var $lastc;
+      var $flagch;
+      var $i;
+      var $coldp;
+      $2=$m;
+      $3=$start;
+      $4=$stop;
+      $5=$startst;
+      $6=$stopst;
+      var $7=$2;
+      var $8=(($7+40)|0);
+      var $9=HEAP32[(($8)>>2)];
+      $st=$9;
+      var $10=$2;
+      var $11=(($10+44)|0);
+      var $12=HEAP32[(($11)>>2)];
+      $fresh=$12;
+      var $13=$2;
+      var $14=(($13+48)|0);
+      var $15=HEAP32[(($14)>>2)];
+      $tmp=$15;
+      var $16=$3;
+      $p=$16;
+      var $17=$3;
+      var $18=$2;
+      var $19=(($18+16)|0);
+      var $20=HEAP32[(($19)>>2)];
+      var $21=(($17)|0)==(($20)|0);
+      if ($21) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $29 = 128;__label__ = 5; break;
+    case 4: 
+      var $24=$3;
+      var $25=((($24)-(1))|0);
+      var $26=HEAP8[($25)];
+      var $27=(($26 << 24) >> 24);
+      var $29 = $27;__label__ = 5; break;
+    case 5: 
+      var $29;
+      $c=$29;
+      var $30=$st;
+      var $31=$2;
+      var $32=(($31)|0);
+      var $33=HEAP32[(($32)>>2)];
+      var $34=(($33+28)|0);
+      var $35=HEAP32[(($34)>>2)];
+      _memset($30, 0, $35, 1);
+      var $36=$5;
+      var $37=$st;
+      var $38=(($37+$36)|0);
+      HEAP8[($38)]=1;
+      var $39=$2;
+      var $40=(($39)|0);
+      var $41=HEAP32[(($40)>>2)];
+      var $42=$5;
+      var $43=$6;
+      var $44=$st;
+      var $45=$st;
+      var $46=_lstep($41, $42, $43, $44, 132, $45);
+      $st=$46;
+      var $47=$fresh;
+      var $48=$st;
+      var $49=$2;
+      var $50=(($49)|0);
+      var $51=HEAP32[(($50)>>2)];
+      var $52=(($51+28)|0);
+      var $53=HEAP32[(($52)>>2)];
+      _llvm_memmove_p0i8_p0i8_i32($47, $48, $53, 1, 0);
+      $coldp=0;
+      __label__ = 6; break;
+    case 6: 
+      var $55=$c;
+      $lastc=$55;
+      var $56=$p;
+      var $57=$2;
+      var $58=(($57+20)|0);
+      var $59=HEAP32[(($58)>>2)];
+      var $60=(($56)|0)==(($59)|0);
+      if ($60) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $67 = 128;__label__ = 9; break;
+    case 8: 
+      var $63=$p;
+      var $64=HEAP8[($63)];
+      var $65=(($64 << 24) >> 24);
+      var $67 = $65;__label__ = 9; break;
+    case 9: 
+      var $67;
+      $c=$67;
+      var $68=$st;
+      var $69=$fresh;
+      var $70=$2;
+      var $71=(($70)|0);
+      var $72=HEAP32[(($71)>>2)];
+      var $73=(($72+28)|0);
+      var $74=HEAP32[(($73)>>2)];
+      var $75=_memcmp($68, $69, $74);
+      var $76=(($75)|0)==0;
+      if ($76) { __label__ = 10; break; } else { __label__ = 11; break; }
+    case 10: 
+      var $78=$p;
+      $coldp=$78;
+      __label__ = 11; break;
+    case 11: 
+      $flagch=0;
+      $i=0;
+      var $80=$lastc;
+      var $81=(($80)|0)==10;
+      if ($81) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      var $83=$2;
+      var $84=(($83)|0);
+      var $85=HEAP32[(($84)>>2)];
+      var $86=(($85+24)|0);
+      var $87=HEAP32[(($86)>>2)];
+      var $88=$87 & 8;
+      var $89=(($88)|0)!=0;
+      if ($89) { __label__ = 15; break; } else { __label__ = 13; break; }
+    case 13: 
+      var $91=$lastc;
+      var $92=(($91)|0)==128;
+      if ($92) { __label__ = 14; break; } else { __label__ = 16; break; }
+    case 14: 
+      var $94=$2;
+      var $95=(($94+4)|0);
+      var $96=HEAP32[(($95)>>2)];
+      var $97=$96 & 1;
+      var $98=(($97)|0)!=0;
+      if ($98) { __label__ = 16; break; } else { __label__ = 15; break; }
+    case 15: 
+      $flagch=129;
+      var $100=$2;
+      var $101=(($100)|0);
+      var $102=HEAP32[(($101)>>2)];
+      var $103=(($102+44)|0);
+      var $104=HEAP32[(($103)>>2)];
+      $i=$104;
+      __label__ = 16; break;
+    case 16: 
+      var $106=$c;
+      var $107=(($106)|0)==10;
+      if ($107) { __label__ = 17; break; } else { __label__ = 18; break; }
+    case 17: 
+      var $109=$2;
+      var $110=(($109)|0);
+      var $111=HEAP32[(($110)>>2)];
+      var $112=(($111+24)|0);
+      var $113=HEAP32[(($112)>>2)];
+      var $114=$113 & 8;
+      var $115=(($114)|0)!=0;
+      if ($115) { __label__ = 20; break; } else { __label__ = 18; break; }
+    case 18: 
+      var $117=$c;
+      var $118=(($117)|0)==128;
+      if ($118) { __label__ = 19; break; } else { __label__ = 21; break; }
+    case 19: 
+      var $120=$2;
+      var $121=(($120+4)|0);
+      var $122=HEAP32[(($121)>>2)];
+      var $123=$122 & 2;
+      var $124=(($123)|0)!=0;
+      if ($124) { __label__ = 21; break; } else { __label__ = 20; break; }
+    case 20: 
+      var $126=$flagch;
+      var $127=(($126)|0)==129;
+      var $128=$127 ? 131 : 130;
+      $flagch=$128;
+      var $129=$2;
+      var $130=(($129)|0);
+      var $131=HEAP32[(($130)>>2)];
+      var $132=(($131+48)|0);
+      var $133=HEAP32[(($132)>>2)];
+      var $134=$i;
+      var $135=((($134)+($133))|0);
+      $i=$135;
+      __label__ = 21; break;
+    case 21: 
+      var $137=$i;
+      var $138=(($137)|0)!=0;
+      if ($138) { __label__ = 22; break; } else { __label__ = 27; break; }
+    case 22: 
+      __label__ = 23; break;
+    case 23: 
+      var $141=$i;
+      var $142=(($141)|0) > 0;
+      if ($142) { __label__ = 24; break; } else { __label__ = 26; break; }
+    case 24: 
+      var $144=$2;
+      var $145=(($144)|0);
+      var $146=HEAP32[(($145)>>2)];
+      var $147=$5;
+      var $148=$6;
+      var $149=$st;
+      var $150=$flagch;
+      var $151=$st;
+      var $152=_lstep($146, $147, $148, $149, $150, $151);
+      $st=$152;
+      __label__ = 25; break;
+    case 25: 
+      var $154=$i;
+      var $155=((($154)-(1))|0);
+      $i=$155;
+      __label__ = 23; break;
+    case 26: 
+      __label__ = 27; break;
+    case 27: 
+      var $158=$flagch;
+      var $159=(($158)|0)==129;
+      if ($159) { __label__ = 31; break; } else { __label__ = 28; break; }
+    case 28: 
+      var $161=$lastc;
+      var $162=(($161)|0)!=128;
+      if ($162) { __label__ = 29; break; } else { __label__ = 35; break; }
+    case 29: 
+      var $164=$lastc;
+      var $165=$164 & 255;
+      var $166=_isalnum($165);
+      var $167=(($166)|0)!=0;
+      if ($167) { __label__ = 35; break; } else { __label__ = 30; break; }
+    case 30: 
+      var $169=$lastc;
+      var $170=(($169)|0)==95;
+      if ($170) { __label__ = 35; break; } else { __label__ = 31; break; }
+    case 31: 
+      var $172=$c;
+      var $173=(($172)|0)!=128;
+      if ($173) { __label__ = 32; break; } else { __label__ = 35; break; }
+    case 32: 
+      var $175=$c;
+      var $176=$175 & 255;
+      var $177=_isalnum($176);
+      var $178=(($177)|0)!=0;
+      if ($178) { __label__ = 34; break; } else { __label__ = 33; break; }
+    case 33: 
+      var $180=$c;
+      var $181=(($180)|0)==95;
+      if ($181) { __label__ = 34; break; } else { __label__ = 35; break; }
+    case 34: 
+      $flagch=133;
+      __label__ = 35; break;
+    case 35: 
+      var $184=$lastc;
+      var $185=(($184)|0)!=128;
+      if ($185) { __label__ = 36; break; } else { __label__ = 43; break; }
+    case 36: 
+      var $187=$lastc;
+      var $188=$187 & 255;
+      var $189=_isalnum($188);
+      var $190=(($189)|0)!=0;
+      if ($190) { __label__ = 38; break; } else { __label__ = 37; break; }
+    case 37: 
+      var $192=$lastc;
+      var $193=(($192)|0)==95;
+      if ($193) { __label__ = 38; break; } else { __label__ = 43; break; }
+    case 38: 
+      var $195=$flagch;
+      var $196=(($195)|0)==130;
+      if ($196) { __label__ = 42; break; } else { __label__ = 39; break; }
+    case 39: 
+      var $198=$c;
+      var $199=(($198)|0)!=128;
+      if ($199) { __label__ = 40; break; } else { __label__ = 43; break; }
+    case 40: 
+      var $201=$c;
+      var $202=$201 & 255;
+      var $203=_isalnum($202);
+      var $204=(($203)|0)!=0;
+      if ($204) { __label__ = 43; break; } else { __label__ = 41; break; }
+    case 41: 
+      var $206=$c;
+      var $207=(($206)|0)==95;
+      if ($207) { __label__ = 43; break; } else { __label__ = 42; break; }
+    case 42: 
+      $flagch=134;
+      __label__ = 43; break;
+    case 43: 
+      var $210=$flagch;
+      var $211=(($210)|0)==133;
+      if ($211) { __label__ = 45; break; } else { __label__ = 44; break; }
+    case 44: 
+      var $213=$flagch;
+      var $214=(($213)|0)==134;
+      if ($214) { __label__ = 45; break; } else { __label__ = 46; break; }
+    case 45: 
+      var $216=$2;
+      var $217=(($216)|0);
+      var $218=HEAP32[(($217)>>2)];
+      var $219=$5;
+      var $220=$6;
+      var $221=$st;
+      var $222=$flagch;
+      var $223=$st;
+      var $224=_lstep($218, $219, $220, $221, $222, $223);
+      $st=$224;
+      __label__ = 46; break;
+    case 46: 
+      var $226=$6;
+      var $227=$st;
+      var $228=(($227+$226)|0);
+      var $229=HEAP8[($228)];
+      var $230=(($229 << 24) >> 24);
+      var $231=(($230)|0)!=0;
+      if ($231) { __label__ = 48; break; } else { __label__ = 47; break; }
+    case 47: 
+      var $233=$p;
+      var $234=$4;
+      var $235=(($233)|0)==(($234)|0);
+      if ($235) { __label__ = 48; break; } else { __label__ = 49; break; }
+    case 48: 
+      __label__ = 50; break;
+    case 49: 
+      var $238=$tmp;
+      var $239=$st;
+      var $240=$2;
+      var $241=(($240)|0);
+      var $242=HEAP32[(($241)>>2)];
+      var $243=(($242+28)|0);
+      var $244=HEAP32[(($243)>>2)];
+      _llvm_memmove_p0i8_p0i8_i32($238, $239, $244, 1, 0);
+      var $245=$st;
+      var $246=$fresh;
+      var $247=$2;
+      var $248=(($247)|0);
+      var $249=HEAP32[(($248)>>2)];
+      var $250=(($249+28)|0);
+      var $251=HEAP32[(($250)>>2)];
+      _llvm_memmove_p0i8_p0i8_i32($245, $246, $251, 1, 0);
+      var $252=$2;
+      var $253=(($252)|0);
+      var $254=HEAP32[(($253)>>2)];
+      var $255=$5;
+      var $256=$6;
+      var $257=$tmp;
+      var $258=$c;
+      var $259=$st;
+      var $260=_lstep($254, $255, $256, $257, $258, $259);
+      $st=$260;
+      var $261=$p;
+      var $262=(($261+1)|0);
+      $p=$262;
+      __label__ = 6; break;
+    case 50: 
+      var $264=$coldp;
+      var $265=$2;
+      var $266=(($265+24)|0);
+      HEAP32[(($266)>>2)]=$264;
+      var $267=$6;
+      var $268=$st;
+      var $269=(($268+$267)|0);
+      var $270=HEAP8[($269)];
+      var $271=(($270 << 24) >> 24)!=0;
+      if ($271) { __label__ = 51; break; } else { __label__ = 52; break; }
+    case 51: 
+      var $273=$p;
+      var $274=(($273+1)|0);
+      $1=$274;
+      __label__ = 53; break;
+    case 52: 
+      $1=0;
+      __label__ = 53; break;
+    case 53: 
+      var $277=$1;
+      ;
+      return $277;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_lfast["X"]=1;
+
+function _lslow($m, $start, $stop, $startst, $stopst) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $st;
+      var $empty;
+      var $tmp;
+      var $p;
+      var $c;
+      var $lastc;
+      var $flagch;
+      var $i;
+      var $matchp;
+      $1=$m;
+      $2=$start;
+      $3=$stop;
+      $4=$startst;
+      $5=$stopst;
+      var $6=$1;
+      var $7=(($6+40)|0);
+      var $8=HEAP32[(($7)>>2)];
+      $st=$8;
+      var $9=$1;
+      var $10=(($9+52)|0);
+      var $11=HEAP32[(($10)>>2)];
+      $empty=$11;
+      var $12=$1;
+      var $13=(($12+48)|0);
+      var $14=HEAP32[(($13)>>2)];
+      $tmp=$14;
+      var $15=$2;
+      $p=$15;
+      var $16=$2;
+      var $17=$1;
+      var $18=(($17+16)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=(($16)|0)==(($19)|0);
+      if ($20) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $28 = 128;__label__ = 5; break;
+    case 4: 
+      var $23=$2;
+      var $24=((($23)-(1))|0);
+      var $25=HEAP8[($24)];
+      var $26=(($25 << 24) >> 24);
+      var $28 = $26;__label__ = 5; break;
+    case 5: 
+      var $28;
+      $c=$28;
+      var $29=$st;
+      var $30=$1;
+      var $31=(($30)|0);
+      var $32=HEAP32[(($31)>>2)];
+      var $33=(($32+28)|0);
+      var $34=HEAP32[(($33)>>2)];
+      _memset($29, 0, $34, 1);
+      var $35=$4;
+      var $36=$st;
+      var $37=(($36+$35)|0);
+      HEAP8[($37)]=1;
+      var $38=$1;
+      var $39=(($38)|0);
+      var $40=HEAP32[(($39)>>2)];
+      var $41=$4;
+      var $42=$5;
+      var $43=$st;
+      var $44=$st;
+      var $45=_lstep($40, $41, $42, $43, 132, $44);
+      $st=$45;
+      $matchp=0;
+      __label__ = 6; break;
+    case 6: 
+      var $47=$c;
+      $lastc=$47;
+      var $48=$p;
+      var $49=$1;
+      var $50=(($49+20)|0);
+      var $51=HEAP32[(($50)>>2)];
+      var $52=(($48)|0)==(($51)|0);
+      if ($52) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $59 = 128;__label__ = 9; break;
+    case 8: 
+      var $55=$p;
+      var $56=HEAP8[($55)];
+      var $57=(($56 << 24) >> 24);
+      var $59 = $57;__label__ = 9; break;
+    case 9: 
+      var $59;
+      $c=$59;
+      $flagch=0;
+      $i=0;
+      var $60=$lastc;
+      var $61=(($60)|0)==10;
+      if ($61) { __label__ = 10; break; } else { __label__ = 11; break; }
+    case 10: 
+      var $63=$1;
+      var $64=(($63)|0);
+      var $65=HEAP32[(($64)>>2)];
+      var $66=(($65+24)|0);
+      var $67=HEAP32[(($66)>>2)];
+      var $68=$67 & 8;
+      var $69=(($68)|0)!=0;
+      if ($69) { __label__ = 13; break; } else { __label__ = 11; break; }
+    case 11: 
+      var $71=$lastc;
+      var $72=(($71)|0)==128;
+      if ($72) { __label__ = 12; break; } else { __label__ = 14; break; }
+    case 12: 
+      var $74=$1;
+      var $75=(($74+4)|0);
+      var $76=HEAP32[(($75)>>2)];
+      var $77=$76 & 1;
+      var $78=(($77)|0)!=0;
+      if ($78) { __label__ = 14; break; } else { __label__ = 13; break; }
+    case 13: 
+      $flagch=129;
+      var $80=$1;
+      var $81=(($80)|0);
+      var $82=HEAP32[(($81)>>2)];
+      var $83=(($82+44)|0);
+      var $84=HEAP32[(($83)>>2)];
+      $i=$84;
+      __label__ = 14; break;
+    case 14: 
+      var $86=$c;
+      var $87=(($86)|0)==10;
+      if ($87) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      var $89=$1;
+      var $90=(($89)|0);
+      var $91=HEAP32[(($90)>>2)];
+      var $92=(($91+24)|0);
+      var $93=HEAP32[(($92)>>2)];
+      var $94=$93 & 8;
+      var $95=(($94)|0)!=0;
+      if ($95) { __label__ = 18; break; } else { __label__ = 16; break; }
+    case 16: 
+      var $97=$c;
+      var $98=(($97)|0)==128;
+      if ($98) { __label__ = 17; break; } else { __label__ = 19; break; }
+    case 17: 
+      var $100=$1;
+      var $101=(($100+4)|0);
+      var $102=HEAP32[(($101)>>2)];
+      var $103=$102 & 2;
+      var $104=(($103)|0)!=0;
+      if ($104) { __label__ = 19; break; } else { __label__ = 18; break; }
+    case 18: 
+      var $106=$flagch;
+      var $107=(($106)|0)==129;
+      var $108=$107 ? 131 : 130;
+      $flagch=$108;
+      var $109=$1;
+      var $110=(($109)|0);
+      var $111=HEAP32[(($110)>>2)];
+      var $112=(($111+48)|0);
+      var $113=HEAP32[(($112)>>2)];
+      var $114=$i;
+      var $115=((($114)+($113))|0);
+      $i=$115;
+      __label__ = 19; break;
+    case 19: 
+      var $117=$i;
+      var $118=(($117)|0)!=0;
+      if ($118) { __label__ = 20; break; } else { __label__ = 25; break; }
+    case 20: 
+      __label__ = 21; break;
+    case 21: 
+      var $121=$i;
+      var $122=(($121)|0) > 0;
+      if ($122) { __label__ = 22; break; } else { __label__ = 24; break; }
+    case 22: 
+      var $124=$1;
+      var $125=(($124)|0);
+      var $126=HEAP32[(($125)>>2)];
+      var $127=$4;
+      var $128=$5;
+      var $129=$st;
+      var $130=$flagch;
+      var $131=$st;
+      var $132=_lstep($126, $127, $128, $129, $130, $131);
+      $st=$132;
+      __label__ = 23; break;
+    case 23: 
+      var $134=$i;
+      var $135=((($134)-(1))|0);
+      $i=$135;
+      __label__ = 21; break;
+    case 24: 
+      __label__ = 25; break;
+    case 25: 
+      var $138=$flagch;
+      var $139=(($138)|0)==129;
+      if ($139) { __label__ = 29; break; } else { __label__ = 26; break; }
+    case 26: 
+      var $141=$lastc;
+      var $142=(($141)|0)!=128;
+      if ($142) { __label__ = 27; break; } else { __label__ = 33; break; }
+    case 27: 
+      var $144=$lastc;
+      var $145=$144 & 255;
+      var $146=_isalnum($145);
+      var $147=(($146)|0)!=0;
+      if ($147) { __label__ = 33; break; } else { __label__ = 28; break; }
+    case 28: 
+      var $149=$lastc;
+      var $150=(($149)|0)==95;
+      if ($150) { __label__ = 33; break; } else { __label__ = 29; break; }
+    case 29: 
+      var $152=$c;
+      var $153=(($152)|0)!=128;
+      if ($153) { __label__ = 30; break; } else { __label__ = 33; break; }
+    case 30: 
+      var $155=$c;
+      var $156=$155 & 255;
+      var $157=_isalnum($156);
+      var $158=(($157)|0)!=0;
+      if ($158) { __label__ = 32; break; } else { __label__ = 31; break; }
+    case 31: 
+      var $160=$c;
+      var $161=(($160)|0)==95;
+      if ($161) { __label__ = 32; break; } else { __label__ = 33; break; }
+    case 32: 
+      $flagch=133;
+      __label__ = 33; break;
+    case 33: 
+      var $164=$lastc;
+      var $165=(($164)|0)!=128;
+      if ($165) { __label__ = 34; break; } else { __label__ = 41; break; }
+    case 34: 
+      var $167=$lastc;
+      var $168=$167 & 255;
+      var $169=_isalnum($168);
+      var $170=(($169)|0)!=0;
+      if ($170) { __label__ = 36; break; } else { __label__ = 35; break; }
+    case 35: 
+      var $172=$lastc;
+      var $173=(($172)|0)==95;
+      if ($173) { __label__ = 36; break; } else { __label__ = 41; break; }
+    case 36: 
+      var $175=$flagch;
+      var $176=(($175)|0)==130;
+      if ($176) { __label__ = 40; break; } else { __label__ = 37; break; }
+    case 37: 
+      var $178=$c;
+      var $179=(($178)|0)!=128;
+      if ($179) { __label__ = 38; break; } else { __label__ = 41; break; }
+    case 38: 
+      var $181=$c;
+      var $182=$181 & 255;
+      var $183=_isalnum($182);
+      var $184=(($183)|0)!=0;
+      if ($184) { __label__ = 41; break; } else { __label__ = 39; break; }
+    case 39: 
+      var $186=$c;
+      var $187=(($186)|0)==95;
+      if ($187) { __label__ = 41; break; } else { __label__ = 40; break; }
+    case 40: 
+      $flagch=134;
+      __label__ = 41; break;
+    case 41: 
+      var $190=$flagch;
+      var $191=(($190)|0)==133;
+      if ($191) { __label__ = 43; break; } else { __label__ = 42; break; }
+    case 42: 
+      var $193=$flagch;
+      var $194=(($193)|0)==134;
+      if ($194) { __label__ = 43; break; } else { __label__ = 44; break; }
+    case 43: 
+      var $196=$1;
+      var $197=(($196)|0);
+      var $198=HEAP32[(($197)>>2)];
+      var $199=$4;
+      var $200=$5;
+      var $201=$st;
+      var $202=$flagch;
+      var $203=$st;
+      var $204=_lstep($198, $199, $200, $201, $202, $203);
+      $st=$204;
+      __label__ = 44; break;
+    case 44: 
+      var $206=$5;
+      var $207=$st;
+      var $208=(($207+$206)|0);
+      var $209=HEAP8[($208)];
+      var $210=(($209 << 24) >> 24)!=0;
+      if ($210) { __label__ = 45; break; } else { __label__ = 46; break; }
+    case 45: 
+      var $212=$p;
+      $matchp=$212;
+      __label__ = 46; break;
+    case 46: 
+      var $214=$st;
+      var $215=$empty;
+      var $216=$1;
+      var $217=(($216)|0);
+      var $218=HEAP32[(($217)>>2)];
+      var $219=(($218+28)|0);
+      var $220=HEAP32[(($219)>>2)];
+      var $221=_memcmp($214, $215, $220);
+      var $222=(($221)|0)==0;
+      if ($222) { __label__ = 48; break; } else { __label__ = 47; break; }
+    case 47: 
+      var $224=$p;
+      var $225=$3;
+      var $226=(($224)|0)==(($225)|0);
+      if ($226) { __label__ = 48; break; } else { __label__ = 49; break; }
+    case 48: 
+      __label__ = 50; break;
+    case 49: 
+      var $229=$tmp;
+      var $230=$st;
+      var $231=$1;
+      var $232=(($231)|0);
+      var $233=HEAP32[(($232)>>2)];
+      var $234=(($233+28)|0);
+      var $235=HEAP32[(($234)>>2)];
+      _llvm_memmove_p0i8_p0i8_i32($229, $230, $235, 1, 0);
+      var $236=$st;
+      var $237=$empty;
+      var $238=$1;
+      var $239=(($238)|0);
+      var $240=HEAP32[(($239)>>2)];
+      var $241=(($240+28)|0);
+      var $242=HEAP32[(($241)>>2)];
+      _llvm_memmove_p0i8_p0i8_i32($236, $237, $242, 1, 0);
+      var $243=$1;
+      var $244=(($243)|0);
+      var $245=HEAP32[(($244)>>2)];
+      var $246=$4;
+      var $247=$5;
+      var $248=$tmp;
+      var $249=$c;
+      var $250=$st;
+      var $251=_lstep($245, $246, $247, $248, $249, $250);
+      $st=$251;
+      var $252=$p;
+      var $253=(($252+1)|0);
+      $p=$253;
+      __label__ = 6; break;
+    case 50: 
+      var $255=$matchp;
+      ;
+      return $255;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_lslow["X"]=1;
+
+function _ldissect($m, $start, $stop, $startst, $stopst) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $i;
+      var $ss;
+      var $es;
+      var $sp;
+      var $stp;
+      var $rest;
+      var $tail;
+      var $ssub;
+      var $esub;
+      var $ssp;
+      var $sep;
+      var $oldssp;
+      var $dp;
+      var $dp1;
+      var $dp2;
+      $1=$m;
+      $2=$start;
+      $3=$stop;
+      $4=$startst;
+      $5=$stopst;
+      var $6=$2;
+      $sp=$6;
+      var $7=$4;
+      $ss=$7;
+      __label__ = 3; break;
+    case 3: 
+      var $9=$ss;
+      var $10=$5;
+      var $11=(($9)|0) < (($10)|0);
+      if ($11) { __label__ = 4; break; } else { __label__ = 54; break; }
+    case 4: 
+      var $13=$ss;
+      $es=$13;
+      var $14=$es;
+      var $15=$1;
+      var $16=(($15)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=(($17+4)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=(($19+($14<<2))|0);
+      var $21=HEAP32[(($20)>>2)];
+      var $22=$21 & -134217728;
+      if ((($22)|0) == 1207959552 || (($22)|0) == 1476395008) {
+        __label__ = 5; break;
+      }
+      else if ((($22)|0) == 2013265920) {
+        __label__ = 6; break;
+      }
+      else {
+      __label__ = 10; break;
+      }
+      
+    case 5: 
+      var $24=$es;
+      var $25=$1;
+      var $26=(($25)|0);
+      var $27=HEAP32[(($26)>>2)];
+      var $28=(($27+4)|0);
+      var $29=HEAP32[(($28)>>2)];
+      var $30=(($29+($24<<2))|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=$31 & 134217727;
+      var $33=$es;
+      var $34=((($33)+($32))|0);
+      $es=$34;
+      __label__ = 10; break;
+    case 6: 
+      __label__ = 7; break;
+    case 7: 
+      var $37=$es;
+      var $38=$1;
+      var $39=(($38)|0);
+      var $40=HEAP32[(($39)>>2)];
+      var $41=(($40+4)|0);
+      var $42=HEAP32[(($41)>>2)];
+      var $43=(($42+($37<<2))|0);
+      var $44=HEAP32[(($43)>>2)];
+      var $45=$44 & -134217728;
+      var $46=(($45)|0)!=-1879048192;
+      if ($46) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $48=$es;
+      var $49=$1;
+      var $50=(($49)|0);
+      var $51=HEAP32[(($50)>>2)];
+      var $52=(($51+4)|0);
+      var $53=HEAP32[(($52)>>2)];
+      var $54=(($53+($48<<2))|0);
+      var $55=HEAP32[(($54)>>2)];
+      var $56=$55 & 134217727;
+      var $57=$es;
+      var $58=((($57)+($56))|0);
+      $es=$58;
+      __label__ = 7; break;
+    case 9: 
+      __label__ = 10; break;
+    case 10: 
+      var $61=$es;
+      var $62=((($61)+(1))|0);
+      $es=$62;
+      var $63=$ss;
+      var $64=$1;
+      var $65=(($64)|0);
+      var $66=HEAP32[(($65)>>2)];
+      var $67=(($66+4)|0);
+      var $68=HEAP32[(($67)>>2)];
+      var $69=(($68+($63<<2))|0);
+      var $70=HEAP32[(($69)>>2)];
+      var $71=$70 & -134217728;
+      if ((($71)|0) == 134217728) {
+        __label__ = 11; break;
+      }
+      else if ((($71)|0) == 268435456) {
+        __label__ = 12; break;
+      }
+      else if ((($71)|0) == 402653184 || (($71)|0) == 536870912 || (($71)|0) == -1744830464 || (($71)|0) == -1610612736) {
+        __label__ = 13; break;
+      }
+      else if ((($71)|0) == 671088640 || (($71)|0) == 805306368) {
+        __label__ = 14; break;
+      }
+      else if ((($71)|0) == 939524096 || (($71)|0) == 1073741824) {
+        __label__ = 15; break;
+      }
+      else if ((($71)|0) == 1476395008) {
+        __label__ = 16; break;
+      }
+      else if ((($71)|0) == 1207959552) {
+        __label__ = 24; break;
+      }
+      else if ((($71)|0) == 2013265920) {
+        __label__ = 36; break;
+      }
+      else if ((($71)|0) == 1342177280 || (($71)|0) == 1610612736 || (($71)|0) == -2147483648 || (($71)|0) == -2013265920 || (($71)|0) == -1879048192) {
+        __label__ = 48; break;
+      }
+      else if ((($71)|0) == 1744830464) {
+        __label__ = 49; break;
+      }
+      else if ((($71)|0) == 1879048192) {
+        __label__ = 50; break;
+      }
+      else {
+      __label__ = 51; break;
+      }
+      
+    case 11: 
+      __label__ = 52; break;
+    case 12: 
+      var $74=$sp;
+      var $75=(($74+1)|0);
+      $sp=$75;
+      __label__ = 52; break;
+    case 13: 
+      __label__ = 52; break;
+    case 14: 
+      var $78=$sp;
+      var $79=(($78+1)|0);
+      $sp=$79;
+      __label__ = 52; break;
+    case 15: 
+      __label__ = 52; break;
+    case 16: 
+      var $82=$3;
+      $stp=$82;
+      __label__ = 17; break;
+    case 17: 
+      var $84=$1;
+      var $85=$sp;
+      var $86=$stp;
+      var $87=$ss;
+      var $88=$es;
+      var $89=_lslow($84, $85, $86, $87, $88);
+      $rest=$89;
+      var $90=$1;
+      var $91=$rest;
+      var $92=$3;
+      var $93=$es;
+      var $94=$5;
+      var $95=_lslow($90, $91, $92, $93, $94);
+      $tail=$95;
+      var $96=$tail;
+      var $97=$3;
+      var $98=(($96)|0)==(($97)|0);
+      if ($98) { __label__ = 18; break; } else { __label__ = 19; break; }
+    case 18: 
+      __label__ = 20; break;
+    case 19: 
+      var $101=$rest;
+      var $102=((($101)-(1))|0);
+      $stp=$102;
+      __label__ = 17; break;
+    case 20: 
+      var $104=$ss;
+      var $105=((($104)+(1))|0);
+      $ssub=$105;
+      var $106=$es;
+      var $107=((($106)-(1))|0);
+      $esub=$107;
+      var $108=$1;
+      var $109=$sp;
+      var $110=$rest;
+      var $111=$ssub;
+      var $112=$esub;
+      var $113=_lslow($108, $109, $110, $111, $112);
+      var $114=(($113)|0)!=0;
+      if ($114) { __label__ = 21; break; } else { __label__ = 22; break; }
+    case 21: 
+      var $116=$1;
+      var $117=$sp;
+      var $118=$rest;
+      var $119=$ssub;
+      var $120=$esub;
+      var $121=_ldissect($116, $117, $118, $119, $120);
+      $dp=$121;
+      var $122=$dp;
+      __label__ = 23; break;
+    case 22: 
+      __label__ = 23; break;
+    case 23: 
+      var $125=$rest;
+      $sp=$125;
+      __label__ = 52; break;
+    case 24: 
+      var $127=$3;
+      $stp=$127;
+      __label__ = 25; break;
+    case 25: 
+      var $129=$1;
+      var $130=$sp;
+      var $131=$stp;
+      var $132=$ss;
+      var $133=$es;
+      var $134=_lslow($129, $130, $131, $132, $133);
+      $rest=$134;
+      var $135=$1;
+      var $136=$rest;
+      var $137=$3;
+      var $138=$es;
+      var $139=$5;
+      var $140=_lslow($135, $136, $137, $138, $139);
+      $tail=$140;
+      var $141=$tail;
+      var $142=$3;
+      var $143=(($141)|0)==(($142)|0);
+      if ($143) { __label__ = 26; break; } else { __label__ = 27; break; }
+    case 26: 
+      __label__ = 28; break;
+    case 27: 
+      var $146=$rest;
+      var $147=((($146)-(1))|0);
+      $stp=$147;
+      __label__ = 25; break;
+    case 28: 
+      var $149=$ss;
+      var $150=((($149)+(1))|0);
+      $ssub=$150;
+      var $151=$es;
+      var $152=((($151)-(1))|0);
+      $esub=$152;
+      var $153=$sp;
+      $ssp=$153;
+      var $154=$ssp;
+      $oldssp=$154;
+      __label__ = 29; break;
+    case 29: 
+      var $156=$1;
+      var $157=$ssp;
+      var $158=$rest;
+      var $159=$ssub;
+      var $160=$esub;
+      var $161=_lslow($156, $157, $158, $159, $160);
+      $sep=$161;
+      var $162=$sep;
+      var $163=(($162)|0)==0;
+      if ($163) { __label__ = 31; break; } else { __label__ = 30; break; }
+    case 30: 
+      var $165=$sep;
+      var $166=$ssp;
+      var $167=(($165)|0)==(($166)|0);
+      if ($167) { __label__ = 31; break; } else { __label__ = 32; break; }
+    case 31: 
+      __label__ = 33; break;
+    case 32: 
+      var $170=$ssp;
+      $oldssp=$170;
+      var $171=$sep;
+      $ssp=$171;
+      __label__ = 29; break;
+    case 33: 
+      var $173=$sep;
+      var $174=(($173)|0)==0;
+      if ($174) { __label__ = 34; break; } else { __label__ = 35; break; }
+    case 34: 
+      var $176=$ssp;
+      $sep=$176;
+      var $177=$oldssp;
+      $ssp=$177;
+      __label__ = 35; break;
+    case 35: 
+      var $179=$1;
+      var $180=$ssp;
+      var $181=$sep;
+      var $182=$ssub;
+      var $183=$esub;
+      var $184=_ldissect($179, $180, $181, $182, $183);
+      $dp1=$184;
+      var $185=$dp1;
+      var $186=$rest;
+      $sp=$186;
+      __label__ = 52; break;
+    case 36: 
+      var $188=$3;
+      $stp=$188;
+      __label__ = 37; break;
+    case 37: 
+      var $190=$1;
+      var $191=$sp;
+      var $192=$stp;
+      var $193=$ss;
+      var $194=$es;
+      var $195=_lslow($190, $191, $192, $193, $194);
+      $rest=$195;
+      var $196=$1;
+      var $197=$rest;
+      var $198=$3;
+      var $199=$es;
+      var $200=$5;
+      var $201=_lslow($196, $197, $198, $199, $200);
+      $tail=$201;
+      var $202=$tail;
+      var $203=$3;
+      var $204=(($202)|0)==(($203)|0);
+      if ($204) { __label__ = 38; break; } else { __label__ = 39; break; }
+    case 38: 
+      __label__ = 40; break;
+    case 39: 
+      var $207=$rest;
+      var $208=((($207)-(1))|0);
+      $stp=$208;
+      __label__ = 37; break;
+    case 40: 
+      var $210=$ss;
+      var $211=((($210)+(1))|0);
+      $ssub=$211;
+      var $212=$ss;
+      var $213=$ss;
+      var $214=$1;
+      var $215=(($214)|0);
+      var $216=HEAP32[(($215)>>2)];
+      var $217=(($216+4)|0);
+      var $218=HEAP32[(($217)>>2)];
+      var $219=(($218+($213<<2))|0);
+      var $220=HEAP32[(($219)>>2)];
+      var $221=$220 & 134217727;
+      var $222=((($212)+($221))|0);
+      var $223=((($222)-(1))|0);
+      $esub=$223;
+      __label__ = 41; break;
+    case 41: 
+      var $225=$1;
+      var $226=$sp;
+      var $227=$rest;
+      var $228=$ssub;
+      var $229=$esub;
+      var $230=_lslow($225, $226, $227, $228, $229);
+      var $231=$rest;
+      var $232=(($230)|0)==(($231)|0);
+      if ($232) { __label__ = 42; break; } else { __label__ = 43; break; }
+    case 42: 
+      __label__ = 47; break;
+    case 43: 
+      var $235=$esub;
+      var $236=((($235)+(1))|0);
+      $esub=$236;
+      var $237=$esub;
+      var $238=((($237)+(1))|0);
+      $ssub=$238;
+      var $239=$esub;
+      var $240=$1;
+      var $241=(($240)|0);
+      var $242=HEAP32[(($241)>>2)];
+      var $243=(($242+4)|0);
+      var $244=HEAP32[(($243)>>2)];
+      var $245=(($244+($239<<2))|0);
+      var $246=HEAP32[(($245)>>2)];
+      var $247=$246 & 134217727;
+      var $248=$esub;
+      var $249=((($248)+($247))|0);
+      $esub=$249;
+      var $250=$esub;
+      var $251=$1;
+      var $252=(($251)|0);
+      var $253=HEAP32[(($252)>>2)];
+      var $254=(($253+4)|0);
+      var $255=HEAP32[(($254)>>2)];
+      var $256=(($255+($250<<2))|0);
+      var $257=HEAP32[(($256)>>2)];
+      var $258=$257 & -134217728;
+      var $259=(($258)|0)==-2013265920;
+      if ($259) { __label__ = 44; break; } else { __label__ = 45; break; }
+    case 44: 
+      var $261=$esub;
+      var $262=((($261)-(1))|0);
+      $esub=$262;
+      __label__ = 46; break;
+    case 45: 
+      __label__ = 46; break;
+    case 46: 
+      __label__ = 41; break;
+    case 47: 
+      var $266=$1;
+      var $267=$sp;
+      var $268=$rest;
+      var $269=$ssub;
+      var $270=$esub;
+      var $271=_ldissect($266, $267, $268, $269, $270);
+      $dp2=$271;
+      var $272=$dp2;
+      var $273=$rest;
+      $sp=$273;
+      __label__ = 52; break;
+    case 48: 
+      __label__ = 52; break;
+    case 49: 
+      var $276=$ss;
+      var $277=$1;
+      var $278=(($277)|0);
+      var $279=HEAP32[(($278)>>2)];
+      var $280=(($279+4)|0);
+      var $281=HEAP32[(($280)>>2)];
+      var $282=(($281+($276<<2))|0);
+      var $283=HEAP32[(($282)>>2)];
+      var $284=$283 & 134217727;
+      $i=$284;
+      var $285=$sp;
+      var $286=$1;
+      var $287=(($286+12)|0);
+      var $288=HEAP32[(($287)>>2)];
+      var $289=$285;
+      var $290=$288;
+      var $291=((($289)-($290))|0);
+      var $292=$i;
+      var $293=$1;
+      var $294=(($293+8)|0);
+      var $295=HEAP32[(($294)>>2)];
+      var $296=(($295+($292<<3))|0);
+      var $297=(($296)|0);
+      HEAP32[(($297)>>2)]=$291;
+      __label__ = 52; break;
+    case 50: 
+      var $299=$ss;
+      var $300=$1;
+      var $301=(($300)|0);
+      var $302=HEAP32[(($301)>>2)];
+      var $303=(($302+4)|0);
+      var $304=HEAP32[(($303)>>2)];
+      var $305=(($304+($299<<2))|0);
+      var $306=HEAP32[(($305)>>2)];
+      var $307=$306 & 134217727;
+      $i=$307;
+      var $308=$sp;
+      var $309=$1;
+      var $310=(($309+12)|0);
+      var $311=HEAP32[(($310)>>2)];
+      var $312=$308;
+      var $313=$311;
+      var $314=((($312)-($313))|0);
+      var $315=$i;
+      var $316=$1;
+      var $317=(($316+8)|0);
+      var $318=HEAP32[(($317)>>2)];
+      var $319=(($318+($315<<3))|0);
+      var $320=(($319+4)|0);
+      HEAP32[(($320)>>2)]=$314;
+      __label__ = 52; break;
+    case 51: 
+      __label__ = 52; break;
+    case 52: 
+      __label__ = 53; break;
+    case 53: 
+      var $324=$es;
+      $ss=$324;
+      __label__ = 3; break;
+    case 54: 
+      var $326=$sp;
+      ;
+      return $326;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_ldissect["X"]=1;
+
+function _lbackref($m, $start, $stop, $startst, $stopst, $lev, $rec) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $7;
+      var $8;
+      var $i;
+      var $ss;
+      var $sp;
+      var $ssub;
+      var $esub;
+      var $ssp;
+      var $dp;
+      var $len;
+      var $hard;
+      var $s;
+      var $offsave;
+      var $cs;
+      $2=$m;
+      $3=$start;
+      $4=$stop;
+      $5=$startst;
+      $6=$stopst;
+      $7=$lev;
+      $8=$rec;
+      var $9=$3;
+      $sp=$9;
+      $hard=0;
+      var $10=$5;
+      $ss=$10;
+      __label__ = 3; break;
+    case 3: 
+      var $12=$hard;
+      var $13=(($12)|0)!=0;
+      if ($13) { var $19 = 0;__label__ = 5; break; } else { __label__ = 4; break; }
+    case 4: 
+      var $15=$ss;
+      var $16=$6;
+      var $17=(($15)|0) < (($16)|0);
+      var $19 = $17;__label__ = 5; break;
+    case 5: 
+      var $19;
+      if ($19) { __label__ = 6; break; } else { __label__ = 70; break; }
+    case 6: 
+      var $21=$ss;
+      var $22=$2;
+      var $23=(($22)|0);
+      var $24=HEAP32[(($23)>>2)];
+      var $25=(($24+4)|0);
+      var $26=HEAP32[(($25)>>2)];
+      var $27=(($26+($21<<2))|0);
+      var $28=HEAP32[(($27)>>2)];
+      $s=$28;
+      var $29=$28 & -134217728;
+      if ((($29)|0) == 268435456) {
+        __label__ = 7; break;
+      }
+      else if ((($29)|0) == 671088640) {
+        __label__ = 11; break;
+      }
+      else if ((($29)|0) == 805306368) {
+        __label__ = 14; break;
+      }
+      else if ((($29)|0) == 402653184) {
+        __label__ = 18; break;
+      }
+      else if ((($29)|0) == 536870912) {
+        __label__ = 26; break;
+      }
+      else if ((($29)|0) == -1744830464) {
+        __label__ = 34; break;
+      }
+      else if ((($29)|0) == -1610612736) {
+        __label__ = 48; break;
+      }
+      else if ((($29)|0) == 1610612736) {
+        __label__ = 62; break;
+      }
+      else if ((($29)|0) == -2147483648) {
+        __label__ = 63; break;
+      }
+      else {
+      __label__ = 67; break;
+      }
+      
+    case 7: 
+      var $31=$sp;
+      var $32=$4;
+      var $33=(($31)|0)==(($32)|0);
+      if ($33) { __label__ = 9; break; } else { __label__ = 8; break; }
+    case 8: 
+      var $35=$sp;
+      var $36=(($35+1)|0);
+      $sp=$36;
+      var $37=HEAP8[($35)];
+      var $38=(($37 << 24) >> 24);
+      var $39=$s;
+      var $40=$39 & 134217727;
+      var $41=(($40) & 255);
+      var $42=(($41 << 24) >> 24);
+      var $43=(($38)|0)!=(($42)|0);
+      if ($43) { __label__ = 9; break; } else { __label__ = 10; break; }
+    case 9: 
+      $1=0;
+      __label__ = 114; break;
+    case 10: 
+      __label__ = 68; break;
+    case 11: 
+      var $47=$sp;
+      var $48=$4;
+      var $49=(($47)|0)==(($48)|0);
+      if ($49) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      $1=0;
+      __label__ = 114; break;
+    case 13: 
+      var $52=$sp;
+      var $53=(($52+1)|0);
+      $sp=$53;
+      __label__ = 68; break;
+    case 14: 
+      var $55=$s;
+      var $56=$55 & 134217727;
+      var $57=$2;
+      var $58=(($57)|0);
+      var $59=HEAP32[(($58)>>2)];
+      var $60=(($59+16)|0);
+      var $61=HEAP32[(($60)>>2)];
+      var $62=(($61+($56<<4))|0);
+      $cs=$62;
+      var $63=$sp;
+      var $64=$4;
+      var $65=(($63)|0)==(($64)|0);
+      if ($65) { __label__ = 16; break; } else { __label__ = 15; break; }
+    case 15: 
+      var $67=$sp;
+      var $68=(($67+1)|0);
+      $sp=$68;
+      var $69=HEAPU8[($67)];
+      var $70=(($69)&255);
+      var $71=$cs;
+      var $72=(($71)|0);
+      var $73=HEAP32[(($72)>>2)];
+      var $74=(($73+$70)|0);
+      var $75=HEAPU8[($74)];
+      var $76=(($75)&255);
+      var $77=$cs;
+      var $78=(($77+4)|0);
+      var $79=HEAPU8[($78)];
+      var $80=(($79)&255);
+      var $81=$76 & $80;
+      var $82=(($81)|0)!=0;
+      if ($82) { __label__ = 17; break; } else { __label__ = 16; break; }
+    case 16: 
+      $1=0;
+      __label__ = 114; break;
+    case 17: 
+      __label__ = 68; break;
+    case 18: 
+      var $86=$sp;
+      var $87=$2;
+      var $88=(($87+16)|0);
+      var $89=HEAP32[(($88)>>2)];
+      var $90=(($86)|0)==(($89)|0);
+      if ($90) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 19: 
+      var $92=$2;
+      var $93=(($92+4)|0);
+      var $94=HEAP32[(($93)>>2)];
+      var $95=$94 & 1;
+      var $96=(($95)|0)!=0;
+      if ($96) { __label__ = 20; break; } else { __label__ = 23; break; }
+    case 20: 
+      var $98=$sp;
+      var $99=$2;
+      var $100=(($99+20)|0);
+      var $101=HEAPU32[(($100)>>2)];
+      var $102=(($98)>>>0) < (($101)>>>0);
+      if ($102) { __label__ = 21; break; } else { __label__ = 24; break; }
+    case 21: 
+      var $104=$sp;
+      var $105=((($104)-(1))|0);
+      var $106=HEAP8[($105)];
+      var $107=(($106 << 24) >> 24);
+      var $108=(($107)|0)==10;
+      if ($108) { __label__ = 22; break; } else { __label__ = 24; break; }
+    case 22: 
+      var $110=$2;
+      var $111=(($110)|0);
+      var $112=HEAP32[(($111)>>2)];
+      var $113=(($112+24)|0);
+      var $114=HEAP32[(($113)>>2)];
+      var $115=$114 & 8;
+      var $116=(($115)|0)!=0;
+      if ($116) { __label__ = 23; break; } else { __label__ = 24; break; }
+    case 23: 
+      __label__ = 25; break;
+    case 24: 
+      $1=0;
+      __label__ = 114; break;
+    case 25: 
+      __label__ = 68; break;
+    case 26: 
+      var $121=$sp;
+      var $122=$2;
+      var $123=(($122+20)|0);
+      var $124=HEAP32[(($123)>>2)];
+      var $125=(($121)|0)==(($124)|0);
+      if ($125) { __label__ = 27; break; } else { __label__ = 28; break; }
+    case 27: 
+      var $127=$2;
+      var $128=(($127+4)|0);
+      var $129=HEAP32[(($128)>>2)];
+      var $130=$129 & 2;
+      var $131=(($130)|0)!=0;
+      if ($131) { __label__ = 28; break; } else { __label__ = 31; break; }
+    case 28: 
+      var $133=$sp;
+      var $134=$2;
+      var $135=(($134+20)|0);
+      var $136=HEAPU32[(($135)>>2)];
+      var $137=(($133)>>>0) < (($136)>>>0);
+      if ($137) { __label__ = 29; break; } else { __label__ = 32; break; }
+    case 29: 
+      var $139=$sp;
+      var $140=HEAP8[($139)];
+      var $141=(($140 << 24) >> 24);
+      var $142=(($141)|0)==10;
+      if ($142) { __label__ = 30; break; } else { __label__ = 32; break; }
+    case 30: 
+      var $144=$2;
+      var $145=(($144)|0);
+      var $146=HEAP32[(($145)>>2)];
+      var $147=(($146+24)|0);
+      var $148=HEAP32[(($147)>>2)];
+      var $149=$148 & 8;
+      var $150=(($149)|0)!=0;
+      if ($150) { __label__ = 31; break; } else { __label__ = 32; break; }
+    case 31: 
+      __label__ = 33; break;
+    case 32: 
+      $1=0;
+      __label__ = 114; break;
+    case 33: 
+      __label__ = 68; break;
+    case 34: 
+      var $155=$sp;
+      var $156=$2;
+      var $157=(($156+16)|0);
+      var $158=HEAP32[(($157)>>2)];
+      var $159=(($155)|0)==(($158)|0);
+      if ($159) { __label__ = 35; break; } else { __label__ = 36; break; }
+    case 35: 
+      var $161=$2;
+      var $162=(($161+4)|0);
+      var $163=HEAP32[(($162)>>2)];
+      var $164=$163 & 1;
+      var $165=(($164)|0)!=0;
+      if ($165) { __label__ = 36; break; } else { __label__ = 42; break; }
+    case 36: 
+      var $167=$sp;
+      var $168=$2;
+      var $169=(($168+20)|0);
+      var $170=HEAPU32[(($169)>>2)];
+      var $171=(($167)>>>0) < (($170)>>>0);
+      if ($171) { __label__ = 37; break; } else { __label__ = 39; break; }
+    case 37: 
+      var $173=$sp;
+      var $174=((($173)-(1))|0);
+      var $175=HEAP8[($174)];
+      var $176=(($175 << 24) >> 24);
+      var $177=(($176)|0)==10;
+      if ($177) { __label__ = 38; break; } else { __label__ = 39; break; }
+    case 38: 
+      var $179=$2;
+      var $180=(($179)|0);
+      var $181=HEAP32[(($180)>>2)];
+      var $182=(($181+24)|0);
+      var $183=HEAP32[(($182)>>2)];
+      var $184=$183 & 8;
+      var $185=(($184)|0)!=0;
+      if ($185) { __label__ = 42; break; } else { __label__ = 39; break; }
+    case 39: 
+      var $187=$sp;
+      var $188=$2;
+      var $189=(($188+16)|0);
+      var $190=HEAPU32[(($189)>>2)];
+      var $191=(($187)>>>0) > (($190)>>>0);
+      if ($191) { __label__ = 40; break; } else { __label__ = 46; break; }
+    case 40: 
+      var $193=$sp;
+      var $194=((($193)-(1))|0);
+      var $195=HEAP8[($194)];
+      var $196=(($195 << 24) >> 24);
+      var $197=$196 & 255;
+      var $198=_isalnum($197);
+      var $199=(($198)|0)!=0;
+      if ($199) { __label__ = 46; break; } else { __label__ = 41; break; }
+    case 41: 
+      var $201=$sp;
+      var $202=((($201)-(1))|0);
+      var $203=HEAP8[($202)];
+      var $204=(($203 << 24) >> 24);
+      var $205=(($204)|0)==95;
+      if ($205) { __label__ = 46; break; } else { __label__ = 42; break; }
+    case 42: 
+      var $207=$sp;
+      var $208=$2;
+      var $209=(($208+20)|0);
+      var $210=HEAPU32[(($209)>>2)];
+      var $211=(($207)>>>0) < (($210)>>>0);
+      if ($211) { __label__ = 43; break; } else { __label__ = 46; break; }
+    case 43: 
+      var $213=$sp;
+      var $214=HEAP8[($213)];
+      var $215=(($214 << 24) >> 24);
+      var $216=$215 & 255;
+      var $217=_isalnum($216);
+      var $218=(($217)|0)!=0;
+      if ($218) { __label__ = 45; break; } else { __label__ = 44; break; }
+    case 44: 
+      var $220=$sp;
+      var $221=HEAP8[($220)];
+      var $222=(($221 << 24) >> 24);
+      var $223=(($222)|0)==95;
+      if ($223) { __label__ = 45; break; } else { __label__ = 46; break; }
+    case 45: 
+      __label__ = 47; break;
+    case 46: 
+      $1=0;
+      __label__ = 114; break;
+    case 47: 
+      __label__ = 68; break;
+    case 48: 
+      var $228=$sp;
+      var $229=$2;
+      var $230=(($229+20)|0);
+      var $231=HEAP32[(($230)>>2)];
+      var $232=(($228)|0)==(($231)|0);
+      if ($232) { __label__ = 49; break; } else { __label__ = 50; break; }
+    case 49: 
+      var $234=$2;
+      var $235=(($234+4)|0);
+      var $236=HEAP32[(($235)>>2)];
+      var $237=$236 & 2;
+      var $238=(($237)|0)!=0;
+      if ($238) { __label__ = 50; break; } else { __label__ = 56; break; }
+    case 50: 
+      var $240=$sp;
+      var $241=$2;
+      var $242=(($241+20)|0);
+      var $243=HEAPU32[(($242)>>2)];
+      var $244=(($240)>>>0) < (($243)>>>0);
+      if ($244) { __label__ = 51; break; } else { __label__ = 53; break; }
+    case 51: 
+      var $246=$sp;
+      var $247=HEAP8[($246)];
+      var $248=(($247 << 24) >> 24);
+      var $249=(($248)|0)==10;
+      if ($249) { __label__ = 52; break; } else { __label__ = 53; break; }
+    case 52: 
+      var $251=$2;
+      var $252=(($251)|0);
+      var $253=HEAP32[(($252)>>2)];
+      var $254=(($253+24)|0);
+      var $255=HEAP32[(($254)>>2)];
+      var $256=$255 & 8;
+      var $257=(($256)|0)!=0;
+      if ($257) { __label__ = 56; break; } else { __label__ = 53; break; }
+    case 53: 
+      var $259=$sp;
+      var $260=$2;
+      var $261=(($260+20)|0);
+      var $262=HEAPU32[(($261)>>2)];
+      var $263=(($259)>>>0) < (($262)>>>0);
+      if ($263) { __label__ = 54; break; } else { __label__ = 60; break; }
+    case 54: 
+      var $265=$sp;
+      var $266=HEAP8[($265)];
+      var $267=(($266 << 24) >> 24);
+      var $268=$267 & 255;
+      var $269=_isalnum($268);
+      var $270=(($269)|0)!=0;
+      if ($270) { __label__ = 60; break; } else { __label__ = 55; break; }
+    case 55: 
+      var $272=$sp;
+      var $273=HEAP8[($272)];
+      var $274=(($273 << 24) >> 24);
+      var $275=(($274)|0)==95;
+      if ($275) { __label__ = 60; break; } else { __label__ = 56; break; }
+    case 56: 
+      var $277=$sp;
+      var $278=$2;
+      var $279=(($278+16)|0);
+      var $280=HEAPU32[(($279)>>2)];
+      var $281=(($277)>>>0) > (($280)>>>0);
+      if ($281) { __label__ = 57; break; } else { __label__ = 60; break; }
+    case 57: 
+      var $283=$sp;
+      var $284=((($283)-(1))|0);
+      var $285=HEAP8[($284)];
+      var $286=(($285 << 24) >> 24);
+      var $287=$286 & 255;
+      var $288=_isalnum($287);
+      var $289=(($288)|0)!=0;
+      if ($289) { __label__ = 59; break; } else { __label__ = 58; break; }
+    case 58: 
+      var $291=$sp;
+      var $292=((($291)-(1))|0);
+      var $293=HEAP8[($292)];
+      var $294=(($293 << 24) >> 24);
+      var $295=(($294)|0)==95;
+      if ($295) { __label__ = 59; break; } else { __label__ = 60; break; }
+    case 59: 
+      __label__ = 61; break;
+    case 60: 
+      $1=0;
+      __label__ = 114; break;
+    case 61: 
+      __label__ = 68; break;
+    case 62: 
+      __label__ = 68; break;
+    case 63: 
+      var $301=$ss;
+      var $302=((($301)+(1))|0);
+      $ss=$302;
+      var $303=$ss;
+      var $304=$2;
+      var $305=(($304)|0);
+      var $306=HEAP32[(($305)>>2)];
+      var $307=(($306+4)|0);
+      var $308=HEAP32[(($307)>>2)];
+      var $309=(($308+($303<<2))|0);
+      var $310=HEAP32[(($309)>>2)];
+      $s=$310;
+      __label__ = 64; break;
+    case 64: 
+      var $312=$s;
+      var $313=$312 & 134217727;
+      var $314=$ss;
+      var $315=((($314)+($313))|0);
+      $ss=$315;
+      __label__ = 65; break;
+    case 65: 
+      var $317=$ss;
+      var $318=$2;
+      var $319=(($318)|0);
+      var $320=HEAP32[(($319)>>2)];
+      var $321=(($320+4)|0);
+      var $322=HEAP32[(($321)>>2)];
+      var $323=(($322+($317<<2))|0);
+      var $324=HEAP32[(($323)>>2)];
+      $s=$324;
+      var $325=$324 & -134217728;
+      var $326=(($325)|0)!=-1879048192;
+      if ($326) { __label__ = 64; break; } else { __label__ = 66; break; }
+    case 66: 
+      __label__ = 68; break;
+    case 67: 
+      $hard=1;
+      __label__ = 68; break;
+    case 68: 
+      __label__ = 69; break;
+    case 69: 
+      var $331=$ss;
+      var $332=((($331)+(1))|0);
+      $ss=$332;
+      __label__ = 3; break;
+    case 70: 
+      var $334=$hard;
+      var $335=(($334)|0)!=0;
+      if ($335) { __label__ = 74; break; } else { __label__ = 71; break; }
+    case 71: 
+      var $337=$sp;
+      var $338=$4;
+      var $339=(($337)|0)!=(($338)|0);
+      if ($339) { __label__ = 72; break; } else { __label__ = 73; break; }
+    case 72: 
+      $1=0;
+      __label__ = 114; break;
+    case 73: 
+      var $342=$sp;
+      $1=$342;
+      __label__ = 114; break;
+    case 74: 
+      var $344=$ss;
+      var $345=((($344)-(1))|0);
+      $ss=$345;
+      var $346=$ss;
+      var $347=$2;
+      var $348=(($347)|0);
+      var $349=HEAP32[(($348)>>2)];
+      var $350=(($349+4)|0);
+      var $351=HEAP32[(($350)>>2)];
+      var $352=(($351+($346<<2))|0);
+      var $353=HEAP32[(($352)>>2)];
+      $s=$353;
+      var $354=$s;
+      var $355=$354 & -134217728;
+      if ((($355)|0) == 939524096) {
+        __label__ = 75; break;
+      }
+      else if ((($355)|0) == 1476395008) {
+        __label__ = 88; break;
+      }
+      else if ((($355)|0) == 1207959552) {
+        __label__ = 91; break;
+      }
+      else if ((($355)|0) == 1342177280) {
+        __label__ = 92; break;
+      }
+      else if ((($355)|0) == 2013265920) {
+        __label__ = 97; break;
+      }
+      else if ((($355)|0) == 1744830464) {
+        __label__ = 106; break;
+      }
+      else if ((($355)|0) == 1879048192) {
+        __label__ = 109; break;
+      }
+      else {
+      __label__ = 112; break;
+      }
+      
+    case 75: 
+      var $357=$s;
+      var $358=$357 & 134217727;
+      $i=$358;
+      var $359=$i;
+      var $360=$2;
+      var $361=(($360+8)|0);
+      var $362=HEAP32[(($361)>>2)];
+      var $363=(($362+($359<<3))|0);
+      var $364=(($363+4)|0);
+      var $365=HEAP32[(($364)>>2)];
+      var $366=(($365)|0)==-1;
+      if ($366) { __label__ = 76; break; } else { __label__ = 77; break; }
+    case 76: 
+      $1=0;
+      __label__ = 114; break;
+    case 77: 
+      var $369=$i;
+      var $370=$2;
+      var $371=(($370+8)|0);
+      var $372=HEAP32[(($371)>>2)];
+      var $373=(($372+($369<<3))|0);
+      var $374=(($373+4)|0);
+      var $375=HEAP32[(($374)>>2)];
+      var $376=$i;
+      var $377=$2;
+      var $378=(($377+8)|0);
+      var $379=HEAP32[(($378)>>2)];
+      var $380=(($379+($376<<3))|0);
+      var $381=(($380)|0);
+      var $382=HEAP32[(($381)>>2)];
+      var $383=((($375)-($382))|0);
+      $len=$383;
+      var $384=$len;
+      var $385=(($384)|0)==0;
+      if ($385) { __label__ = 78; break; } else { __label__ = 80; break; }
+    case 78: 
+      var $387=$8;
+      var $388=((($387)+(1))|0);
+      $8=$388;
+      var $389=(($387)|0) > 100;
+      if ($389) { __label__ = 79; break; } else { __label__ = 80; break; }
+    case 79: 
+      $1=0;
+      __label__ = 114; break;
+    case 80: 
+      var $392=$sp;
+      var $393=$4;
+      var $394=$len;
+      var $395=(((-$394))|0);
+      var $396=(($393+$395)|0);
+      var $397=(($392)>>>0) > (($396)>>>0);
+      if ($397) { __label__ = 81; break; } else { __label__ = 82; break; }
+    case 81: 
+      $1=0;
+      __label__ = 114; break;
+    case 82: 
+      var $400=$2;
+      var $401=(($400+12)|0);
+      var $402=HEAP32[(($401)>>2)];
+      var $403=$i;
+      var $404=$2;
+      var $405=(($404+8)|0);
+      var $406=HEAP32[(($405)>>2)];
+      var $407=(($406+($403<<3))|0);
+      var $408=(($407)|0);
+      var $409=HEAP32[(($408)>>2)];
+      var $410=(($402+$409)|0);
+      $ssp=$410;
+      var $411=$sp;
+      var $412=$ssp;
+      var $413=$len;
+      var $414=_memcmp($411, $412, $413);
+      var $415=(($414)|0)!=0;
+      if ($415) { __label__ = 83; break; } else { __label__ = 84; break; }
+    case 83: 
+      $1=0;
+      __label__ = 114; break;
+    case 84: 
+      __label__ = 85; break;
+    case 85: 
+      var $419=$ss;
+      var $420=$2;
+      var $421=(($420)|0);
+      var $422=HEAP32[(($421)>>2)];
+      var $423=(($422+4)|0);
+      var $424=HEAP32[(($423)>>2)];
+      var $425=(($424+($419<<2))|0);
+      var $426=HEAP32[(($425)>>2)];
+      var $427=$i;
+      var $428=1073741824 | $427;
+      var $429=(($426)|0)!=(($428)|0);
+      if ($429) { __label__ = 86; break; } else { __label__ = 87; break; }
+    case 86: 
+      var $431=$ss;
+      var $432=((($431)+(1))|0);
+      $ss=$432;
+      __label__ = 85; break;
+    case 87: 
+      var $434=$2;
+      var $435=$sp;
+      var $436=$len;
+      var $437=(($435+$436)|0);
+      var $438=$4;
+      var $439=$ss;
+      var $440=((($439)+(1))|0);
+      var $441=$6;
+      var $442=$7;
+      var $443=$8;
+      var $444=_lbackref($434, $437, $438, $440, $441, $442, $443);
+      $1=$444;
+      __label__ = 114; break;
+    case 88: 
+      var $446=$2;
+      var $447=$sp;
+      var $448=$4;
+      var $449=$ss;
+      var $450=((($449)+(1))|0);
+      var $451=$6;
+      var $452=$7;
+      var $453=$8;
+      var $454=_lbackref($446, $447, $448, $450, $451, $452, $453);
+      $dp=$454;
+      var $455=$dp;
+      var $456=(($455)|0)!=0;
+      if ($456) { __label__ = 89; break; } else { __label__ = 90; break; }
+    case 89: 
+      var $458=$dp;
+      $1=$458;
+      __label__ = 114; break;
+    case 90: 
+      var $460=$2;
+      var $461=$sp;
+      var $462=$4;
+      var $463=$ss;
+      var $464=$s;
+      var $465=$464 & 134217727;
+      var $466=((($463)+($465))|0);
+      var $467=((($466)+(1))|0);
+      var $468=$6;
+      var $469=$7;
+      var $470=$8;
+      var $471=_lbackref($460, $461, $462, $467, $468, $469, $470);
+      $1=$471;
+      __label__ = 114; break;
+    case 91: 
+      var $473=$sp;
+      var $474=$7;
+      var $475=((($474)+(1))|0);
+      var $476=$2;
+      var $477=(($476+28)|0);
+      var $478=HEAP32[(($477)>>2)];
+      var $479=(($478+($475<<2))|0);
+      HEAP32[(($479)>>2)]=$473;
+      var $480=$2;
+      var $481=$sp;
+      var $482=$4;
+      var $483=$ss;
+      var $484=((($483)+(1))|0);
+      var $485=$6;
+      var $486=$7;
+      var $487=((($486)+(1))|0);
+      var $488=$8;
+      var $489=_lbackref($480, $481, $482, $484, $485, $487, $488);
+      $1=$489;
+      __label__ = 114; break;
+    case 92: 
+      var $491=$sp;
+      var $492=$7;
+      var $493=$2;
+      var $494=(($493+28)|0);
+      var $495=HEAP32[(($494)>>2)];
+      var $496=(($495+($492<<2))|0);
+      var $497=HEAP32[(($496)>>2)];
+      var $498=(($491)|0)==(($497)|0);
+      if ($498) { __label__ = 93; break; } else { __label__ = 94; break; }
+    case 93: 
+      var $500=$2;
+      var $501=$sp;
+      var $502=$4;
+      var $503=$ss;
+      var $504=((($503)+(1))|0);
+      var $505=$6;
+      var $506=$7;
+      var $507=((($506)-(1))|0);
+      var $508=$8;
+      var $509=_lbackref($500, $501, $502, $504, $505, $507, $508);
+      $1=$509;
+      __label__ = 114; break;
+    case 94: 
+      var $511=$sp;
+      var $512=$7;
+      var $513=$2;
+      var $514=(($513+28)|0);
+      var $515=HEAP32[(($514)>>2)];
+      var $516=(($515+($512<<2))|0);
+      HEAP32[(($516)>>2)]=$511;
+      var $517=$2;
+      var $518=$sp;
+      var $519=$4;
+      var $520=$ss;
+      var $521=$s;
+      var $522=$521 & 134217727;
+      var $523=((($520)-($522))|0);
+      var $524=((($523)+(1))|0);
+      var $525=$6;
+      var $526=$7;
+      var $527=$8;
+      var $528=_lbackref($517, $518, $519, $524, $525, $526, $527);
+      $dp=$528;
+      var $529=$dp;
+      var $530=(($529)|0)==0;
+      if ($530) { __label__ = 95; break; } else { __label__ = 96; break; }
+    case 95: 
+      var $532=$2;
+      var $533=$sp;
+      var $534=$4;
+      var $535=$ss;
+      var $536=((($535)+(1))|0);
+      var $537=$6;
+      var $538=$7;
+      var $539=((($538)-(1))|0);
+      var $540=$8;
+      var $541=_lbackref($532, $533, $534, $536, $537, $539, $540);
+      $1=$541;
+      __label__ = 114; break;
+    case 96: 
+      var $543=$dp;
+      $1=$543;
+      __label__ = 114; break;
+    case 97: 
+      var $545=$ss;
+      var $546=((($545)+(1))|0);
+      $ssub=$546;
+      var $547=$ss;
+      var $548=$s;
+      var $549=$548 & 134217727;
+      var $550=((($547)+($549))|0);
+      var $551=((($550)-(1))|0);
+      $esub=$551;
+      __label__ = 98; break;
+    case 98: 
+      var $553=$2;
+      var $554=$sp;
+      var $555=$4;
+      var $556=$ssub;
+      var $557=$esub;
+      var $558=$7;
+      var $559=$8;
+      var $560=_lbackref($553, $554, $555, $556, $557, $558, $559);
+      $dp=$560;
+      var $561=$dp;
+      var $562=(($561)|0)!=0;
+      if ($562) { __label__ = 99; break; } else { __label__ = 100; break; }
+    case 99: 
+      var $564=$dp;
+      $1=$564;
+      __label__ = 114; break;
+    case 100: 
+      var $566=$esub;
+      var $567=$2;
+      var $568=(($567)|0);
+      var $569=HEAP32[(($568)>>2)];
+      var $570=(($569+4)|0);
+      var $571=HEAP32[(($570)>>2)];
+      var $572=(($571+($566<<2))|0);
+      var $573=HEAP32[(($572)>>2)];
+      var $574=$573 & -134217728;
+      var $575=(($574)|0)==-1879048192;
+      if ($575) { __label__ = 101; break; } else { __label__ = 102; break; }
+    case 101: 
+      $1=0;
+      __label__ = 114; break;
+    case 102: 
+      var $578=$esub;
+      var $579=((($578)+(1))|0);
+      $esub=$579;
+      var $580=$esub;
+      var $581=((($580)+(1))|0);
+      $ssub=$581;
+      var $582=$esub;
+      var $583=$2;
+      var $584=(($583)|0);
+      var $585=HEAP32[(($584)>>2)];
+      var $586=(($585+4)|0);
+      var $587=HEAP32[(($586)>>2)];
+      var $588=(($587+($582<<2))|0);
+      var $589=HEAP32[(($588)>>2)];
+      var $590=$589 & 134217727;
+      var $591=$esub;
+      var $592=((($591)+($590))|0);
+      $esub=$592;
+      var $593=$esub;
+      var $594=$2;
+      var $595=(($594)|0);
+      var $596=HEAP32[(($595)>>2)];
+      var $597=(($596+4)|0);
+      var $598=HEAP32[(($597)>>2)];
+      var $599=(($598+($593<<2))|0);
+      var $600=HEAP32[(($599)>>2)];
+      var $601=$600 & -134217728;
+      var $602=(($601)|0)==-2013265920;
+      if ($602) { __label__ = 103; break; } else { __label__ = 104; break; }
+    case 103: 
+      var $604=$esub;
+      var $605=((($604)-(1))|0);
+      $esub=$605;
+      __label__ = 105; break;
+    case 104: 
+      __label__ = 105; break;
+    case 105: 
+      __label__ = 98; break;
+    case 106: 
+      var $609=$s;
+      var $610=$609 & 134217727;
+      $i=$610;
+      var $611=$i;
+      var $612=$2;
+      var $613=(($612+8)|0);
+      var $614=HEAP32[(($613)>>2)];
+      var $615=(($614+($611<<3))|0);
+      var $616=(($615)|0);
+      var $617=HEAP32[(($616)>>2)];
+      $offsave=$617;
+      var $618=$sp;
+      var $619=$2;
+      var $620=(($619+12)|0);
+      var $621=HEAP32[(($620)>>2)];
+      var $622=$618;
+      var $623=$621;
+      var $624=((($622)-($623))|0);
+      var $625=$i;
+      var $626=$2;
+      var $627=(($626+8)|0);
+      var $628=HEAP32[(($627)>>2)];
+      var $629=(($628+($625<<3))|0);
+      var $630=(($629)|0);
+      HEAP32[(($630)>>2)]=$624;
+      var $631=$2;
+      var $632=$sp;
+      var $633=$4;
+      var $634=$ss;
+      var $635=((($634)+(1))|0);
+      var $636=$6;
+      var $637=$7;
+      var $638=$8;
+      var $639=_lbackref($631, $632, $633, $635, $636, $637, $638);
+      $dp=$639;
+      var $640=$dp;
+      var $641=(($640)|0)!=0;
+      if ($641) { __label__ = 107; break; } else { __label__ = 108; break; }
+    case 107: 
+      var $643=$dp;
+      $1=$643;
+      __label__ = 114; break;
+    case 108: 
+      var $645=$offsave;
+      var $646=$i;
+      var $647=$2;
+      var $648=(($647+8)|0);
+      var $649=HEAP32[(($648)>>2)];
+      var $650=(($649+($646<<3))|0);
+      var $651=(($650)|0);
+      HEAP32[(($651)>>2)]=$645;
+      $1=0;
+      __label__ = 114; break;
+    case 109: 
+      var $653=$s;
+      var $654=$653 & 134217727;
+      $i=$654;
+      var $655=$i;
+      var $656=$2;
+      var $657=(($656+8)|0);
+      var $658=HEAP32[(($657)>>2)];
+      var $659=(($658+($655<<3))|0);
+      var $660=(($659+4)|0);
+      var $661=HEAP32[(($660)>>2)];
+      $offsave=$661;
+      var $662=$sp;
+      var $663=$2;
+      var $664=(($663+12)|0);
+      var $665=HEAP32[(($664)>>2)];
+      var $666=$662;
+      var $667=$665;
+      var $668=((($666)-($667))|0);
+      var $669=$i;
+      var $670=$2;
+      var $671=(($670+8)|0);
+      var $672=HEAP32[(($671)>>2)];
+      var $673=(($672+($669<<3))|0);
+      var $674=(($673+4)|0);
+      HEAP32[(($674)>>2)]=$668;
+      var $675=$2;
+      var $676=$sp;
+      var $677=$4;
+      var $678=$ss;
+      var $679=((($678)+(1))|0);
+      var $680=$6;
+      var $681=$7;
+      var $682=$8;
+      var $683=_lbackref($675, $676, $677, $679, $680, $681, $682);
+      $dp=$683;
+      var $684=$dp;
+      var $685=(($684)|0)!=0;
+      if ($685) { __label__ = 110; break; } else { __label__ = 111; break; }
+    case 110: 
+      var $687=$dp;
+      $1=$687;
+      __label__ = 114; break;
+    case 111: 
+      var $689=$offsave;
+      var $690=$i;
+      var $691=$2;
+      var $692=(($691+8)|0);
+      var $693=HEAP32[(($692)>>2)];
+      var $694=(($693+($690<<3))|0);
+      var $695=(($694+4)|0);
+      HEAP32[(($695)>>2)]=$689;
+      $1=0;
+      __label__ = 114; break;
+    case 112: 
+      __label__ = 113; break;
+    case 113: 
+      $1=0;
+      __label__ = 114; break;
+    case 114: 
+      var $699=$1;
+      ;
+      return $699;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_lbackref["X"]=1;
+
+function _lstep($g, $start, $stop, $bef, $ch, $aft) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $cs;
+      var $s;
+      var $pc;
+      var $here;
+      var $look;
+      var $i;
+      $1=$g;
+      $2=$start;
+      $3=$stop;
+      $4=$bef;
+      $5=$ch;
+      $6=$aft;
+      var $7=$2;
+      $pc=$7;
+      var $8=$pc;
+      $here=$8;
+      __label__ = 3; break;
+    case 3: 
+      var $10=$pc;
+      var $11=$3;
+      var $12=(($10)|0)!=(($11)|0);
+      if ($12) { __label__ = 4; break; } else { __label__ = 54; break; }
+    case 4: 
+      var $14=$pc;
+      var $15=$1;
+      var $16=(($15+4)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=(($17+($14<<2))|0);
+      var $19=HEAP32[(($18)>>2)];
+      $s=$19;
+      var $20=$s;
+      var $21=$20 & -134217728;
+      if ((($21)|0) == 134217728) {
+        __label__ = 5; break;
+      }
+      else if ((($21)|0) == 268435456) {
+        __label__ = 6; break;
+      }
+      else if ((($21)|0) == 402653184) {
+        __label__ = 9; break;
+      }
+      else if ((($21)|0) == 536870912) {
+        __label__ = 13; break;
+      }
+      else if ((($21)|0) == -1744830464) {
+        __label__ = 17; break;
+      }
+      else if ((($21)|0) == -1610612736) {
+        __label__ = 20; break;
+      }
+      else if ((($21)|0) == 671088640) {
+        __label__ = 23; break;
+      }
+      else if ((($21)|0) == 805306368) {
+        __label__ = 26; break;
+      }
+      else if ((($21)|0) == 939524096 || (($21)|0) == 1073741824) {
+        __label__ = 30; break;
+      }
+      else if ((($21)|0) == 1207959552) {
+        __label__ = 31; break;
+      }
+      else if ((($21)|0) == 1342177280) {
+        __label__ = 32; break;
+      }
+      else if ((($21)|0) == 1476395008) {
+        __label__ = 36; break;
+      }
+      else if ((($21)|0) == 1610612736) {
+        __label__ = 37; break;
+      }
+      else if ((($21)|0) == 1744830464 || (($21)|0) == 1879048192) {
+        __label__ = 38; break;
+      }
+      else if ((($21)|0) == 2013265920) {
+        __label__ = 39; break;
+      }
+      else if ((($21)|0) == -2147483648) {
+        __label__ = 40; break;
+      }
+      else if ((($21)|0) == -2013265920) {
+        __label__ = 47; break;
+      }
+      else if ((($21)|0) == -1879048192) {
+        __label__ = 50; break;
+      }
+      else {
+      __label__ = 51; break;
+      }
+      
+    case 5: 
+      __label__ = 52; break;
+    case 6: 
+      var $24=$5;
+      var $25=$s;
+      var $26=$25 & 134217727;
+      var $27=(($26) & 255);
+      var $28=(($27 << 24) >> 24);
+      var $29=(($24)|0)==(($28)|0);
+      if ($29) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $31=$here;
+      var $32=$4;
+      var $33=(($32+$31)|0);
+      var $34=HEAP8[($33)];
+      var $35=(($34 << 24) >> 24);
+      var $36=$here;
+      var $37=((($36)+(1))|0);
+      var $38=$6;
+      var $39=(($38+$37)|0);
+      var $40=HEAP8[($39)];
+      var $41=(($40 << 24) >> 24);
+      var $42=$41 | $35;
+      var $43=(($42) & 255);
+      HEAP8[($39)]=$43;
+      __label__ = 8; break;
+    case 8: 
+      __label__ = 52; break;
+    case 9: 
+      var $46=$5;
+      var $47=(($46)|0)==129;
+      if ($47) { __label__ = 11; break; } else { __label__ = 10; break; }
+    case 10: 
+      var $49=$5;
+      var $50=(($49)|0)==131;
+      if ($50) { __label__ = 11; break; } else { __label__ = 12; break; }
+    case 11: 
+      var $52=$here;
+      var $53=$4;
+      var $54=(($53+$52)|0);
+      var $55=HEAP8[($54)];
+      var $56=(($55 << 24) >> 24);
+      var $57=$here;
+      var $58=((($57)+(1))|0);
+      var $59=$6;
+      var $60=(($59+$58)|0);
+      var $61=HEAP8[($60)];
+      var $62=(($61 << 24) >> 24);
+      var $63=$62 | $56;
+      var $64=(($63) & 255);
+      HEAP8[($60)]=$64;
+      __label__ = 12; break;
+    case 12: 
+      __label__ = 52; break;
+    case 13: 
+      var $67=$5;
+      var $68=(($67)|0)==130;
+      if ($68) { __label__ = 15; break; } else { __label__ = 14; break; }
+    case 14: 
+      var $70=$5;
+      var $71=(($70)|0)==131;
+      if ($71) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      var $73=$here;
+      var $74=$4;
+      var $75=(($74+$73)|0);
+      var $76=HEAP8[($75)];
+      var $77=(($76 << 24) >> 24);
+      var $78=$here;
+      var $79=((($78)+(1))|0);
+      var $80=$6;
+      var $81=(($80+$79)|0);
+      var $82=HEAP8[($81)];
+      var $83=(($82 << 24) >> 24);
+      var $84=$83 | $77;
+      var $85=(($84) & 255);
+      HEAP8[($81)]=$85;
+      __label__ = 16; break;
+    case 16: 
+      __label__ = 52; break;
+    case 17: 
+      var $88=$5;
+      var $89=(($88)|0)==133;
+      if ($89) { __label__ = 18; break; } else { __label__ = 19; break; }
+    case 18: 
+      var $91=$here;
+      var $92=$4;
+      var $93=(($92+$91)|0);
+      var $94=HEAP8[($93)];
+      var $95=(($94 << 24) >> 24);
+      var $96=$here;
+      var $97=((($96)+(1))|0);
+      var $98=$6;
+      var $99=(($98+$97)|0);
+      var $100=HEAP8[($99)];
+      var $101=(($100 << 24) >> 24);
+      var $102=$101 | $95;
+      var $103=(($102) & 255);
+      HEAP8[($99)]=$103;
+      __label__ = 19; break;
+    case 19: 
+      __label__ = 52; break;
+    case 20: 
+      var $106=$5;
+      var $107=(($106)|0)==134;
+      if ($107) { __label__ = 21; break; } else { __label__ = 22; break; }
+    case 21: 
+      var $109=$here;
+      var $110=$4;
+      var $111=(($110+$109)|0);
+      var $112=HEAP8[($111)];
+      var $113=(($112 << 24) >> 24);
+      var $114=$here;
+      var $115=((($114)+(1))|0);
+      var $116=$6;
+      var $117=(($116+$115)|0);
+      var $118=HEAP8[($117)];
+      var $119=(($118 << 24) >> 24);
+      var $120=$119 | $113;
+      var $121=(($120) & 255);
+      HEAP8[($117)]=$121;
+      __label__ = 22; break;
+    case 22: 
+      __label__ = 52; break;
+    case 23: 
+      var $124=$5;
+      var $125=(($124)|0) > 127;
+      if ($125) { __label__ = 25; break; } else { __label__ = 24; break; }
+    case 24: 
+      var $127=$here;
+      var $128=$4;
+      var $129=(($128+$127)|0);
+      var $130=HEAP8[($129)];
+      var $131=(($130 << 24) >> 24);
+      var $132=$here;
+      var $133=((($132)+(1))|0);
+      var $134=$6;
+      var $135=(($134+$133)|0);
+      var $136=HEAP8[($135)];
+      var $137=(($136 << 24) >> 24);
+      var $138=$137 | $131;
+      var $139=(($138) & 255);
+      HEAP8[($135)]=$139;
+      __label__ = 25; break;
+    case 25: 
+      __label__ = 52; break;
+    case 26: 
+      var $142=$s;
+      var $143=$142 & 134217727;
+      var $144=$1;
+      var $145=(($144+16)|0);
+      var $146=HEAP32[(($145)>>2)];
+      var $147=(($146+($143<<4))|0);
+      $cs=$147;
+      var $148=$5;
+      var $149=(($148)|0) > 127;
+      if ($149) { __label__ = 29; break; } else { __label__ = 27; break; }
+    case 27: 
+      var $151=$5;
+      var $152=(($151) & 255);
+      var $153=(($152)&255);
+      var $154=$cs;
+      var $155=(($154)|0);
+      var $156=HEAP32[(($155)>>2)];
+      var $157=(($156+$153)|0);
+      var $158=HEAPU8[($157)];
+      var $159=(($158)&255);
+      var $160=$cs;
+      var $161=(($160+4)|0);
+      var $162=HEAPU8[($161)];
+      var $163=(($162)&255);
+      var $164=$159 & $163;
+      var $165=(($164)|0)!=0;
+      if ($165) { __label__ = 28; break; } else { __label__ = 29; break; }
+    case 28: 
+      var $167=$here;
+      var $168=$4;
+      var $169=(($168+$167)|0);
+      var $170=HEAP8[($169)];
+      var $171=(($170 << 24) >> 24);
+      var $172=$here;
+      var $173=((($172)+(1))|0);
+      var $174=$6;
+      var $175=(($174+$173)|0);
+      var $176=HEAP8[($175)];
+      var $177=(($176 << 24) >> 24);
+      var $178=$177 | $171;
+      var $179=(($178) & 255);
+      HEAP8[($175)]=$179;
+      __label__ = 29; break;
+    case 29: 
+      __label__ = 52; break;
+    case 30: 
+      var $182=$here;
+      var $183=$6;
+      var $184=(($183+$182)|0);
+      var $185=HEAP8[($184)];
+      var $186=(($185 << 24) >> 24);
+      var $187=$here;
+      var $188=((($187)+(1))|0);
+      var $189=$6;
+      var $190=(($189+$188)|0);
+      var $191=HEAP8[($190)];
+      var $192=(($191 << 24) >> 24);
+      var $193=$192 | $186;
+      var $194=(($193) & 255);
+      HEAP8[($190)]=$194;
+      __label__ = 52; break;
+    case 31: 
+      var $196=$here;
+      var $197=$6;
+      var $198=(($197+$196)|0);
+      var $199=HEAP8[($198)];
+      var $200=(($199 << 24) >> 24);
+      var $201=$here;
+      var $202=((($201)+(1))|0);
+      var $203=$6;
+      var $204=(($203+$202)|0);
+      var $205=HEAP8[($204)];
+      var $206=(($205 << 24) >> 24);
+      var $207=$206 | $200;
+      var $208=(($207) & 255);
+      HEAP8[($204)]=$208;
+      __label__ = 52; break;
+    case 32: 
+      var $210=$here;
+      var $211=$6;
+      var $212=(($211+$210)|0);
+      var $213=HEAP8[($212)];
+      var $214=(($213 << 24) >> 24);
+      var $215=$here;
+      var $216=((($215)+(1))|0);
+      var $217=$6;
+      var $218=(($217+$216)|0);
+      var $219=HEAP8[($218)];
+      var $220=(($219 << 24) >> 24);
+      var $221=$220 | $214;
+      var $222=(($221) & 255);
+      HEAP8[($218)]=$222;
+      var $223=$here;
+      var $224=$s;
+      var $225=$224 & 134217727;
+      var $226=((($223)-($225))|0);
+      var $227=$6;
+      var $228=(($227+$226)|0);
+      var $229=HEAP8[($228)];
+      var $230=(($229 << 24) >> 24);
+      $i=$230;
+      var $231=$here;
+      var $232=$6;
+      var $233=(($232+$231)|0);
+      var $234=HEAP8[($233)];
+      var $235=(($234 << 24) >> 24);
+      var $236=$here;
+      var $237=$s;
+      var $238=$237 & 134217727;
+      var $239=((($236)-($238))|0);
+      var $240=$6;
+      var $241=(($240+$239)|0);
+      var $242=HEAP8[($241)];
+      var $243=(($242 << 24) >> 24);
+      var $244=$243 | $235;
+      var $245=(($244) & 255);
+      HEAP8[($241)]=$245;
+      var $246=$i;
+      var $247=(($246)|0)!=0;
+      if ($247) { __label__ = 35; break; } else { __label__ = 33; break; }
+    case 33: 
+      var $249=$here;
+      var $250=$s;
+      var $251=$250 & 134217727;
+      var $252=((($249)-($251))|0);
+      var $253=$6;
+      var $254=(($253+$252)|0);
+      var $255=HEAP8[($254)];
+      var $256=(($255 << 24) >> 24);
+      var $257=(($256)|0)!=0;
+      if ($257) { __label__ = 34; break; } else { __label__ = 35; break; }
+    case 34: 
+      var $259=$s;
+      var $260=$259 & 134217727;
+      var $261=((($260)+(1))|0);
+      var $262=$pc;
+      var $263=((($262)-($261))|0);
+      $pc=$263;
+      var $264=$pc;
+      $here=$264;
+      __label__ = 35; break;
+    case 35: 
+      __label__ = 52; break;
+    case 36: 
+      var $267=$here;
+      var $268=$6;
+      var $269=(($268+$267)|0);
+      var $270=HEAP8[($269)];
+      var $271=(($270 << 24) >> 24);
+      var $272=$here;
+      var $273=((($272)+(1))|0);
+      var $274=$6;
+      var $275=(($274+$273)|0);
+      var $276=HEAP8[($275)];
+      var $277=(($276 << 24) >> 24);
+      var $278=$277 | $271;
+      var $279=(($278) & 255);
+      HEAP8[($275)]=$279;
+      var $280=$here;
+      var $281=$6;
+      var $282=(($281+$280)|0);
+      var $283=HEAP8[($282)];
+      var $284=(($283 << 24) >> 24);
+      var $285=$here;
+      var $286=$s;
+      var $287=$286 & 134217727;
+      var $288=((($285)+($287))|0);
+      var $289=$6;
+      var $290=(($289+$288)|0);
+      var $291=HEAP8[($290)];
+      var $292=(($291 << 24) >> 24);
+      var $293=$292 | $284;
+      var $294=(($293) & 255);
+      HEAP8[($290)]=$294;
+      __label__ = 52; break;
+    case 37: 
+      var $296=$here;
+      var $297=$6;
+      var $298=(($297+$296)|0);
+      var $299=HEAP8[($298)];
+      var $300=(($299 << 24) >> 24);
+      var $301=$here;
+      var $302=((($301)+(1))|0);
+      var $303=$6;
+      var $304=(($303+$302)|0);
+      var $305=HEAP8[($304)];
+      var $306=(($305 << 24) >> 24);
+      var $307=$306 | $300;
+      var $308=(($307) & 255);
+      HEAP8[($304)]=$308;
+      __label__ = 52; break;
+    case 38: 
+      var $310=$here;
+      var $311=$6;
+      var $312=(($311+$310)|0);
+      var $313=HEAP8[($312)];
+      var $314=(($313 << 24) >> 24);
+      var $315=$here;
+      var $316=((($315)+(1))|0);
+      var $317=$6;
+      var $318=(($317+$316)|0);
+      var $319=HEAP8[($318)];
+      var $320=(($319 << 24) >> 24);
+      var $321=$320 | $314;
+      var $322=(($321) & 255);
+      HEAP8[($318)]=$322;
+      __label__ = 52; break;
+    case 39: 
+      var $324=$here;
+      var $325=$6;
+      var $326=(($325+$324)|0);
+      var $327=HEAP8[($326)];
+      var $328=(($327 << 24) >> 24);
+      var $329=$here;
+      var $330=((($329)+(1))|0);
+      var $331=$6;
+      var $332=(($331+$330)|0);
+      var $333=HEAP8[($332)];
+      var $334=(($333 << 24) >> 24);
+      var $335=$334 | $328;
+      var $336=(($335) & 255);
+      HEAP8[($332)]=$336;
+      var $337=$here;
+      var $338=$6;
+      var $339=(($338+$337)|0);
+      var $340=HEAP8[($339)];
+      var $341=(($340 << 24) >> 24);
+      var $342=$here;
+      var $343=$s;
+      var $344=$343 & 134217727;
+      var $345=((($342)+($344))|0);
+      var $346=$6;
+      var $347=(($346+$345)|0);
+      var $348=HEAP8[($347)];
+      var $349=(($348 << 24) >> 24);
+      var $350=$349 | $341;
+      var $351=(($350) & 255);
+      HEAP8[($347)]=$351;
+      __label__ = 52; break;
+    case 40: 
+      var $353=$here;
+      var $354=$6;
+      var $355=(($354+$353)|0);
+      var $356=HEAP8[($355)];
+      var $357=(($356 << 24) >> 24)!=0;
+      if ($357) { __label__ = 41; break; } else { __label__ = 46; break; }
+    case 41: 
+      $look=1;
+      __label__ = 42; break;
+    case 42: 
+      var $360=$pc;
+      var $361=$look;
+      var $362=((($360)+($361))|0);
+      var $363=$1;
+      var $364=(($363+4)|0);
+      var $365=HEAP32[(($364)>>2)];
+      var $366=(($365+($362<<2))|0);
+      var $367=HEAP32[(($366)>>2)];
+      $s=$367;
+      var $368=$367 & -134217728;
+      var $369=(($368)|0)!=-1879048192;
+      if ($369) { __label__ = 43; break; } else { __label__ = 45; break; }
+    case 43: 
+      __label__ = 44; break;
+    case 44: 
+      var $372=$s;
+      var $373=$372 & 134217727;
+      var $374=$look;
+      var $375=((($374)+($373))|0);
+      $look=$375;
+      __label__ = 42; break;
+    case 45: 
+      var $377=$here;
+      var $378=$6;
+      var $379=(($378+$377)|0);
+      var $380=HEAP8[($379)];
+      var $381=(($380 << 24) >> 24);
+      var $382=$here;
+      var $383=$look;
+      var $384=((($382)+($383))|0);
+      var $385=$6;
+      var $386=(($385+$384)|0);
+      var $387=HEAP8[($386)];
+      var $388=(($387 << 24) >> 24);
+      var $389=$388 | $381;
+      var $390=(($389) & 255);
+      HEAP8[($386)]=$390;
+      __label__ = 46; break;
+    case 46: 
+      __label__ = 52; break;
+    case 47: 
+      var $393=$here;
+      var $394=$6;
+      var $395=(($394+$393)|0);
+      var $396=HEAP8[($395)];
+      var $397=(($396 << 24) >> 24);
+      var $398=$here;
+      var $399=((($398)+(1))|0);
+      var $400=$6;
+      var $401=(($400+$399)|0);
+      var $402=HEAP8[($401)];
+      var $403=(($402 << 24) >> 24);
+      var $404=$403 | $397;
+      var $405=(($404) & 255);
+      HEAP8[($401)]=$405;
+      var $406=$pc;
+      var $407=$s;
+      var $408=$407 & 134217727;
+      var $409=((($406)+($408))|0);
+      var $410=$1;
+      var $411=(($410+4)|0);
+      var $412=HEAP32[(($411)>>2)];
+      var $413=(($412+($409<<2))|0);
+      var $414=HEAP32[(($413)>>2)];
+      var $415=$414 & -134217728;
+      var $416=(($415)|0)!=-1879048192;
+      if ($416) { __label__ = 48; break; } else { __label__ = 49; break; }
+    case 48: 
+      var $418=$here;
+      var $419=$6;
+      var $420=(($419+$418)|0);
+      var $421=HEAP8[($420)];
+      var $422=(($421 << 24) >> 24);
+      var $423=$here;
+      var $424=$s;
+      var $425=$424 & 134217727;
+      var $426=((($423)+($425))|0);
+      var $427=$6;
+      var $428=(($427+$426)|0);
+      var $429=HEAP8[($428)];
+      var $430=(($429 << 24) >> 24);
+      var $431=$430 | $422;
+      var $432=(($431) & 255);
+      HEAP8[($428)]=$432;
+      __label__ = 49; break;
+    case 49: 
+      __label__ = 52; break;
+    case 50: 
+      var $435=$here;
+      var $436=$6;
+      var $437=(($436+$435)|0);
+      var $438=HEAP8[($437)];
+      var $439=(($438 << 24) >> 24);
+      var $440=$here;
+      var $441=((($440)+(1))|0);
+      var $442=$6;
+      var $443=(($442+$441)|0);
+      var $444=HEAP8[($443)];
+      var $445=(($444 << 24) >> 24);
+      var $446=$445 | $439;
+      var $447=(($446) & 255);
+      HEAP8[($443)]=$447;
+      __label__ = 52; break;
+    case 51: 
+      __label__ = 52; break;
+    case 52: 
+      __label__ = 53; break;
+    case 53: 
+      var $451=$pc;
+      var $452=((($451)+(1))|0);
+      $pc=$452;
+      var $453=$here;
+      var $454=((($453)+(1))|0);
+      $here=$454;
+      __label__ = 3; break;
+    case 54: 
+      var $456=$6;
+      ;
+      return $456;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_lstep["X"]=1;
+
+function _sfast($m, $start, $stop, $startst, $stopst) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $st;
+      var $fresh;
+      var $tmp;
+      var $p;
+      var $c;
+      var $lastc;
+      var $flagch;
+      var $i;
+      var $coldp;
+      $2=$m;
+      $3=$start;
+      $4=$stop;
+      $5=$startst;
+      $6=$stopst;
+      var $7=$2;
+      var $8=(($7+36)|0);
+      var $9=HEAP32[(($8)>>2)];
+      $st=$9;
+      var $10=$2;
+      var $11=(($10+40)|0);
+      var $12=HEAP32[(($11)>>2)];
+      $fresh=$12;
+      var $13=$2;
+      var $14=(($13+44)|0);
+      var $15=HEAP32[(($14)>>2)];
+      $tmp=$15;
+      var $16=$3;
+      $p=$16;
+      var $17=$3;
+      var $18=$2;
+      var $19=(($18+16)|0);
+      var $20=HEAP32[(($19)>>2)];
+      var $21=(($17)|0)==(($20)|0);
+      if ($21) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $29 = 128;__label__ = 5; break;
+    case 4: 
+      var $24=$3;
+      var $25=((($24)-(1))|0);
+      var $26=HEAP8[($25)];
+      var $27=(($26 << 24) >> 24);
+      var $29 = $27;__label__ = 5; break;
+    case 5: 
+      var $29;
+      $c=$29;
+      $st=0;
+      var $30=$5;
+      var $31=1 << $30;
+      var $32=$st;
+      var $33=$32 | $31;
+      $st=$33;
+      var $34=$2;
+      var $35=(($34)|0);
+      var $36=HEAP32[(($35)>>2)];
+      var $37=$5;
+      var $38=$6;
+      var $39=$st;
+      var $40=$st;
+      var $41=_sstep($36, $37, $38, $39, 132, $40);
+      $st=$41;
+      var $42=$st;
+      $fresh=$42;
+      $coldp=0;
+      __label__ = 6; break;
+    case 6: 
+      var $44=$c;
+      $lastc=$44;
+      var $45=$p;
+      var $46=$2;
+      var $47=(($46+20)|0);
+      var $48=HEAP32[(($47)>>2)];
+      var $49=(($45)|0)==(($48)|0);
+      if ($49) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $56 = 128;__label__ = 9; break;
+    case 8: 
+      var $52=$p;
+      var $53=HEAP8[($52)];
+      var $54=(($53 << 24) >> 24);
+      var $56 = $54;__label__ = 9; break;
+    case 9: 
+      var $56;
+      $c=$56;
+      var $57=$st;
+      var $58=$fresh;
+      var $59=(($57)|0)==(($58)|0);
+      if ($59) { __label__ = 10; break; } else { __label__ = 11; break; }
+    case 10: 
+      var $61=$p;
+      $coldp=$61;
+      __label__ = 11; break;
+    case 11: 
+      $flagch=0;
+      $i=0;
+      var $63=$lastc;
+      var $64=(($63)|0)==10;
+      if ($64) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      var $66=$2;
+      var $67=(($66)|0);
+      var $68=HEAP32[(($67)>>2)];
+      var $69=(($68+24)|0);
+      var $70=HEAP32[(($69)>>2)];
+      var $71=$70 & 8;
+      var $72=(($71)|0)!=0;
+      if ($72) { __label__ = 15; break; } else { __label__ = 13; break; }
+    case 13: 
+      var $74=$lastc;
+      var $75=(($74)|0)==128;
+      if ($75) { __label__ = 14; break; } else { __label__ = 16; break; }
+    case 14: 
+      var $77=$2;
+      var $78=(($77+4)|0);
+      var $79=HEAP32[(($78)>>2)];
+      var $80=$79 & 1;
+      var $81=(($80)|0)!=0;
+      if ($81) { __label__ = 16; break; } else { __label__ = 15; break; }
+    case 15: 
+      $flagch=129;
+      var $83=$2;
+      var $84=(($83)|0);
+      var $85=HEAP32[(($84)>>2)];
+      var $86=(($85+44)|0);
+      var $87=HEAP32[(($86)>>2)];
+      $i=$87;
+      __label__ = 16; break;
+    case 16: 
+      var $89=$c;
+      var $90=(($89)|0)==10;
+      if ($90) { __label__ = 17; break; } else { __label__ = 18; break; }
+    case 17: 
+      var $92=$2;
+      var $93=(($92)|0);
+      var $94=HEAP32[(($93)>>2)];
+      var $95=(($94+24)|0);
+      var $96=HEAP32[(($95)>>2)];
+      var $97=$96 & 8;
+      var $98=(($97)|0)!=0;
+      if ($98) { __label__ = 20; break; } else { __label__ = 18; break; }
+    case 18: 
+      var $100=$c;
+      var $101=(($100)|0)==128;
+      if ($101) { __label__ = 19; break; } else { __label__ = 21; break; }
+    case 19: 
+      var $103=$2;
+      var $104=(($103+4)|0);
+      var $105=HEAP32[(($104)>>2)];
+      var $106=$105 & 2;
+      var $107=(($106)|0)!=0;
+      if ($107) { __label__ = 21; break; } else { __label__ = 20; break; }
+    case 20: 
+      var $109=$flagch;
+      var $110=(($109)|0)==129;
+      var $111=$110 ? 131 : 130;
+      $flagch=$111;
+      var $112=$2;
+      var $113=(($112)|0);
+      var $114=HEAP32[(($113)>>2)];
+      var $115=(($114+48)|0);
+      var $116=HEAP32[(($115)>>2)];
+      var $117=$i;
+      var $118=((($117)+($116))|0);
+      $i=$118;
+      __label__ = 21; break;
+    case 21: 
+      var $120=$i;
+      var $121=(($120)|0)!=0;
+      if ($121) { __label__ = 22; break; } else { __label__ = 27; break; }
+    case 22: 
+      __label__ = 23; break;
+    case 23: 
+      var $124=$i;
+      var $125=(($124)|0) > 0;
+      if ($125) { __label__ = 24; break; } else { __label__ = 26; break; }
+    case 24: 
+      var $127=$2;
+      var $128=(($127)|0);
+      var $129=HEAP32[(($128)>>2)];
+      var $130=$5;
+      var $131=$6;
+      var $132=$st;
+      var $133=$flagch;
+      var $134=$st;
+      var $135=_sstep($129, $130, $131, $132, $133, $134);
+      $st=$135;
+      __label__ = 25; break;
+    case 25: 
+      var $137=$i;
+      var $138=((($137)-(1))|0);
+      $i=$138;
+      __label__ = 23; break;
+    case 26: 
+      __label__ = 27; break;
+    case 27: 
+      var $141=$flagch;
+      var $142=(($141)|0)==129;
+      if ($142) { __label__ = 31; break; } else { __label__ = 28; break; }
+    case 28: 
+      var $144=$lastc;
+      var $145=(($144)|0)!=128;
+      if ($145) { __label__ = 29; break; } else { __label__ = 35; break; }
+    case 29: 
+      var $147=$lastc;
+      var $148=$147 & 255;
+      var $149=_isalnum($148);
+      var $150=(($149)|0)!=0;
+      if ($150) { __label__ = 35; break; } else { __label__ = 30; break; }
+    case 30: 
+      var $152=$lastc;
+      var $153=(($152)|0)==95;
+      if ($153) { __label__ = 35; break; } else { __label__ = 31; break; }
+    case 31: 
+      var $155=$c;
+      var $156=(($155)|0)!=128;
+      if ($156) { __label__ = 32; break; } else { __label__ = 35; break; }
+    case 32: 
+      var $158=$c;
+      var $159=$158 & 255;
+      var $160=_isalnum($159);
+      var $161=(($160)|0)!=0;
+      if ($161) { __label__ = 34; break; } else { __label__ = 33; break; }
+    case 33: 
+      var $163=$c;
+      var $164=(($163)|0)==95;
+      if ($164) { __label__ = 34; break; } else { __label__ = 35; break; }
+    case 34: 
+      $flagch=133;
+      __label__ = 35; break;
+    case 35: 
+      var $167=$lastc;
+      var $168=(($167)|0)!=128;
+      if ($168) { __label__ = 36; break; } else { __label__ = 43; break; }
+    case 36: 
+      var $170=$lastc;
+      var $171=$170 & 255;
+      var $172=_isalnum($171);
+      var $173=(($172)|0)!=0;
+      if ($173) { __label__ = 38; break; } else { __label__ = 37; break; }
+    case 37: 
+      var $175=$lastc;
+      var $176=(($175)|0)==95;
+      if ($176) { __label__ = 38; break; } else { __label__ = 43; break; }
+    case 38: 
+      var $178=$flagch;
+      var $179=(($178)|0)==130;
+      if ($179) { __label__ = 42; break; } else { __label__ = 39; break; }
+    case 39: 
+      var $181=$c;
+      var $182=(($181)|0)!=128;
+      if ($182) { __label__ = 40; break; } else { __label__ = 43; break; }
+    case 40: 
+      var $184=$c;
+      var $185=$184 & 255;
+      var $186=_isalnum($185);
+      var $187=(($186)|0)!=0;
+      if ($187) { __label__ = 43; break; } else { __label__ = 41; break; }
+    case 41: 
+      var $189=$c;
+      var $190=(($189)|0)==95;
+      if ($190) { __label__ = 43; break; } else { __label__ = 42; break; }
+    case 42: 
+      $flagch=134;
+      __label__ = 43; break;
+    case 43: 
+      var $193=$flagch;
+      var $194=(($193)|0)==133;
+      if ($194) { __label__ = 45; break; } else { __label__ = 44; break; }
+    case 44: 
+      var $196=$flagch;
+      var $197=(($196)|0)==134;
+      if ($197) { __label__ = 45; break; } else { __label__ = 46; break; }
+    case 45: 
+      var $199=$2;
+      var $200=(($199)|0);
+      var $201=HEAP32[(($200)>>2)];
+      var $202=$5;
+      var $203=$6;
+      var $204=$st;
+      var $205=$flagch;
+      var $206=$st;
+      var $207=_sstep($201, $202, $203, $204, $205, $206);
+      $st=$207;
+      __label__ = 46; break;
+    case 46: 
+      var $209=$st;
+      var $210=$6;
+      var $211=1 << $210;
+      var $212=$209 & $211;
+      var $213=(($212)|0)!=0;
+      if ($213) { __label__ = 48; break; } else { __label__ = 47; break; }
+    case 47: 
+      var $215=$p;
+      var $216=$4;
+      var $217=(($215)|0)==(($216)|0);
+      if ($217) { __label__ = 48; break; } else { __label__ = 49; break; }
+    case 48: 
+      __label__ = 50; break;
+    case 49: 
+      var $220=$st;
+      $tmp=$220;
+      var $221=$fresh;
+      $st=$221;
+      var $222=$2;
+      var $223=(($222)|0);
+      var $224=HEAP32[(($223)>>2)];
+      var $225=$5;
+      var $226=$6;
+      var $227=$tmp;
+      var $228=$c;
+      var $229=$st;
+      var $230=_sstep($224, $225, $226, $227, $228, $229);
+      $st=$230;
+      var $231=$p;
+      var $232=(($231+1)|0);
+      $p=$232;
+      __label__ = 6; break;
+    case 50: 
+      var $234=$coldp;
+      var $235=$2;
+      var $236=(($235+24)|0);
+      HEAP32[(($236)>>2)]=$234;
+      var $237=$st;
+      var $238=$6;
+      var $239=1 << $238;
+      var $240=$237 & $239;
+      var $241=(($240)|0)!=0;
+      if ($241) { __label__ = 51; break; } else { __label__ = 52; break; }
+    case 51: 
+      var $243=$p;
+      var $244=(($243+1)|0);
+      $1=$244;
+      __label__ = 53; break;
+    case 52: 
+      $1=0;
+      __label__ = 53; break;
+    case 53: 
+      var $247=$1;
+      ;
+      return $247;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_sfast["X"]=1;
+
+function _sslow($m, $start, $stop, $startst, $stopst) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $st;
+      var $empty;
+      var $tmp;
+      var $p;
+      var $c;
+      var $lastc;
+      var $flagch;
+      var $i;
+      var $matchp;
+      $1=$m;
+      $2=$start;
+      $3=$stop;
+      $4=$startst;
+      $5=$stopst;
+      var $6=$1;
+      var $7=(($6+36)|0);
+      var $8=HEAP32[(($7)>>2)];
+      $st=$8;
+      var $9=$1;
+      var $10=(($9+48)|0);
+      var $11=HEAP32[(($10)>>2)];
+      $empty=$11;
+      var $12=$1;
+      var $13=(($12+44)|0);
+      var $14=HEAP32[(($13)>>2)];
+      $tmp=$14;
+      var $15=$2;
+      $p=$15;
+      var $16=$2;
+      var $17=$1;
+      var $18=(($17+16)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=(($16)|0)==(($19)|0);
+      if ($20) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      var $28 = 128;__label__ = 5; break;
+    case 4: 
+      var $23=$2;
+      var $24=((($23)-(1))|0);
+      var $25=HEAP8[($24)];
+      var $26=(($25 << 24) >> 24);
+      var $28 = $26;__label__ = 5; break;
+    case 5: 
+      var $28;
+      $c=$28;
+      $st=0;
+      var $29=$4;
+      var $30=1 << $29;
+      var $31=$st;
+      var $32=$31 | $30;
+      $st=$32;
+      var $33=$1;
+      var $34=(($33)|0);
+      var $35=HEAP32[(($34)>>2)];
+      var $36=$4;
+      var $37=$5;
+      var $38=$st;
+      var $39=$st;
+      var $40=_sstep($35, $36, $37, $38, 132, $39);
+      $st=$40;
+      $matchp=0;
+      __label__ = 6; break;
+    case 6: 
+      var $42=$c;
+      $lastc=$42;
+      var $43=$p;
+      var $44=$1;
+      var $45=(($44+20)|0);
+      var $46=HEAP32[(($45)>>2)];
+      var $47=(($43)|0)==(($46)|0);
+      if ($47) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $54 = 128;__label__ = 9; break;
+    case 8: 
+      var $50=$p;
+      var $51=HEAP8[($50)];
+      var $52=(($51 << 24) >> 24);
+      var $54 = $52;__label__ = 9; break;
+    case 9: 
+      var $54;
+      $c=$54;
+      $flagch=0;
+      $i=0;
+      var $55=$lastc;
+      var $56=(($55)|0)==10;
+      if ($56) { __label__ = 10; break; } else { __label__ = 11; break; }
+    case 10: 
+      var $58=$1;
+      var $59=(($58)|0);
+      var $60=HEAP32[(($59)>>2)];
+      var $61=(($60+24)|0);
+      var $62=HEAP32[(($61)>>2)];
+      var $63=$62 & 8;
+      var $64=(($63)|0)!=0;
+      if ($64) { __label__ = 13; break; } else { __label__ = 11; break; }
+    case 11: 
+      var $66=$lastc;
+      var $67=(($66)|0)==128;
+      if ($67) { __label__ = 12; break; } else { __label__ = 14; break; }
+    case 12: 
+      var $69=$1;
+      var $70=(($69+4)|0);
+      var $71=HEAP32[(($70)>>2)];
+      var $72=$71 & 1;
+      var $73=(($72)|0)!=0;
+      if ($73) { __label__ = 14; break; } else { __label__ = 13; break; }
+    case 13: 
+      $flagch=129;
+      var $75=$1;
+      var $76=(($75)|0);
+      var $77=HEAP32[(($76)>>2)];
+      var $78=(($77+44)|0);
+      var $79=HEAP32[(($78)>>2)];
+      $i=$79;
+      __label__ = 14; break;
+    case 14: 
+      var $81=$c;
+      var $82=(($81)|0)==10;
+      if ($82) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      var $84=$1;
+      var $85=(($84)|0);
+      var $86=HEAP32[(($85)>>2)];
+      var $87=(($86+24)|0);
+      var $88=HEAP32[(($87)>>2)];
+      var $89=$88 & 8;
+      var $90=(($89)|0)!=0;
+      if ($90) { __label__ = 18; break; } else { __label__ = 16; break; }
+    case 16: 
+      var $92=$c;
+      var $93=(($92)|0)==128;
+      if ($93) { __label__ = 17; break; } else { __label__ = 19; break; }
+    case 17: 
+      var $95=$1;
+      var $96=(($95+4)|0);
+      var $97=HEAP32[(($96)>>2)];
+      var $98=$97 & 2;
+      var $99=(($98)|0)!=0;
+      if ($99) { __label__ = 19; break; } else { __label__ = 18; break; }
+    case 18: 
+      var $101=$flagch;
+      var $102=(($101)|0)==129;
+      var $103=$102 ? 131 : 130;
+      $flagch=$103;
+      var $104=$1;
+      var $105=(($104)|0);
+      var $106=HEAP32[(($105)>>2)];
+      var $107=(($106+48)|0);
+      var $108=HEAP32[(($107)>>2)];
+      var $109=$i;
+      var $110=((($109)+($108))|0);
+      $i=$110;
+      __label__ = 19; break;
+    case 19: 
+      var $112=$i;
+      var $113=(($112)|0)!=0;
+      if ($113) { __label__ = 20; break; } else { __label__ = 25; break; }
+    case 20: 
+      __label__ = 21; break;
+    case 21: 
+      var $116=$i;
+      var $117=(($116)|0) > 0;
+      if ($117) { __label__ = 22; break; } else { __label__ = 24; break; }
+    case 22: 
+      var $119=$1;
+      var $120=(($119)|0);
+      var $121=HEAP32[(($120)>>2)];
+      var $122=$4;
+      var $123=$5;
+      var $124=$st;
+      var $125=$flagch;
+      var $126=$st;
+      var $127=_sstep($121, $122, $123, $124, $125, $126);
+      $st=$127;
+      __label__ = 23; break;
+    case 23: 
+      var $129=$i;
+      var $130=((($129)-(1))|0);
+      $i=$130;
+      __label__ = 21; break;
+    case 24: 
+      __label__ = 25; break;
+    case 25: 
+      var $133=$flagch;
+      var $134=(($133)|0)==129;
+      if ($134) { __label__ = 29; break; } else { __label__ = 26; break; }
+    case 26: 
+      var $136=$lastc;
+      var $137=(($136)|0)!=128;
+      if ($137) { __label__ = 27; break; } else { __label__ = 33; break; }
+    case 27: 
+      var $139=$lastc;
+      var $140=$139 & 255;
+      var $141=_isalnum($140);
+      var $142=(($141)|0)!=0;
+      if ($142) { __label__ = 33; break; } else { __label__ = 28; break; }
+    case 28: 
+      var $144=$lastc;
+      var $145=(($144)|0)==95;
+      if ($145) { __label__ = 33; break; } else { __label__ = 29; break; }
+    case 29: 
+      var $147=$c;
+      var $148=(($147)|0)!=128;
+      if ($148) { __label__ = 30; break; } else { __label__ = 33; break; }
+    case 30: 
+      var $150=$c;
+      var $151=$150 & 255;
+      var $152=_isalnum($151);
+      var $153=(($152)|0)!=0;
+      if ($153) { __label__ = 32; break; } else { __label__ = 31; break; }
+    case 31: 
+      var $155=$c;
+      var $156=(($155)|0)==95;
+      if ($156) { __label__ = 32; break; } else { __label__ = 33; break; }
+    case 32: 
+      $flagch=133;
+      __label__ = 33; break;
+    case 33: 
+      var $159=$lastc;
+      var $160=(($159)|0)!=128;
+      if ($160) { __label__ = 34; break; } else { __label__ = 41; break; }
+    case 34: 
+      var $162=$lastc;
+      var $163=$162 & 255;
+      var $164=_isalnum($163);
+      var $165=(($164)|0)!=0;
+      if ($165) { __label__ = 36; break; } else { __label__ = 35; break; }
+    case 35: 
+      var $167=$lastc;
+      var $168=(($167)|0)==95;
+      if ($168) { __label__ = 36; break; } else { __label__ = 41; break; }
+    case 36: 
+      var $170=$flagch;
+      var $171=(($170)|0)==130;
+      if ($171) { __label__ = 40; break; } else { __label__ = 37; break; }
+    case 37: 
+      var $173=$c;
+      var $174=(($173)|0)!=128;
+      if ($174) { __label__ = 38; break; } else { __label__ = 41; break; }
+    case 38: 
+      var $176=$c;
+      var $177=$176 & 255;
+      var $178=_isalnum($177);
+      var $179=(($178)|0)!=0;
+      if ($179) { __label__ = 41; break; } else { __label__ = 39; break; }
+    case 39: 
+      var $181=$c;
+      var $182=(($181)|0)==95;
+      if ($182) { __label__ = 41; break; } else { __label__ = 40; break; }
+    case 40: 
+      $flagch=134;
+      __label__ = 41; break;
+    case 41: 
+      var $185=$flagch;
+      var $186=(($185)|0)==133;
+      if ($186) { __label__ = 43; break; } else { __label__ = 42; break; }
+    case 42: 
+      var $188=$flagch;
+      var $189=(($188)|0)==134;
+      if ($189) { __label__ = 43; break; } else { __label__ = 44; break; }
+    case 43: 
+      var $191=$1;
+      var $192=(($191)|0);
+      var $193=HEAP32[(($192)>>2)];
+      var $194=$4;
+      var $195=$5;
+      var $196=$st;
+      var $197=$flagch;
+      var $198=$st;
+      var $199=_sstep($193, $194, $195, $196, $197, $198);
+      $st=$199;
+      __label__ = 44; break;
+    case 44: 
+      var $201=$st;
+      var $202=$5;
+      var $203=1 << $202;
+      var $204=$201 & $203;
+      var $205=(($204)|0)!=0;
+      if ($205) { __label__ = 45; break; } else { __label__ = 46; break; }
+    case 45: 
+      var $207=$p;
+      $matchp=$207;
+      __label__ = 46; break;
+    case 46: 
+      var $209=$st;
+      var $210=$empty;
+      var $211=(($209)|0)==(($210)|0);
+      if ($211) { __label__ = 48; break; } else { __label__ = 47; break; }
+    case 47: 
+      var $213=$p;
+      var $214=$3;
+      var $215=(($213)|0)==(($214)|0);
+      if ($215) { __label__ = 48; break; } else { __label__ = 49; break; }
+    case 48: 
+      __label__ = 50; break;
+    case 49: 
+      var $218=$st;
+      $tmp=$218;
+      var $219=$empty;
+      $st=$219;
+      var $220=$1;
+      var $221=(($220)|0);
+      var $222=HEAP32[(($221)>>2)];
+      var $223=$4;
+      var $224=$5;
+      var $225=$tmp;
+      var $226=$c;
+      var $227=$st;
+      var $228=_sstep($222, $223, $224, $225, $226, $227);
+      $st=$228;
+      var $229=$p;
+      var $230=(($229+1)|0);
+      $p=$230;
+      __label__ = 6; break;
+    case 50: 
+      var $232=$matchp;
+      ;
+      return $232;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_sslow["X"]=1;
+
+function _sdissect($m, $start, $stop, $startst, $stopst) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $i;
+      var $ss;
+      var $es;
+      var $sp;
+      var $stp;
+      var $rest;
+      var $tail;
+      var $ssub;
+      var $esub;
+      var $ssp;
+      var $sep;
+      var $oldssp;
+      var $dp;
+      var $dp1;
+      var $dp2;
+      $1=$m;
+      $2=$start;
+      $3=$stop;
+      $4=$startst;
+      $5=$stopst;
+      var $6=$2;
+      $sp=$6;
+      var $7=$4;
+      $ss=$7;
+      __label__ = 3; break;
+    case 3: 
+      var $9=$ss;
+      var $10=$5;
+      var $11=(($9)|0) < (($10)|0);
+      if ($11) { __label__ = 4; break; } else { __label__ = 54; break; }
+    case 4: 
+      var $13=$ss;
+      $es=$13;
+      var $14=$es;
+      var $15=$1;
+      var $16=(($15)|0);
+      var $17=HEAP32[(($16)>>2)];
+      var $18=(($17+4)|0);
+      var $19=HEAP32[(($18)>>2)];
+      var $20=(($19+($14<<2))|0);
+      var $21=HEAP32[(($20)>>2)];
+      var $22=$21 & -134217728;
+      if ((($22)|0) == 1207959552 || (($22)|0) == 1476395008) {
+        __label__ = 5; break;
+      }
+      else if ((($22)|0) == 2013265920) {
+        __label__ = 6; break;
+      }
+      else {
+      __label__ = 10; break;
+      }
+      
+    case 5: 
+      var $24=$es;
+      var $25=$1;
+      var $26=(($25)|0);
+      var $27=HEAP32[(($26)>>2)];
+      var $28=(($27+4)|0);
+      var $29=HEAP32[(($28)>>2)];
+      var $30=(($29+($24<<2))|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=$31 & 134217727;
+      var $33=$es;
+      var $34=((($33)+($32))|0);
+      $es=$34;
+      __label__ = 10; break;
+    case 6: 
+      __label__ = 7; break;
+    case 7: 
+      var $37=$es;
+      var $38=$1;
+      var $39=(($38)|0);
+      var $40=HEAP32[(($39)>>2)];
+      var $41=(($40+4)|0);
+      var $42=HEAP32[(($41)>>2)];
+      var $43=(($42+($37<<2))|0);
+      var $44=HEAP32[(($43)>>2)];
+      var $45=$44 & -134217728;
+      var $46=(($45)|0)!=-1879048192;
+      if ($46) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $48=$es;
+      var $49=$1;
+      var $50=(($49)|0);
+      var $51=HEAP32[(($50)>>2)];
+      var $52=(($51+4)|0);
+      var $53=HEAP32[(($52)>>2)];
+      var $54=(($53+($48<<2))|0);
+      var $55=HEAP32[(($54)>>2)];
+      var $56=$55 & 134217727;
+      var $57=$es;
+      var $58=((($57)+($56))|0);
+      $es=$58;
+      __label__ = 7; break;
+    case 9: 
+      __label__ = 10; break;
+    case 10: 
+      var $61=$es;
+      var $62=((($61)+(1))|0);
+      $es=$62;
+      var $63=$ss;
+      var $64=$1;
+      var $65=(($64)|0);
+      var $66=HEAP32[(($65)>>2)];
+      var $67=(($66+4)|0);
+      var $68=HEAP32[(($67)>>2)];
+      var $69=(($68+($63<<2))|0);
+      var $70=HEAP32[(($69)>>2)];
+      var $71=$70 & -134217728;
+      if ((($71)|0) == 134217728) {
+        __label__ = 11; break;
+      }
+      else if ((($71)|0) == 268435456) {
+        __label__ = 12; break;
+      }
+      else if ((($71)|0) == 402653184 || (($71)|0) == 536870912 || (($71)|0) == -1744830464 || (($71)|0) == -1610612736) {
+        __label__ = 13; break;
+      }
+      else if ((($71)|0) == 671088640 || (($71)|0) == 805306368) {
+        __label__ = 14; break;
+      }
+      else if ((($71)|0) == 939524096 || (($71)|0) == 1073741824) {
+        __label__ = 15; break;
+      }
+      else if ((($71)|0) == 1476395008) {
+        __label__ = 16; break;
+      }
+      else if ((($71)|0) == 1207959552) {
+        __label__ = 24; break;
+      }
+      else if ((($71)|0) == 2013265920) {
+        __label__ = 36; break;
+      }
+      else if ((($71)|0) == 1342177280 || (($71)|0) == 1610612736 || (($71)|0) == -2147483648 || (($71)|0) == -2013265920 || (($71)|0) == -1879048192) {
+        __label__ = 48; break;
+      }
+      else if ((($71)|0) == 1744830464) {
+        __label__ = 49; break;
+      }
+      else if ((($71)|0) == 1879048192) {
+        __label__ = 50; break;
+      }
+      else {
+      __label__ = 51; break;
+      }
+      
+    case 11: 
+      __label__ = 52; break;
+    case 12: 
+      var $74=$sp;
+      var $75=(($74+1)|0);
+      $sp=$75;
+      __label__ = 52; break;
+    case 13: 
+      __label__ = 52; break;
+    case 14: 
+      var $78=$sp;
+      var $79=(($78+1)|0);
+      $sp=$79;
+      __label__ = 52; break;
+    case 15: 
+      __label__ = 52; break;
+    case 16: 
+      var $82=$3;
+      $stp=$82;
+      __label__ = 17; break;
+    case 17: 
+      var $84=$1;
+      var $85=$sp;
+      var $86=$stp;
+      var $87=$ss;
+      var $88=$es;
+      var $89=_sslow($84, $85, $86, $87, $88);
+      $rest=$89;
+      var $90=$1;
+      var $91=$rest;
+      var $92=$3;
+      var $93=$es;
+      var $94=$5;
+      var $95=_sslow($90, $91, $92, $93, $94);
+      $tail=$95;
+      var $96=$tail;
+      var $97=$3;
+      var $98=(($96)|0)==(($97)|0);
+      if ($98) { __label__ = 18; break; } else { __label__ = 19; break; }
+    case 18: 
+      __label__ = 20; break;
+    case 19: 
+      var $101=$rest;
+      var $102=((($101)-(1))|0);
+      $stp=$102;
+      __label__ = 17; break;
+    case 20: 
+      var $104=$ss;
+      var $105=((($104)+(1))|0);
+      $ssub=$105;
+      var $106=$es;
+      var $107=((($106)-(1))|0);
+      $esub=$107;
+      var $108=$1;
+      var $109=$sp;
+      var $110=$rest;
+      var $111=$ssub;
+      var $112=$esub;
+      var $113=_sslow($108, $109, $110, $111, $112);
+      var $114=(($113)|0)!=0;
+      if ($114) { __label__ = 21; break; } else { __label__ = 22; break; }
+    case 21: 
+      var $116=$1;
+      var $117=$sp;
+      var $118=$rest;
+      var $119=$ssub;
+      var $120=$esub;
+      var $121=_sdissect($116, $117, $118, $119, $120);
+      $dp=$121;
+      var $122=$dp;
+      __label__ = 23; break;
+    case 22: 
+      __label__ = 23; break;
+    case 23: 
+      var $125=$rest;
+      $sp=$125;
+      __label__ = 52; break;
+    case 24: 
+      var $127=$3;
+      $stp=$127;
+      __label__ = 25; break;
+    case 25: 
+      var $129=$1;
+      var $130=$sp;
+      var $131=$stp;
+      var $132=$ss;
+      var $133=$es;
+      var $134=_sslow($129, $130, $131, $132, $133);
+      $rest=$134;
+      var $135=$1;
+      var $136=$rest;
+      var $137=$3;
+      var $138=$es;
+      var $139=$5;
+      var $140=_sslow($135, $136, $137, $138, $139);
+      $tail=$140;
+      var $141=$tail;
+      var $142=$3;
+      var $143=(($141)|0)==(($142)|0);
+      if ($143) { __label__ = 26; break; } else { __label__ = 27; break; }
+    case 26: 
+      __label__ = 28; break;
+    case 27: 
+      var $146=$rest;
+      var $147=((($146)-(1))|0);
+      $stp=$147;
+      __label__ = 25; break;
+    case 28: 
+      var $149=$ss;
+      var $150=((($149)+(1))|0);
+      $ssub=$150;
+      var $151=$es;
+      var $152=((($151)-(1))|0);
+      $esub=$152;
+      var $153=$sp;
+      $ssp=$153;
+      var $154=$ssp;
+      $oldssp=$154;
+      __label__ = 29; break;
+    case 29: 
+      var $156=$1;
+      var $157=$ssp;
+      var $158=$rest;
+      var $159=$ssub;
+      var $160=$esub;
+      var $161=_sslow($156, $157, $158, $159, $160);
+      $sep=$161;
+      var $162=$sep;
+      var $163=(($162)|0)==0;
+      if ($163) { __label__ = 31; break; } else { __label__ = 30; break; }
+    case 30: 
+      var $165=$sep;
+      var $166=$ssp;
+      var $167=(($165)|0)==(($166)|0);
+      if ($167) { __label__ = 31; break; } else { __label__ = 32; break; }
+    case 31: 
+      __label__ = 33; break;
+    case 32: 
+      var $170=$ssp;
+      $oldssp=$170;
+      var $171=$sep;
+      $ssp=$171;
+      __label__ = 29; break;
+    case 33: 
+      var $173=$sep;
+      var $174=(($173)|0)==0;
+      if ($174) { __label__ = 34; break; } else { __label__ = 35; break; }
+    case 34: 
+      var $176=$ssp;
+      $sep=$176;
+      var $177=$oldssp;
+      $ssp=$177;
+      __label__ = 35; break;
+    case 35: 
+      var $179=$1;
+      var $180=$ssp;
+      var $181=$sep;
+      var $182=$ssub;
+      var $183=$esub;
+      var $184=_sdissect($179, $180, $181, $182, $183);
+      $dp1=$184;
+      var $185=$dp1;
+      var $186=$rest;
+      $sp=$186;
+      __label__ = 52; break;
+    case 36: 
+      var $188=$3;
+      $stp=$188;
+      __label__ = 37; break;
+    case 37: 
+      var $190=$1;
+      var $191=$sp;
+      var $192=$stp;
+      var $193=$ss;
+      var $194=$es;
+      var $195=_sslow($190, $191, $192, $193, $194);
+      $rest=$195;
+      var $196=$1;
+      var $197=$rest;
+      var $198=$3;
+      var $199=$es;
+      var $200=$5;
+      var $201=_sslow($196, $197, $198, $199, $200);
+      $tail=$201;
+      var $202=$tail;
+      var $203=$3;
+      var $204=(($202)|0)==(($203)|0);
+      if ($204) { __label__ = 38; break; } else { __label__ = 39; break; }
+    case 38: 
+      __label__ = 40; break;
+    case 39: 
+      var $207=$rest;
+      var $208=((($207)-(1))|0);
+      $stp=$208;
+      __label__ = 37; break;
+    case 40: 
+      var $210=$ss;
+      var $211=((($210)+(1))|0);
+      $ssub=$211;
+      var $212=$ss;
+      var $213=$ss;
+      var $214=$1;
+      var $215=(($214)|0);
+      var $216=HEAP32[(($215)>>2)];
+      var $217=(($216+4)|0);
+      var $218=HEAP32[(($217)>>2)];
+      var $219=(($218+($213<<2))|0);
+      var $220=HEAP32[(($219)>>2)];
+      var $221=$220 & 134217727;
+      var $222=((($212)+($221))|0);
+      var $223=((($222)-(1))|0);
+      $esub=$223;
+      __label__ = 41; break;
+    case 41: 
+      var $225=$1;
+      var $226=$sp;
+      var $227=$rest;
+      var $228=$ssub;
+      var $229=$esub;
+      var $230=_sslow($225, $226, $227, $228, $229);
+      var $231=$rest;
+      var $232=(($230)|0)==(($231)|0);
+      if ($232) { __label__ = 42; break; } else { __label__ = 43; break; }
+    case 42: 
+      __label__ = 47; break;
+    case 43: 
+      var $235=$esub;
+      var $236=((($235)+(1))|0);
+      $esub=$236;
+      var $237=$esub;
+      var $238=((($237)+(1))|0);
+      $ssub=$238;
+      var $239=$esub;
+      var $240=$1;
+      var $241=(($240)|0);
+      var $242=HEAP32[(($241)>>2)];
+      var $243=(($242+4)|0);
+      var $244=HEAP32[(($243)>>2)];
+      var $245=(($244+($239<<2))|0);
+      var $246=HEAP32[(($245)>>2)];
+      var $247=$246 & 134217727;
+      var $248=$esub;
+      var $249=((($248)+($247))|0);
+      $esub=$249;
+      var $250=$esub;
+      var $251=$1;
+      var $252=(($251)|0);
+      var $253=HEAP32[(($252)>>2)];
+      var $254=(($253+4)|0);
+      var $255=HEAP32[(($254)>>2)];
+      var $256=(($255+($250<<2))|0);
+      var $257=HEAP32[(($256)>>2)];
+      var $258=$257 & -134217728;
+      var $259=(($258)|0)==-2013265920;
+      if ($259) { __label__ = 44; break; } else { __label__ = 45; break; }
+    case 44: 
+      var $261=$esub;
+      var $262=((($261)-(1))|0);
+      $esub=$262;
+      __label__ = 46; break;
+    case 45: 
+      __label__ = 46; break;
+    case 46: 
+      __label__ = 41; break;
+    case 47: 
+      var $266=$1;
+      var $267=$sp;
+      var $268=$rest;
+      var $269=$ssub;
+      var $270=$esub;
+      var $271=_sdissect($266, $267, $268, $269, $270);
+      $dp2=$271;
+      var $272=$dp2;
+      var $273=$rest;
+      $sp=$273;
+      __label__ = 52; break;
+    case 48: 
+      __label__ = 52; break;
+    case 49: 
+      var $276=$ss;
+      var $277=$1;
+      var $278=(($277)|0);
+      var $279=HEAP32[(($278)>>2)];
+      var $280=(($279+4)|0);
+      var $281=HEAP32[(($280)>>2)];
+      var $282=(($281+($276<<2))|0);
+      var $283=HEAP32[(($282)>>2)];
+      var $284=$283 & 134217727;
+      $i=$284;
+      var $285=$sp;
+      var $286=$1;
+      var $287=(($286+12)|0);
+      var $288=HEAP32[(($287)>>2)];
+      var $289=$285;
+      var $290=$288;
+      var $291=((($289)-($290))|0);
+      var $292=$i;
+      var $293=$1;
+      var $294=(($293+8)|0);
+      var $295=HEAP32[(($294)>>2)];
+      var $296=(($295+($292<<3))|0);
+      var $297=(($296)|0);
+      HEAP32[(($297)>>2)]=$291;
+      __label__ = 52; break;
+    case 50: 
+      var $299=$ss;
+      var $300=$1;
+      var $301=(($300)|0);
+      var $302=HEAP32[(($301)>>2)];
+      var $303=(($302+4)|0);
+      var $304=HEAP32[(($303)>>2)];
+      var $305=(($304+($299<<2))|0);
+      var $306=HEAP32[(($305)>>2)];
+      var $307=$306 & 134217727;
+      $i=$307;
+      var $308=$sp;
+      var $309=$1;
+      var $310=(($309+12)|0);
+      var $311=HEAP32[(($310)>>2)];
+      var $312=$308;
+      var $313=$311;
+      var $314=((($312)-($313))|0);
+      var $315=$i;
+      var $316=$1;
+      var $317=(($316+8)|0);
+      var $318=HEAP32[(($317)>>2)];
+      var $319=(($318+($315<<3))|0);
+      var $320=(($319+4)|0);
+      HEAP32[(($320)>>2)]=$314;
+      __label__ = 52; break;
+    case 51: 
+      __label__ = 52; break;
+    case 52: 
+      __label__ = 53; break;
+    case 53: 
+      var $324=$es;
+      $ss=$324;
+      __label__ = 3; break;
+    case 54: 
+      var $326=$sp;
+      ;
+      return $326;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_sdissect["X"]=1;
+
+function _sbackref($m, $start, $stop, $startst, $stopst, $lev, $rec) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $7;
+      var $8;
+      var $i;
+      var $ss;
+      var $sp;
+      var $ssub;
+      var $esub;
+      var $ssp;
+      var $dp;
+      var $len;
+      var $hard;
+      var $s;
+      var $offsave;
+      var $cs;
+      $2=$m;
+      $3=$start;
+      $4=$stop;
+      $5=$startst;
+      $6=$stopst;
+      $7=$lev;
+      $8=$rec;
+      var $9=$3;
+      $sp=$9;
+      $hard=0;
+      var $10=$5;
+      $ss=$10;
+      __label__ = 3; break;
+    case 3: 
+      var $12=$hard;
+      var $13=(($12)|0)!=0;
+      if ($13) { var $19 = 0;__label__ = 5; break; } else { __label__ = 4; break; }
+    case 4: 
+      var $15=$ss;
+      var $16=$6;
+      var $17=(($15)|0) < (($16)|0);
+      var $19 = $17;__label__ = 5; break;
+    case 5: 
+      var $19;
+      if ($19) { __label__ = 6; break; } else { __label__ = 70; break; }
+    case 6: 
+      var $21=$ss;
+      var $22=$2;
+      var $23=(($22)|0);
+      var $24=HEAP32[(($23)>>2)];
+      var $25=(($24+4)|0);
+      var $26=HEAP32[(($25)>>2)];
+      var $27=(($26+($21<<2))|0);
+      var $28=HEAP32[(($27)>>2)];
+      $s=$28;
+      var $29=$28 & -134217728;
+      if ((($29)|0) == 268435456) {
+        __label__ = 7; break;
+      }
+      else if ((($29)|0) == 671088640) {
+        __label__ = 11; break;
+      }
+      else if ((($29)|0) == 805306368) {
+        __label__ = 14; break;
+      }
+      else if ((($29)|0) == 402653184) {
+        __label__ = 18; break;
+      }
+      else if ((($29)|0) == 536870912) {
+        __label__ = 26; break;
+      }
+      else if ((($29)|0) == -1744830464) {
+        __label__ = 34; break;
+      }
+      else if ((($29)|0) == -1610612736) {
+        __label__ = 48; break;
+      }
+      else if ((($29)|0) == 1610612736) {
+        __label__ = 62; break;
+      }
+      else if ((($29)|0) == -2147483648) {
+        __label__ = 63; break;
+      }
+      else {
+      __label__ = 67; break;
+      }
+      
+    case 7: 
+      var $31=$sp;
+      var $32=$4;
+      var $33=(($31)|0)==(($32)|0);
+      if ($33) { __label__ = 9; break; } else { __label__ = 8; break; }
+    case 8: 
+      var $35=$sp;
+      var $36=(($35+1)|0);
+      $sp=$36;
+      var $37=HEAP8[($35)];
+      var $38=(($37 << 24) >> 24);
+      var $39=$s;
+      var $40=$39 & 134217727;
+      var $41=(($40) & 255);
+      var $42=(($41 << 24) >> 24);
+      var $43=(($38)|0)!=(($42)|0);
+      if ($43) { __label__ = 9; break; } else { __label__ = 10; break; }
+    case 9: 
+      $1=0;
+      __label__ = 114; break;
+    case 10: 
+      __label__ = 68; break;
+    case 11: 
+      var $47=$sp;
+      var $48=$4;
+      var $49=(($47)|0)==(($48)|0);
+      if ($49) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      $1=0;
+      __label__ = 114; break;
+    case 13: 
+      var $52=$sp;
+      var $53=(($52+1)|0);
+      $sp=$53;
+      __label__ = 68; break;
+    case 14: 
+      var $55=$s;
+      var $56=$55 & 134217727;
+      var $57=$2;
+      var $58=(($57)|0);
+      var $59=HEAP32[(($58)>>2)];
+      var $60=(($59+16)|0);
+      var $61=HEAP32[(($60)>>2)];
+      var $62=(($61+($56<<4))|0);
+      $cs=$62;
+      var $63=$sp;
+      var $64=$4;
+      var $65=(($63)|0)==(($64)|0);
+      if ($65) { __label__ = 16; break; } else { __label__ = 15; break; }
+    case 15: 
+      var $67=$sp;
+      var $68=(($67+1)|0);
+      $sp=$68;
+      var $69=HEAPU8[($67)];
+      var $70=(($69)&255);
+      var $71=$cs;
+      var $72=(($71)|0);
+      var $73=HEAP32[(($72)>>2)];
+      var $74=(($73+$70)|0);
+      var $75=HEAPU8[($74)];
+      var $76=(($75)&255);
+      var $77=$cs;
+      var $78=(($77+4)|0);
+      var $79=HEAPU8[($78)];
+      var $80=(($79)&255);
+      var $81=$76 & $80;
+      var $82=(($81)|0)!=0;
+      if ($82) { __label__ = 17; break; } else { __label__ = 16; break; }
+    case 16: 
+      $1=0;
+      __label__ = 114; break;
+    case 17: 
+      __label__ = 68; break;
+    case 18: 
+      var $86=$sp;
+      var $87=$2;
+      var $88=(($87+16)|0);
+      var $89=HEAP32[(($88)>>2)];
+      var $90=(($86)|0)==(($89)|0);
+      if ($90) { __label__ = 19; break; } else { __label__ = 20; break; }
+    case 19: 
+      var $92=$2;
+      var $93=(($92+4)|0);
+      var $94=HEAP32[(($93)>>2)];
+      var $95=$94 & 1;
+      var $96=(($95)|0)!=0;
+      if ($96) { __label__ = 20; break; } else { __label__ = 23; break; }
+    case 20: 
+      var $98=$sp;
+      var $99=$2;
+      var $100=(($99+20)|0);
+      var $101=HEAPU32[(($100)>>2)];
+      var $102=(($98)>>>0) < (($101)>>>0);
+      if ($102) { __label__ = 21; break; } else { __label__ = 24; break; }
+    case 21: 
+      var $104=$sp;
+      var $105=((($104)-(1))|0);
+      var $106=HEAP8[($105)];
+      var $107=(($106 << 24) >> 24);
+      var $108=(($107)|0)==10;
+      if ($108) { __label__ = 22; break; } else { __label__ = 24; break; }
+    case 22: 
+      var $110=$2;
+      var $111=(($110)|0);
+      var $112=HEAP32[(($111)>>2)];
+      var $113=(($112+24)|0);
+      var $114=HEAP32[(($113)>>2)];
+      var $115=$114 & 8;
+      var $116=(($115)|0)!=0;
+      if ($116) { __label__ = 23; break; } else { __label__ = 24; break; }
+    case 23: 
+      __label__ = 25; break;
+    case 24: 
+      $1=0;
+      __label__ = 114; break;
+    case 25: 
+      __label__ = 68; break;
+    case 26: 
+      var $121=$sp;
+      var $122=$2;
+      var $123=(($122+20)|0);
+      var $124=HEAP32[(($123)>>2)];
+      var $125=(($121)|0)==(($124)|0);
+      if ($125) { __label__ = 27; break; } else { __label__ = 28; break; }
+    case 27: 
+      var $127=$2;
+      var $128=(($127+4)|0);
+      var $129=HEAP32[(($128)>>2)];
+      var $130=$129 & 2;
+      var $131=(($130)|0)!=0;
+      if ($131) { __label__ = 28; break; } else { __label__ = 31; break; }
+    case 28: 
+      var $133=$sp;
+      var $134=$2;
+      var $135=(($134+20)|0);
+      var $136=HEAPU32[(($135)>>2)];
+      var $137=(($133)>>>0) < (($136)>>>0);
+      if ($137) { __label__ = 29; break; } else { __label__ = 32; break; }
+    case 29: 
+      var $139=$sp;
+      var $140=HEAP8[($139)];
+      var $141=(($140 << 24) >> 24);
+      var $142=(($141)|0)==10;
+      if ($142) { __label__ = 30; break; } else { __label__ = 32; break; }
+    case 30: 
+      var $144=$2;
+      var $145=(($144)|0);
+      var $146=HEAP32[(($145)>>2)];
+      var $147=(($146+24)|0);
+      var $148=HEAP32[(($147)>>2)];
+      var $149=$148 & 8;
+      var $150=(($149)|0)!=0;
+      if ($150) { __label__ = 31; break; } else { __label__ = 32; break; }
+    case 31: 
+      __label__ = 33; break;
+    case 32: 
+      $1=0;
+      __label__ = 114; break;
+    case 33: 
+      __label__ = 68; break;
+    case 34: 
+      var $155=$sp;
+      var $156=$2;
+      var $157=(($156+16)|0);
+      var $158=HEAP32[(($157)>>2)];
+      var $159=(($155)|0)==(($158)|0);
+      if ($159) { __label__ = 35; break; } else { __label__ = 36; break; }
+    case 35: 
+      var $161=$2;
+      var $162=(($161+4)|0);
+      var $163=HEAP32[(($162)>>2)];
+      var $164=$163 & 1;
+      var $165=(($164)|0)!=0;
+      if ($165) { __label__ = 36; break; } else { __label__ = 42; break; }
+    case 36: 
+      var $167=$sp;
+      var $168=$2;
+      var $169=(($168+20)|0);
+      var $170=HEAPU32[(($169)>>2)];
+      var $171=(($167)>>>0) < (($170)>>>0);
+      if ($171) { __label__ = 37; break; } else { __label__ = 39; break; }
+    case 37: 
+      var $173=$sp;
+      var $174=((($173)-(1))|0);
+      var $175=HEAP8[($174)];
+      var $176=(($175 << 24) >> 24);
+      var $177=(($176)|0)==10;
+      if ($177) { __label__ = 38; break; } else { __label__ = 39; break; }
+    case 38: 
+      var $179=$2;
+      var $180=(($179)|0);
+      var $181=HEAP32[(($180)>>2)];
+      var $182=(($181+24)|0);
+      var $183=HEAP32[(($182)>>2)];
+      var $184=$183 & 8;
+      var $185=(($184)|0)!=0;
+      if ($185) { __label__ = 42; break; } else { __label__ = 39; break; }
+    case 39: 
+      var $187=$sp;
+      var $188=$2;
+      var $189=(($188+16)|0);
+      var $190=HEAPU32[(($189)>>2)];
+      var $191=(($187)>>>0) > (($190)>>>0);
+      if ($191) { __label__ = 40; break; } else { __label__ = 46; break; }
+    case 40: 
+      var $193=$sp;
+      var $194=((($193)-(1))|0);
+      var $195=HEAP8[($194)];
+      var $196=(($195 << 24) >> 24);
+      var $197=$196 & 255;
+      var $198=_isalnum($197);
+      var $199=(($198)|0)!=0;
+      if ($199) { __label__ = 46; break; } else { __label__ = 41; break; }
+    case 41: 
+      var $201=$sp;
+      var $202=((($201)-(1))|0);
+      var $203=HEAP8[($202)];
+      var $204=(($203 << 24) >> 24);
+      var $205=(($204)|0)==95;
+      if ($205) { __label__ = 46; break; } else { __label__ = 42; break; }
+    case 42: 
+      var $207=$sp;
+      var $208=$2;
+      var $209=(($208+20)|0);
+      var $210=HEAPU32[(($209)>>2)];
+      var $211=(($207)>>>0) < (($210)>>>0);
+      if ($211) { __label__ = 43; break; } else { __label__ = 46; break; }
+    case 43: 
+      var $213=$sp;
+      var $214=HEAP8[($213)];
+      var $215=(($214 << 24) >> 24);
+      var $216=$215 & 255;
+      var $217=_isalnum($216);
+      var $218=(($217)|0)!=0;
+      if ($218) { __label__ = 45; break; } else { __label__ = 44; break; }
+    case 44: 
+      var $220=$sp;
+      var $221=HEAP8[($220)];
+      var $222=(($221 << 24) >> 24);
+      var $223=(($222)|0)==95;
+      if ($223) { __label__ = 45; break; } else { __label__ = 46; break; }
+    case 45: 
+      __label__ = 47; break;
+    case 46: 
+      $1=0;
+      __label__ = 114; break;
+    case 47: 
+      __label__ = 68; break;
+    case 48: 
+      var $228=$sp;
+      var $229=$2;
+      var $230=(($229+20)|0);
+      var $231=HEAP32[(($230)>>2)];
+      var $232=(($228)|0)==(($231)|0);
+      if ($232) { __label__ = 49; break; } else { __label__ = 50; break; }
+    case 49: 
+      var $234=$2;
+      var $235=(($234+4)|0);
+      var $236=HEAP32[(($235)>>2)];
+      var $237=$236 & 2;
+      var $238=(($237)|0)!=0;
+      if ($238) { __label__ = 50; break; } else { __label__ = 56; break; }
+    case 50: 
+      var $240=$sp;
+      var $241=$2;
+      var $242=(($241+20)|0);
+      var $243=HEAPU32[(($242)>>2)];
+      var $244=(($240)>>>0) < (($243)>>>0);
+      if ($244) { __label__ = 51; break; } else { __label__ = 53; break; }
+    case 51: 
+      var $246=$sp;
+      var $247=HEAP8[($246)];
+      var $248=(($247 << 24) >> 24);
+      var $249=(($248)|0)==10;
+      if ($249) { __label__ = 52; break; } else { __label__ = 53; break; }
+    case 52: 
+      var $251=$2;
+      var $252=(($251)|0);
+      var $253=HEAP32[(($252)>>2)];
+      var $254=(($253+24)|0);
+      var $255=HEAP32[(($254)>>2)];
+      var $256=$255 & 8;
+      var $257=(($256)|0)!=0;
+      if ($257) { __label__ = 56; break; } else { __label__ = 53; break; }
+    case 53: 
+      var $259=$sp;
+      var $260=$2;
+      var $261=(($260+20)|0);
+      var $262=HEAPU32[(($261)>>2)];
+      var $263=(($259)>>>0) < (($262)>>>0);
+      if ($263) { __label__ = 54; break; } else { __label__ = 60; break; }
+    case 54: 
+      var $265=$sp;
+      var $266=HEAP8[($265)];
+      var $267=(($266 << 24) >> 24);
+      var $268=$267 & 255;
+      var $269=_isalnum($268);
+      var $270=(($269)|0)!=0;
+      if ($270) { __label__ = 60; break; } else { __label__ = 55; break; }
+    case 55: 
+      var $272=$sp;
+      var $273=HEAP8[($272)];
+      var $274=(($273 << 24) >> 24);
+      var $275=(($274)|0)==95;
+      if ($275) { __label__ = 60; break; } else { __label__ = 56; break; }
+    case 56: 
+      var $277=$sp;
+      var $278=$2;
+      var $279=(($278+16)|0);
+      var $280=HEAPU32[(($279)>>2)];
+      var $281=(($277)>>>0) > (($280)>>>0);
+      if ($281) { __label__ = 57; break; } else { __label__ = 60; break; }
+    case 57: 
+      var $283=$sp;
+      var $284=((($283)-(1))|0);
+      var $285=HEAP8[($284)];
+      var $286=(($285 << 24) >> 24);
+      var $287=$286 & 255;
+      var $288=_isalnum($287);
+      var $289=(($288)|0)!=0;
+      if ($289) { __label__ = 59; break; } else { __label__ = 58; break; }
+    case 58: 
+      var $291=$sp;
+      var $292=((($291)-(1))|0);
+      var $293=HEAP8[($292)];
+      var $294=(($293 << 24) >> 24);
+      var $295=(($294)|0)==95;
+      if ($295) { __label__ = 59; break; } else { __label__ = 60; break; }
+    case 59: 
+      __label__ = 61; break;
+    case 60: 
+      $1=0;
+      __label__ = 114; break;
+    case 61: 
+      __label__ = 68; break;
+    case 62: 
+      __label__ = 68; break;
+    case 63: 
+      var $301=$ss;
+      var $302=((($301)+(1))|0);
+      $ss=$302;
+      var $303=$ss;
+      var $304=$2;
+      var $305=(($304)|0);
+      var $306=HEAP32[(($305)>>2)];
+      var $307=(($306+4)|0);
+      var $308=HEAP32[(($307)>>2)];
+      var $309=(($308+($303<<2))|0);
+      var $310=HEAP32[(($309)>>2)];
+      $s=$310;
+      __label__ = 64; break;
+    case 64: 
+      var $312=$s;
+      var $313=$312 & 134217727;
+      var $314=$ss;
+      var $315=((($314)+($313))|0);
+      $ss=$315;
+      __label__ = 65; break;
+    case 65: 
+      var $317=$ss;
+      var $318=$2;
+      var $319=(($318)|0);
+      var $320=HEAP32[(($319)>>2)];
+      var $321=(($320+4)|0);
+      var $322=HEAP32[(($321)>>2)];
+      var $323=(($322+($317<<2))|0);
+      var $324=HEAP32[(($323)>>2)];
+      $s=$324;
+      var $325=$324 & -134217728;
+      var $326=(($325)|0)!=-1879048192;
+      if ($326) { __label__ = 64; break; } else { __label__ = 66; break; }
+    case 66: 
+      __label__ = 68; break;
+    case 67: 
+      $hard=1;
+      __label__ = 68; break;
+    case 68: 
+      __label__ = 69; break;
+    case 69: 
+      var $331=$ss;
+      var $332=((($331)+(1))|0);
+      $ss=$332;
+      __label__ = 3; break;
+    case 70: 
+      var $334=$hard;
+      var $335=(($334)|0)!=0;
+      if ($335) { __label__ = 74; break; } else { __label__ = 71; break; }
+    case 71: 
+      var $337=$sp;
+      var $338=$4;
+      var $339=(($337)|0)!=(($338)|0);
+      if ($339) { __label__ = 72; break; } else { __label__ = 73; break; }
+    case 72: 
+      $1=0;
+      __label__ = 114; break;
+    case 73: 
+      var $342=$sp;
+      $1=$342;
+      __label__ = 114; break;
+    case 74: 
+      var $344=$ss;
+      var $345=((($344)-(1))|0);
+      $ss=$345;
+      var $346=$ss;
+      var $347=$2;
+      var $348=(($347)|0);
+      var $349=HEAP32[(($348)>>2)];
+      var $350=(($349+4)|0);
+      var $351=HEAP32[(($350)>>2)];
+      var $352=(($351+($346<<2))|0);
+      var $353=HEAP32[(($352)>>2)];
+      $s=$353;
+      var $354=$s;
+      var $355=$354 & -134217728;
+      if ((($355)|0) == 939524096) {
+        __label__ = 75; break;
+      }
+      else if ((($355)|0) == 1476395008) {
+        __label__ = 88; break;
+      }
+      else if ((($355)|0) == 1207959552) {
+        __label__ = 91; break;
+      }
+      else if ((($355)|0) == 1342177280) {
+        __label__ = 92; break;
+      }
+      else if ((($355)|0) == 2013265920) {
+        __label__ = 97; break;
+      }
+      else if ((($355)|0) == 1744830464) {
+        __label__ = 106; break;
+      }
+      else if ((($355)|0) == 1879048192) {
+        __label__ = 109; break;
+      }
+      else {
+      __label__ = 112; break;
+      }
+      
+    case 75: 
+      var $357=$s;
+      var $358=$357 & 134217727;
+      $i=$358;
+      var $359=$i;
+      var $360=$2;
+      var $361=(($360+8)|0);
+      var $362=HEAP32[(($361)>>2)];
+      var $363=(($362+($359<<3))|0);
+      var $364=(($363+4)|0);
+      var $365=HEAP32[(($364)>>2)];
+      var $366=(($365)|0)==-1;
+      if ($366) { __label__ = 76; break; } else { __label__ = 77; break; }
+    case 76: 
+      $1=0;
+      __label__ = 114; break;
+    case 77: 
+      var $369=$i;
+      var $370=$2;
+      var $371=(($370+8)|0);
+      var $372=HEAP32[(($371)>>2)];
+      var $373=(($372+($369<<3))|0);
+      var $374=(($373+4)|0);
+      var $375=HEAP32[(($374)>>2)];
+      var $376=$i;
+      var $377=$2;
+      var $378=(($377+8)|0);
+      var $379=HEAP32[(($378)>>2)];
+      var $380=(($379+($376<<3))|0);
+      var $381=(($380)|0);
+      var $382=HEAP32[(($381)>>2)];
+      var $383=((($375)-($382))|0);
+      $len=$383;
+      var $384=$len;
+      var $385=(($384)|0)==0;
+      if ($385) { __label__ = 78; break; } else { __label__ = 80; break; }
+    case 78: 
+      var $387=$8;
+      var $388=((($387)+(1))|0);
+      $8=$388;
+      var $389=(($387)|0) > 100;
+      if ($389) { __label__ = 79; break; } else { __label__ = 80; break; }
+    case 79: 
+      $1=0;
+      __label__ = 114; break;
+    case 80: 
+      var $392=$sp;
+      var $393=$4;
+      var $394=$len;
+      var $395=(((-$394))|0);
+      var $396=(($393+$395)|0);
+      var $397=(($392)>>>0) > (($396)>>>0);
+      if ($397) { __label__ = 81; break; } else { __label__ = 82; break; }
+    case 81: 
+      $1=0;
+      __label__ = 114; break;
+    case 82: 
+      var $400=$2;
+      var $401=(($400+12)|0);
+      var $402=HEAP32[(($401)>>2)];
+      var $403=$i;
+      var $404=$2;
+      var $405=(($404+8)|0);
+      var $406=HEAP32[(($405)>>2)];
+      var $407=(($406+($403<<3))|0);
+      var $408=(($407)|0);
+      var $409=HEAP32[(($408)>>2)];
+      var $410=(($402+$409)|0);
+      $ssp=$410;
+      var $411=$sp;
+      var $412=$ssp;
+      var $413=$len;
+      var $414=_memcmp($411, $412, $413);
+      var $415=(($414)|0)!=0;
+      if ($415) { __label__ = 83; break; } else { __label__ = 84; break; }
+    case 83: 
+      $1=0;
+      __label__ = 114; break;
+    case 84: 
+      __label__ = 85; break;
+    case 85: 
+      var $419=$ss;
+      var $420=$2;
+      var $421=(($420)|0);
+      var $422=HEAP32[(($421)>>2)];
+      var $423=(($422+4)|0);
+      var $424=HEAP32[(($423)>>2)];
+      var $425=(($424+($419<<2))|0);
+      var $426=HEAP32[(($425)>>2)];
+      var $427=$i;
+      var $428=1073741824 | $427;
+      var $429=(($426)|0)!=(($428)|0);
+      if ($429) { __label__ = 86; break; } else { __label__ = 87; break; }
+    case 86: 
+      var $431=$ss;
+      var $432=((($431)+(1))|0);
+      $ss=$432;
+      __label__ = 85; break;
+    case 87: 
+      var $434=$2;
+      var $435=$sp;
+      var $436=$len;
+      var $437=(($435+$436)|0);
+      var $438=$4;
+      var $439=$ss;
+      var $440=((($439)+(1))|0);
+      var $441=$6;
+      var $442=$7;
+      var $443=$8;
+      var $444=_sbackref($434, $437, $438, $440, $441, $442, $443);
+      $1=$444;
+      __label__ = 114; break;
+    case 88: 
+      var $446=$2;
+      var $447=$sp;
+      var $448=$4;
+      var $449=$ss;
+      var $450=((($449)+(1))|0);
+      var $451=$6;
+      var $452=$7;
+      var $453=$8;
+      var $454=_sbackref($446, $447, $448, $450, $451, $452, $453);
+      $dp=$454;
+      var $455=$dp;
+      var $456=(($455)|0)!=0;
+      if ($456) { __label__ = 89; break; } else { __label__ = 90; break; }
+    case 89: 
+      var $458=$dp;
+      $1=$458;
+      __label__ = 114; break;
+    case 90: 
+      var $460=$2;
+      var $461=$sp;
+      var $462=$4;
+      var $463=$ss;
+      var $464=$s;
+      var $465=$464 & 134217727;
+      var $466=((($463)+($465))|0);
+      var $467=((($466)+(1))|0);
+      var $468=$6;
+      var $469=$7;
+      var $470=$8;
+      var $471=_sbackref($460, $461, $462, $467, $468, $469, $470);
+      $1=$471;
+      __label__ = 114; break;
+    case 91: 
+      var $473=$sp;
+      var $474=$7;
+      var $475=((($474)+(1))|0);
+      var $476=$2;
+      var $477=(($476+28)|0);
+      var $478=HEAP32[(($477)>>2)];
+      var $479=(($478+($475<<2))|0);
+      HEAP32[(($479)>>2)]=$473;
+      var $480=$2;
+      var $481=$sp;
+      var $482=$4;
+      var $483=$ss;
+      var $484=((($483)+(1))|0);
+      var $485=$6;
+      var $486=$7;
+      var $487=((($486)+(1))|0);
+      var $488=$8;
+      var $489=_sbackref($480, $481, $482, $484, $485, $487, $488);
+      $1=$489;
+      __label__ = 114; break;
+    case 92: 
+      var $491=$sp;
+      var $492=$7;
+      var $493=$2;
+      var $494=(($493+28)|0);
+      var $495=HEAP32[(($494)>>2)];
+      var $496=(($495+($492<<2))|0);
+      var $497=HEAP32[(($496)>>2)];
+      var $498=(($491)|0)==(($497)|0);
+      if ($498) { __label__ = 93; break; } else { __label__ = 94; break; }
+    case 93: 
+      var $500=$2;
+      var $501=$sp;
+      var $502=$4;
+      var $503=$ss;
+      var $504=((($503)+(1))|0);
+      var $505=$6;
+      var $506=$7;
+      var $507=((($506)-(1))|0);
+      var $508=$8;
+      var $509=_sbackref($500, $501, $502, $504, $505, $507, $508);
+      $1=$509;
+      __label__ = 114; break;
+    case 94: 
+      var $511=$sp;
+      var $512=$7;
+      var $513=$2;
+      var $514=(($513+28)|0);
+      var $515=HEAP32[(($514)>>2)];
+      var $516=(($515+($512<<2))|0);
+      HEAP32[(($516)>>2)]=$511;
+      var $517=$2;
+      var $518=$sp;
+      var $519=$4;
+      var $520=$ss;
+      var $521=$s;
+      var $522=$521 & 134217727;
+      var $523=((($520)-($522))|0);
+      var $524=((($523)+(1))|0);
+      var $525=$6;
+      var $526=$7;
+      var $527=$8;
+      var $528=_sbackref($517, $518, $519, $524, $525, $526, $527);
+      $dp=$528;
+      var $529=$dp;
+      var $530=(($529)|0)==0;
+      if ($530) { __label__ = 95; break; } else { __label__ = 96; break; }
+    case 95: 
+      var $532=$2;
+      var $533=$sp;
+      var $534=$4;
+      var $535=$ss;
+      var $536=((($535)+(1))|0);
+      var $537=$6;
+      var $538=$7;
+      var $539=((($538)-(1))|0);
+      var $540=$8;
+      var $541=_sbackref($532, $533, $534, $536, $537, $539, $540);
+      $1=$541;
+      __label__ = 114; break;
+    case 96: 
+      var $543=$dp;
+      $1=$543;
+      __label__ = 114; break;
+    case 97: 
+      var $545=$ss;
+      var $546=((($545)+(1))|0);
+      $ssub=$546;
+      var $547=$ss;
+      var $548=$s;
+      var $549=$548 & 134217727;
+      var $550=((($547)+($549))|0);
+      var $551=((($550)-(1))|0);
+      $esub=$551;
+      __label__ = 98; break;
+    case 98: 
+      var $553=$2;
+      var $554=$sp;
+      var $555=$4;
+      var $556=$ssub;
+      var $557=$esub;
+      var $558=$7;
+      var $559=$8;
+      var $560=_sbackref($553, $554, $555, $556, $557, $558, $559);
+      $dp=$560;
+      var $561=$dp;
+      var $562=(($561)|0)!=0;
+      if ($562) { __label__ = 99; break; } else { __label__ = 100; break; }
+    case 99: 
+      var $564=$dp;
+      $1=$564;
+      __label__ = 114; break;
+    case 100: 
+      var $566=$esub;
+      var $567=$2;
+      var $568=(($567)|0);
+      var $569=HEAP32[(($568)>>2)];
+      var $570=(($569+4)|0);
+      var $571=HEAP32[(($570)>>2)];
+      var $572=(($571+($566<<2))|0);
+      var $573=HEAP32[(($572)>>2)];
+      var $574=$573 & -134217728;
+      var $575=(($574)|0)==-1879048192;
+      if ($575) { __label__ = 101; break; } else { __label__ = 102; break; }
+    case 101: 
+      $1=0;
+      __label__ = 114; break;
+    case 102: 
+      var $578=$esub;
+      var $579=((($578)+(1))|0);
+      $esub=$579;
+      var $580=$esub;
+      var $581=((($580)+(1))|0);
+      $ssub=$581;
+      var $582=$esub;
+      var $583=$2;
+      var $584=(($583)|0);
+      var $585=HEAP32[(($584)>>2)];
+      var $586=(($585+4)|0);
+      var $587=HEAP32[(($586)>>2)];
+      var $588=(($587+($582<<2))|0);
+      var $589=HEAP32[(($588)>>2)];
+      var $590=$589 & 134217727;
+      var $591=$esub;
+      var $592=((($591)+($590))|0);
+      $esub=$592;
+      var $593=$esub;
+      var $594=$2;
+      var $595=(($594)|0);
+      var $596=HEAP32[(($595)>>2)];
+      var $597=(($596+4)|0);
+      var $598=HEAP32[(($597)>>2)];
+      var $599=(($598+($593<<2))|0);
+      var $600=HEAP32[(($599)>>2)];
+      var $601=$600 & -134217728;
+      var $602=(($601)|0)==-2013265920;
+      if ($602) { __label__ = 103; break; } else { __label__ = 104; break; }
+    case 103: 
+      var $604=$esub;
+      var $605=((($604)-(1))|0);
+      $esub=$605;
+      __label__ = 105; break;
+    case 104: 
+      __label__ = 105; break;
+    case 105: 
+      __label__ = 98; break;
+    case 106: 
+      var $609=$s;
+      var $610=$609 & 134217727;
+      $i=$610;
+      var $611=$i;
+      var $612=$2;
+      var $613=(($612+8)|0);
+      var $614=HEAP32[(($613)>>2)];
+      var $615=(($614+($611<<3))|0);
+      var $616=(($615)|0);
+      var $617=HEAP32[(($616)>>2)];
+      $offsave=$617;
+      var $618=$sp;
+      var $619=$2;
+      var $620=(($619+12)|0);
+      var $621=HEAP32[(($620)>>2)];
+      var $622=$618;
+      var $623=$621;
+      var $624=((($622)-($623))|0);
+      var $625=$i;
+      var $626=$2;
+      var $627=(($626+8)|0);
+      var $628=HEAP32[(($627)>>2)];
+      var $629=(($628+($625<<3))|0);
+      var $630=(($629)|0);
+      HEAP32[(($630)>>2)]=$624;
+      var $631=$2;
+      var $632=$sp;
+      var $633=$4;
+      var $634=$ss;
+      var $635=((($634)+(1))|0);
+      var $636=$6;
+      var $637=$7;
+      var $638=$8;
+      var $639=_sbackref($631, $632, $633, $635, $636, $637, $638);
+      $dp=$639;
+      var $640=$dp;
+      var $641=(($640)|0)!=0;
+      if ($641) { __label__ = 107; break; } else { __label__ = 108; break; }
+    case 107: 
+      var $643=$dp;
+      $1=$643;
+      __label__ = 114; break;
+    case 108: 
+      var $645=$offsave;
+      var $646=$i;
+      var $647=$2;
+      var $648=(($647+8)|0);
+      var $649=HEAP32[(($648)>>2)];
+      var $650=(($649+($646<<3))|0);
+      var $651=(($650)|0);
+      HEAP32[(($651)>>2)]=$645;
+      $1=0;
+      __label__ = 114; break;
+    case 109: 
+      var $653=$s;
+      var $654=$653 & 134217727;
+      $i=$654;
+      var $655=$i;
+      var $656=$2;
+      var $657=(($656+8)|0);
+      var $658=HEAP32[(($657)>>2)];
+      var $659=(($658+($655<<3))|0);
+      var $660=(($659+4)|0);
+      var $661=HEAP32[(($660)>>2)];
+      $offsave=$661;
+      var $662=$sp;
+      var $663=$2;
+      var $664=(($663+12)|0);
+      var $665=HEAP32[(($664)>>2)];
+      var $666=$662;
+      var $667=$665;
+      var $668=((($666)-($667))|0);
+      var $669=$i;
+      var $670=$2;
+      var $671=(($670+8)|0);
+      var $672=HEAP32[(($671)>>2)];
+      var $673=(($672+($669<<3))|0);
+      var $674=(($673+4)|0);
+      HEAP32[(($674)>>2)]=$668;
+      var $675=$2;
+      var $676=$sp;
+      var $677=$4;
+      var $678=$ss;
+      var $679=((($678)+(1))|0);
+      var $680=$6;
+      var $681=$7;
+      var $682=$8;
+      var $683=_sbackref($675, $676, $677, $679, $680, $681, $682);
+      $dp=$683;
+      var $684=$dp;
+      var $685=(($684)|0)!=0;
+      if ($685) { __label__ = 110; break; } else { __label__ = 111; break; }
+    case 110: 
+      var $687=$dp;
+      $1=$687;
+      __label__ = 114; break;
+    case 111: 
+      var $689=$offsave;
+      var $690=$i;
+      var $691=$2;
+      var $692=(($691+8)|0);
+      var $693=HEAP32[(($692)>>2)];
+      var $694=(($693+($690<<3))|0);
+      var $695=(($694+4)|0);
+      HEAP32[(($695)>>2)]=$689;
+      $1=0;
+      __label__ = 114; break;
+    case 112: 
+      __label__ = 113; break;
+    case 113: 
+      $1=0;
+      __label__ = 114; break;
+    case 114: 
+      var $699=$1;
+      ;
+      return $699;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_sbackref["X"]=1;
+
+function _sstep($g, $start, $stop, $bef, $ch, $aft) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $4;
+      var $5;
+      var $6;
+      var $cs;
+      var $s;
+      var $pc;
+      var $here;
+      var $look;
+      var $i;
+      $1=$g;
+      $2=$start;
+      $3=$stop;
+      $4=$bef;
+      $5=$ch;
+      $6=$aft;
+      var $7=$2;
+      $pc=$7;
+      var $8=$pc;
+      var $9=1 << $8;
+      $here=$9;
+      __label__ = 3; break;
+    case 3: 
+      var $11=$pc;
+      var $12=$3;
+      var $13=(($11)|0)!=(($12)|0);
+      if ($13) { __label__ = 4; break; } else { __label__ = 54; break; }
+    case 4: 
+      var $15=$pc;
+      var $16=$1;
+      var $17=(($16+4)|0);
+      var $18=HEAP32[(($17)>>2)];
+      var $19=(($18+($15<<2))|0);
+      var $20=HEAP32[(($19)>>2)];
+      $s=$20;
+      var $21=$s;
+      var $22=$21 & -134217728;
+      if ((($22)|0) == 134217728) {
+        __label__ = 5; break;
+      }
+      else if ((($22)|0) == 268435456) {
+        __label__ = 6; break;
+      }
+      else if ((($22)|0) == 402653184) {
+        __label__ = 9; break;
+      }
+      else if ((($22)|0) == 536870912) {
+        __label__ = 13; break;
+      }
+      else if ((($22)|0) == -1744830464) {
+        __label__ = 17; break;
+      }
+      else if ((($22)|0) == -1610612736) {
+        __label__ = 20; break;
+      }
+      else if ((($22)|0) == 671088640) {
+        __label__ = 23; break;
+      }
+      else if ((($22)|0) == 805306368) {
+        __label__ = 26; break;
+      }
+      else if ((($22)|0) == 939524096 || (($22)|0) == 1073741824) {
+        __label__ = 30; break;
+      }
+      else if ((($22)|0) == 1207959552) {
+        __label__ = 31; break;
+      }
+      else if ((($22)|0) == 1342177280) {
+        __label__ = 32; break;
+      }
+      else if ((($22)|0) == 1476395008) {
+        __label__ = 36; break;
+      }
+      else if ((($22)|0) == 1610612736) {
+        __label__ = 37; break;
+      }
+      else if ((($22)|0) == 1744830464 || (($22)|0) == 1879048192) {
+        __label__ = 38; break;
+      }
+      else if ((($22)|0) == 2013265920) {
+        __label__ = 39; break;
+      }
+      else if ((($22)|0) == -2147483648) {
+        __label__ = 40; break;
+      }
+      else if ((($22)|0) == -2013265920) {
+        __label__ = 47; break;
+      }
+      else if ((($22)|0) == -1879048192) {
+        __label__ = 50; break;
+      }
+      else {
+      __label__ = 51; break;
+      }
+      
+    case 5: 
+      __label__ = 52; break;
+    case 6: 
+      var $25=$5;
+      var $26=$s;
+      var $27=$26 & 134217727;
+      var $28=(($27) & 255);
+      var $29=(($28 << 24) >> 24);
+      var $30=(($25)|0)==(($29)|0);
+      if ($30) { __label__ = 7; break; } else { __label__ = 8; break; }
+    case 7: 
+      var $32=$4;
+      var $33=$here;
+      var $34=$32 & $33;
+      var $35=$34 << 1;
+      var $36=$6;
+      var $37=$36 | $35;
+      $6=$37;
+      __label__ = 8; break;
+    case 8: 
+      __label__ = 52; break;
+    case 9: 
+      var $40=$5;
+      var $41=(($40)|0)==129;
+      if ($41) { __label__ = 11; break; } else { __label__ = 10; break; }
+    case 10: 
+      var $43=$5;
+      var $44=(($43)|0)==131;
+      if ($44) { __label__ = 11; break; } else { __label__ = 12; break; }
+    case 11: 
+      var $46=$4;
+      var $47=$here;
+      var $48=$46 & $47;
+      var $49=$48 << 1;
+      var $50=$6;
+      var $51=$50 | $49;
+      $6=$51;
+      __label__ = 12; break;
+    case 12: 
+      __label__ = 52; break;
+    case 13: 
+      var $54=$5;
+      var $55=(($54)|0)==130;
+      if ($55) { __label__ = 15; break; } else { __label__ = 14; break; }
+    case 14: 
+      var $57=$5;
+      var $58=(($57)|0)==131;
+      if ($58) { __label__ = 15; break; } else { __label__ = 16; break; }
+    case 15: 
+      var $60=$4;
+      var $61=$here;
+      var $62=$60 & $61;
+      var $63=$62 << 1;
+      var $64=$6;
+      var $65=$64 | $63;
+      $6=$65;
+      __label__ = 16; break;
+    case 16: 
+      __label__ = 52; break;
+    case 17: 
+      var $68=$5;
+      var $69=(($68)|0)==133;
+      if ($69) { __label__ = 18; break; } else { __label__ = 19; break; }
+    case 18: 
+      var $71=$4;
+      var $72=$here;
+      var $73=$71 & $72;
+      var $74=$73 << 1;
+      var $75=$6;
+      var $76=$75 | $74;
+      $6=$76;
+      __label__ = 19; break;
+    case 19: 
+      __label__ = 52; break;
+    case 20: 
+      var $79=$5;
+      var $80=(($79)|0)==134;
+      if ($80) { __label__ = 21; break; } else { __label__ = 22; break; }
+    case 21: 
+      var $82=$4;
+      var $83=$here;
+      var $84=$82 & $83;
+      var $85=$84 << 1;
+      var $86=$6;
+      var $87=$86 | $85;
+      $6=$87;
+      __label__ = 22; break;
+    case 22: 
+      __label__ = 52; break;
+    case 23: 
+      var $90=$5;
+      var $91=(($90)|0) > 127;
+      if ($91) { __label__ = 25; break; } else { __label__ = 24; break; }
+    case 24: 
+      var $93=$4;
+      var $94=$here;
+      var $95=$93 & $94;
+      var $96=$95 << 1;
+      var $97=$6;
+      var $98=$97 | $96;
+      $6=$98;
+      __label__ = 25; break;
+    case 25: 
+      __label__ = 52; break;
+    case 26: 
+      var $101=$s;
+      var $102=$101 & 134217727;
+      var $103=$1;
+      var $104=(($103+16)|0);
+      var $105=HEAP32[(($104)>>2)];
+      var $106=(($105+($102<<4))|0);
+      $cs=$106;
+      var $107=$5;
+      var $108=(($107)|0) > 127;
+      if ($108) { __label__ = 29; break; } else { __label__ = 27; break; }
+    case 27: 
+      var $110=$5;
+      var $111=(($110) & 255);
+      var $112=(($111)&255);
+      var $113=$cs;
+      var $114=(($113)|0);
+      var $115=HEAP32[(($114)>>2)];
+      var $116=(($115+$112)|0);
+      var $117=HEAPU8[($116)];
+      var $118=(($117)&255);
+      var $119=$cs;
+      var $120=(($119+4)|0);
+      var $121=HEAPU8[($120)];
+      var $122=(($121)&255);
+      var $123=$118 & $122;
+      var $124=(($123)|0)!=0;
+      if ($124) { __label__ = 28; break; } else { __label__ = 29; break; }
+    case 28: 
+      var $126=$4;
+      var $127=$here;
+      var $128=$126 & $127;
+      var $129=$128 << 1;
+      var $130=$6;
+      var $131=$130 | $129;
+      $6=$131;
+      __label__ = 29; break;
+    case 29: 
+      __label__ = 52; break;
+    case 30: 
+      var $134=$6;
+      var $135=$here;
+      var $136=$134 & $135;
+      var $137=$136 << 1;
+      var $138=$6;
+      var $139=$138 | $137;
+      $6=$139;
+      __label__ = 52; break;
+    case 31: 
+      var $141=$6;
+      var $142=$here;
+      var $143=$141 & $142;
+      var $144=$143 << 1;
+      var $145=$6;
+      var $146=$145 | $144;
+      $6=$146;
+      __label__ = 52; break;
+    case 32: 
+      var $148=$6;
+      var $149=$here;
+      var $150=$148 & $149;
+      var $151=$150 << 1;
+      var $152=$6;
+      var $153=$152 | $151;
+      $6=$153;
+      var $154=$6;
+      var $155=$here;
+      var $156=$s;
+      var $157=$156 & 134217727;
+      var $158=$155 >>> (($157)>>>0);
+      var $159=$154 & $158;
+      var $160=(($159)|0)!=0;
+      var $161=(($160)&1);
+      $i=$161;
+      var $162=$6;
+      var $163=$here;
+      var $164=$162 & $163;
+      var $165=$s;
+      var $166=$165 & 134217727;
+      var $167=$164 >>> (($166)>>>0);
+      var $168=$6;
+      var $169=$168 | $167;
+      $6=$169;
+      var $170=$i;
+      var $171=(($170)|0)!=0;
+      if ($171) { __label__ = 35; break; } else { __label__ = 33; break; }
+    case 33: 
+      var $173=$6;
+      var $174=$here;
+      var $175=$s;
+      var $176=$175 & 134217727;
+      var $177=$174 >>> (($176)>>>0);
+      var $178=$173 & $177;
+      var $179=(($178)|0)!=0;
+      if ($179) { __label__ = 34; break; } else { __label__ = 35; break; }
+    case 34: 
+      var $181=$s;
+      var $182=$181 & 134217727;
+      var $183=((($182)+(1))|0);
+      var $184=$pc;
+      var $185=((($184)-($183))|0);
+      $pc=$185;
+      var $186=$pc;
+      var $187=1 << $186;
+      $here=$187;
+      __label__ = 35; break;
+    case 35: 
+      __label__ = 52; break;
+    case 36: 
+      var $190=$6;
+      var $191=$here;
+      var $192=$190 & $191;
+      var $193=$192 << 1;
+      var $194=$6;
+      var $195=$194 | $193;
+      $6=$195;
+      var $196=$6;
+      var $197=$here;
+      var $198=$196 & $197;
+      var $199=$s;
+      var $200=$199 & 134217727;
+      var $201=$198 << $200;
+      var $202=$6;
+      var $203=$202 | $201;
+      $6=$203;
+      __label__ = 52; break;
+    case 37: 
+      var $205=$6;
+      var $206=$here;
+      var $207=$205 & $206;
+      var $208=$207 << 1;
+      var $209=$6;
+      var $210=$209 | $208;
+      $6=$210;
+      __label__ = 52; break;
+    case 38: 
+      var $212=$6;
+      var $213=$here;
+      var $214=$212 & $213;
+      var $215=$214 << 1;
+      var $216=$6;
+      var $217=$216 | $215;
+      $6=$217;
+      __label__ = 52; break;
+    case 39: 
+      var $219=$6;
+      var $220=$here;
+      var $221=$219 & $220;
+      var $222=$221 << 1;
+      var $223=$6;
+      var $224=$223 | $222;
+      $6=$224;
+      var $225=$6;
+      var $226=$here;
+      var $227=$225 & $226;
+      var $228=$s;
+      var $229=$228 & 134217727;
+      var $230=$227 << $229;
+      var $231=$6;
+      var $232=$231 | $230;
+      $6=$232;
+      __label__ = 52; break;
+    case 40: 
+      var $234=$6;
+      var $235=$here;
+      var $236=$234 & $235;
+      var $237=(($236)|0)!=0;
+      if ($237) { __label__ = 41; break; } else { __label__ = 46; break; }
+    case 41: 
+      $look=1;
+      __label__ = 42; break;
+    case 42: 
+      var $240=$pc;
+      var $241=$look;
+      var $242=((($240)+($241))|0);
+      var $243=$1;
+      var $244=(($243+4)|0);
+      var $245=HEAP32[(($244)>>2)];
+      var $246=(($245+($242<<2))|0);
+      var $247=HEAP32[(($246)>>2)];
+      $s=$247;
+      var $248=$247 & -134217728;
+      var $249=(($248)|0)!=-1879048192;
+      if ($249) { __label__ = 43; break; } else { __label__ = 45; break; }
+    case 43: 
+      __label__ = 44; break;
+    case 44: 
+      var $252=$s;
+      var $253=$252 & 134217727;
+      var $254=$look;
+      var $255=((($254)+($253))|0);
+      $look=$255;
+      __label__ = 42; break;
+    case 45: 
+      var $257=$6;
+      var $258=$here;
+      var $259=$257 & $258;
+      var $260=$look;
+      var $261=$259 << $260;
+      var $262=$6;
+      var $263=$262 | $261;
+      $6=$263;
+      __label__ = 46; break;
+    case 46: 
+      __label__ = 52; break;
+    case 47: 
+      var $266=$6;
+      var $267=$here;
+      var $268=$266 & $267;
+      var $269=$268 << 1;
+      var $270=$6;
+      var $271=$270 | $269;
+      $6=$271;
+      var $272=$pc;
+      var $273=$s;
+      var $274=$273 & 134217727;
+      var $275=((($272)+($274))|0);
+      var $276=$1;
+      var $277=(($276+4)|0);
+      var $278=HEAP32[(($277)>>2)];
+      var $279=(($278+($275<<2))|0);
+      var $280=HEAP32[(($279)>>2)];
+      var $281=$280 & -134217728;
+      var $282=(($281)|0)!=-1879048192;
+      if ($282) { __label__ = 48; break; } else { __label__ = 49; break; }
+    case 48: 
+      var $284=$6;
+      var $285=$here;
+      var $286=$284 & $285;
+      var $287=$s;
+      var $288=$287 & 134217727;
+      var $289=$286 << $288;
+      var $290=$6;
+      var $291=$290 | $289;
+      $6=$291;
+      __label__ = 49; break;
+    case 49: 
+      __label__ = 52; break;
+    case 50: 
+      var $294=$6;
+      var $295=$here;
+      var $296=$294 & $295;
+      var $297=$296 << 1;
+      var $298=$6;
+      var $299=$298 | $297;
+      $6=$299;
+      __label__ = 52; break;
+    case 51: 
+      __label__ = 52; break;
+    case 52: 
+      __label__ = 53; break;
+    case 53: 
+      var $303=$pc;
+      var $304=((($303)+(1))|0);
+      $pc=$304;
+      var $305=$here;
+      var $306=$305 << 1;
+      $here=$306;
+      __label__ = 3; break;
+    case 54: 
+      var $308=$6;
+      ;
+      return $308;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_sstep["X"]=1;
+
+function _llvm_strlcpy($dst, $src, $siz) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $2;
+      var $3;
+      var $d;
+      var $s;
+      var $n;
+      $1=$dst;
+      $2=$src;
+      $3=$siz;
+      var $4=$1;
+      $d=$4;
+      var $5=$2;
+      $s=$5;
+      var $6=$3;
+      $n=$6;
+      var $7=$n;
+      var $8=(($7)|0)!=0;
+      if ($8) { __label__ = 3; break; } else { __label__ = 9; break; }
+    case 3: 
+      __label__ = 4; break;
+    case 4: 
+      var $11=$n;
+      var $12=((($11)-(1))|0);
+      $n=$12;
+      var $13=(($12)|0)!=0;
+      if ($13) { __label__ = 5; break; } else { __label__ = 8; break; }
+    case 5: 
+      var $15=$s;
+      var $16=(($15+1)|0);
+      $s=$16;
+      var $17=HEAP8[($15)];
+      var $18=$d;
+      var $19=(($18+1)|0);
+      $d=$19;
+      HEAP8[($18)]=$17;
+      var $20=(($17 << 24) >> 24);
+      var $21=(($20)|0)==0;
+      if ($21) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      __label__ = 8; break;
+    case 7: 
+      __label__ = 4; break;
+    case 8: 
+      __label__ = 9; break;
+    case 9: 
+      var $26=$n;
+      var $27=(($26)|0)==0;
+      if ($27) { __label__ = 10; break; } else { __label__ = 16; break; }
+    case 10: 
+      var $29=$3;
+      var $30=(($29)|0)!=0;
+      if ($30) { __label__ = 11; break; } else { __label__ = 12; break; }
+    case 11: 
+      var $32=$d;
+      HEAP8[($32)]=0;
+      __label__ = 12; break;
+    case 12: 
+      __label__ = 13; break;
+    case 13: 
+      var $35=$s;
+      var $36=(($35+1)|0);
+      $s=$36;
+      var $37=HEAP8[($35)];
+      var $38=(($37 << 24) >> 24)!=0;
+      if ($38) { __label__ = 14; break; } else { __label__ = 15; break; }
+    case 14: 
+      __label__ = 13; break;
+    case 15: 
+      __label__ = 16; break;
+    case 16: 
+      var $42=$s;
+      var $43=$2;
+      var $44=$42;
+      var $45=$43;
+      var $46=((($44)-($45))|0);
+      var $47=((($46)-(1))|0);
+      ;
+      return $47;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_llvm_strlcpy["X"]=1;
+
+function _llvm_regfree($preg) {
+  ;
+  var __label__;
+  __label__ = 2; 
+  while(1) switch(__label__) {
+    case 2: 
+      var $1;
+      var $g;
+      $1=$preg;
+      var $2=$1;
+      var $3=(($2)|0);
+      var $4=HEAP32[(($3)>>2)];
+      var $5=(($4)|0)!=62053;
+      if ($5) { __label__ = 3; break; } else { __label__ = 4; break; }
+    case 3: 
+      __label__ = 16; break;
+    case 4: 
+      var $8=$1;
+      var $9=(($8+12)|0);
+      var $10=HEAP32[(($9)>>2)];
+      $g=$10;
+      var $11=$g;
+      var $12=(($11)|0)==0;
+      if ($12) { __label__ = 6; break; } else { __label__ = 5; break; }
+    case 5: 
+      var $14=$g;
+      var $15=(($14)|0);
+      var $16=HEAP32[(($15)>>2)];
+      var $17=(($16)|0)!=53829;
+      if ($17) { __label__ = 6; break; } else { __label__ = 7; break; }
+    case 6: 
+      __label__ = 16; break;
+    case 7: 
+      var $20=$1;
+      var $21=(($20)|0);
+      HEAP32[(($21)>>2)]=0;
+      var $22=$g;
+      var $23=(($22)|0);
+      HEAP32[(($23)>>2)]=0;
+      var $24=$g;
+      var $25=(($24+4)|0);
+      var $26=HEAP32[(($25)>>2)];
+      var $27=(($26)|0)!=0;
+      if ($27) { __label__ = 8; break; } else { __label__ = 9; break; }
+    case 8: 
+      var $29=$g;
+      var $30=(($29+4)|0);
+      var $31=HEAP32[(($30)>>2)];
+      var $32=$31;
+      _free($32);
+      __label__ = 9; break;
+    case 9: 
+      var $34=$g;
+      var $35=(($34+16)|0);
+      var $36=HEAP32[(($35)>>2)];
+      var $37=(($36)|0)!=0;
+      if ($37) { __label__ = 10; break; } else { __label__ = 11; break; }
+    case 10: 
+      var $39=$g;
+      var $40=(($39+16)|0);
+      var $41=HEAP32[(($40)>>2)];
+      var $42=$41;
+      _free($42);
+      __label__ = 11; break;
+    case 11: 
+      var $44=$g;
+      var $45=(($44+20)|0);
+      var $46=HEAP32[(($45)>>2)];
+      var $47=(($46)|0)!=0;
+      if ($47) { __label__ = 12; break; } else { __label__ = 13; break; }
+    case 12: 
+      var $49=$g;
+      var $50=(($49+20)|0);
+      var $51=HEAP32[(($50)>>2)];
+      _free($51);
+      __label__ = 13; break;
+    case 13: 
+      var $53=$g;
+      var $54=(($53+60)|0);
+      var $55=HEAP32[(($54)>>2)];
+      var $56=(($55)|0)!=0;
+      if ($56) { __label__ = 14; break; } else { __label__ = 15; break; }
+    case 14: 
+      var $58=$g;
+      var $59=(($58+60)|0);
+      var $60=HEAP32[(($59)>>2)];
+      _free($60);
+      __label__ = 15; break;
+    case 15: 
+      var $62=$g;
+      var $63=$62;
+      _free($63);
+      __label__ = 16; break;
+    case 16: 
+      ;
+      return;
+    default: assert(0, "bad label: " + __label__);
+  }
+}
+_llvm_regfree["X"]=1;
+
 function _init_magic() {
   ;
   var __label__;
@@ -30729,7 +44006,7 @@ function _init_magic() {
   var $1=_magic_open(0);
   HEAP32[((_m)>>2)]=$1;
   var $2=HEAP32[((_m)>>2)];
-  var $3=_magic_load($2, ((STRING_TABLE.__str362)|0));
+  var $3=_magic_load($2, ((STRING_TABLE.__str487)|0));
   ;
   return;
 }
@@ -30764,11 +44041,11 @@ function _webfile_check($data, $length) {
     case 5: 
       var $14=HEAP32[((_m)>>2)];
       var $15=_magic_error($14);
-      var $16=_printf(((STRING_TABLE.__str1363)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$15,tempInt));
+      var $16=_printf(((STRING_TABLE.__str1488)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$15,tempInt));
       __label__ = 7; break;
     case 6: 
       var $18=$result;
-      var $19=_printf(((STRING_TABLE.__str2364)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$18,tempInt));
+      var $19=_printf(((STRING_TABLE.__str2489)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$18,tempInt));
       __label__ = 7; break;
     case 7: 
       var $21=$result;
@@ -37769,13 +51046,13 @@ function _internal_malloc_stats($m) {
     case 21: 
       var $116=HEAP32[((_stderr)>>2)]; //@line 3402 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
       var $117=$maxfp; //@line 3402 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
-      var $118=_fprintf($116, ((STRING_TABLE.__str365)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$117,tempInt)); //@line 3402 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
+      var $118=_fprintf($116, ((STRING_TABLE.__str490)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$117,tempInt)); //@line 3402 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
       var $119=HEAP32[((_stderr)>>2)]; //@line 3403 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
       var $120=$fp; //@line 3403 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
-      var $121=_fprintf($119, ((STRING_TABLE.__str1366)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$120,tempInt)); //@line 3403 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
+      var $121=_fprintf($119, ((STRING_TABLE.__str1491)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$120,tempInt)); //@line 3403 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
       var $122=HEAP32[((_stderr)>>2)]; //@line 3404 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
       var $123=$used; //@line 3404 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
-      var $124=_fprintf($122, ((STRING_TABLE.__str2367)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$123,tempInt)); //@line 3404 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
+      var $124=_fprintf($122, ((STRING_TABLE.__str2492)|0), (tempInt=STACKTOP,STACKTOP += 4,assert(STACKTOP < STACK_ROOT + STACK_MAX, "Ran out of stack"),HEAP32[((tempInt)>>2)]=$123,tempInt)); //@line 3404 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
       STACKTOP = __stackBase__;
       return; //@line 3408 "/data/workspace/sources/emscripten/system/lib/dlmalloc.c"
     default: assert(0, "bad label: " + __label__);
@@ -39449,7 +52726,7 @@ function __ZNKSt9bad_alloc4whatEv($this) {
   $1=$this;
   var $2=$1;
   ;
-  return ((STRING_TABLE.__str3368)|0); //@line 160 "/data/workspace/sources/emscripten/system/lib/libcxx/new.cpp"
+  return ((STRING_TABLE.__str3493)|0); //@line 160 "/data/workspace/sources/emscripten/system/lib/libcxx/new.cpp"
 }
 
 
@@ -40413,7 +53690,7 @@ function __ZNKSt20bad_array_new_length4whatEv($this) {
   $1=$this;
   var $2=$1;
   ;
-  return ((STRING_TABLE.__str14369)|0); //@line 174 "/data/workspace/sources/emscripten/system/lib/libcxx/new.cpp"
+  return ((STRING_TABLE.__str14494)|0); //@line 174 "/data/workspace/sources/emscripten/system/lib/libcxx/new.cpp"
 }
 
 
@@ -43951,10 +57228,6 @@ var _getline; // stub for _getline
       return _strncmp(px, py, TOTAL_MEMORY);
     }
 
-  function ___assert_func(filename, line, func, condition) {
-      throw 'Assertion failed: ' + Pointer_stringify(condition) + ', at: ' + [Pointer_stringify(filename), line, Pointer_stringify(func)];
-    }
-
   function _strcspn(pstr, pset) {
       var str = pstr, set, strcurr, setcurr;
       while (1) {
@@ -43983,10 +57256,6 @@ var _getline; // stub for _getline
       HEAP8[((s)+(i))]=0;
       return result.length;
     }
-var _regcomp; // stub for _regcomp
-var _regerror; // stub for _regerror
-var _regexec; // stub for _regexec
-var _regfree; // stub for _regfree
 
   function _islower(chr) {
       return chr >= 'a'.charCodeAt(0) && chr <= 'z'.charCodeAt(0);
@@ -44224,16 +57493,6 @@ var _llvm_va_start; // stub for _llvm_va_start
       }
     }
 
-  function _strncpy(pdest, psrc, num) {
-      var padding = false, curr;
-      for (var i = 0; i < num; i++) {
-        curr = padding ? 0 : HEAP8[((psrc)+(i))];
-        HEAP8[((pdest)+(i))]=curr
-        padding = padding || HEAP8[((psrc)+(i))] == 0;
-      }
-      return pdest;
-    }
-
   function _strncat(pdest, psrc, num) {
       var len = _strlen(pdest);
       var i = 0;
@@ -44268,6 +57527,27 @@ var _llvm_va_start; // stub for _llvm_va_start
     }
 
   var _vsprintf=_sprintf;
+
+  
+  function _memmove(dest, src, num, align) {
+      if (src < dest && dest < src + num) {
+        // Copy backwards in a safe manner
+        src += num;
+        dest += num;
+        while (num--) {
+          dest--;
+          src--;
+          HEAP8[(dest)]=HEAP8[(src)];
+        }
+      } else {
+        _memcpy(dest, src, num, align);
+      }
+    }var _llvm_memmove_p0i8_p0i8_i32=_memmove;
+
+  function _isalpha(chr) {
+      return (chr >= 'a'.charCodeAt(0) && chr <= 'z'.charCodeAt(0)) ||
+             (chr >= 'A'.charCodeAt(0) && chr <= 'Z'.charCodeAt(0));
+    }
 var _llvm_dbg_declare; // stub for _llvm_dbg_declare
 var _llvm_expect_i32; // stub for _llvm_expect_i32
 
@@ -45097,10 +58377,7 @@ var _init_file_tables_done;
 
 
 
-
-
-
-var __str7168;
+var __str7166;
 
 
 
@@ -45136,7 +58413,7 @@ var _file_fmttime_daylight;
 
 
 
-var __str20209;
+var __str20207;
 
 
 
@@ -45179,10 +58456,6 @@ var _cdf_bo;
 
 
 
-
-
-
-
 var _vn;
 
 
@@ -45214,7 +58487,47 @@ var _cdf_ctime_ctbuf;
 
 var _mdays;
 
-var __str311;
+var __str307;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _nuls;
 
 
 
@@ -45256,6 +58569,125 @@ var __str311;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _cnames;
+var _cclasses;
+
+
+var __str99;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _rerrs;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var __str35477;
 
 var _m;
 
@@ -45398,263 +58830,415 @@ STRING_TABLE.__str78=allocate([65,80,80,76,69,32,116,121,112,101,32,96,37,115,39
 STRING_TABLE.__str79=allocate([67,117,114,114,101,110,116,32,101,110,116,114,121,32,97,108,114,101,97,100,121,32,104,97,115,32,97,32,77,73,77,69,32,116,121,112,101,32,96,37,115,39,44,32,110,101,119,32,116,121,112,101,32,96,37,115,39,0] /* Current entry alread */, "i8", ALLOC_STATIC);
 STRING_TABLE.__str80=allocate([77,73,77,69,32,116,121,112,101,32,96,37,115,39,32,116,114,117,110,99,97,116,101,100,32,37,122,117,0] /* MIME type `%s' trunc */, "i8", ALLOC_STATIC);
 _init_file_tables_done=allocate(4, "i8", ALLOC_STATIC);
-STRING_TABLE.__str81=allocate([97,112,112,114,101,110,116,105,99,101,46,99,0] /* apprentice.c\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.___func___init_file_tables=allocate([105,110,105,116,95,102,105,108,101,95,116,97,98,108,101,115,0] /* init_file_tables\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str82=allocate([112,45,62,116,121,112,101,32,60,32,70,73,76,69,95,78,65,77,69,83,95,83,73,90,69,0] /* p-_type _ FILE_NAMES */, "i8", ALLOC_STATIC);
 STRING_TABLE._rcsid30=allocate([64,40,35,41,36,70,105,108,101,58,32,115,111,102,116,109,97,103,105,99,46,99,44,118,32,49,46,49,52,55,32,50,48,49,49,47,49,49,47,48,53,32,49,53,58,52,52,58,50,50,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: softmagic */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str83=allocate([32,0] /*  \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str184=allocate([10,0] /* \0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str285=allocate([37,99,0] /* %c\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str386=allocate([37,104,117,0] /* %hu\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str487=allocate([37,117,0] /* %u\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str588=allocate([37,103,0] /* %g\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str689=allocate([105,110,118,97,108,105,100,32,109,45,62,116,121,112,101,32,40,37,100,41,32,105,110,32,109,112,114,105,110,116,40,41,0] /* invalid m-_type (%d) */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str790=allocate([37,91,45,48,45,57,92,46,93,42,115,0] /* %[-0-9\5C.]_s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str891=allocate([114,101,103,101,120,32,101,114,114,111,114,32,37,100,44,32,40,37,115,41,0] /* regex error %d, (%s) */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str992=allocate([10,45,32,0] /* \0A- \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1093=allocate([37,46,56,115,0] /* %.8s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1194=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1295=allocate([99,97,110,110,111,116,32,104,97,112,112,101,110,32,119,105,116,104,32,102,108,111,97,116,58,32,105,110,118,97,108,105,100,32,114,101,108,97,116,105,111,110,32,96,37,99,39,0] /* cannot happen with f */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1396=allocate([99,97,110,110,111,116,32,104,97,112,112,101,110,32,119,105,116,104,32,100,111,117,98,108,101,58,32,105,110,118,97,108,105,100,32,114,101,108,97,116,105,111,110,32,96,37,99,39,0] /* cannot happen with d */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1497=allocate([114,101,103,101,120,101,99,32,101,114,114,111,114,32,37,100,44,32,40,37,115,41,0] /* regexec error %d, (% */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1598=allocate([105,110,118,97,108,105,100,32,116,121,112,101,32,37,100,32,105,110,32,109,97,103,105,99,99,104,101,99,107,40,41,0] /* invalid type %d in m */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1699=allocate([37,108,108,117,32,61,61,32,42,97,110,121,42,32,61,32,49,10,0] /* %llu == _any_ = 1\0A */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17100=allocate([37,108,108,117,32,33,61,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu != %llu = %d\0A */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str18101=allocate([37,108,108,117,32,61,61,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu == %llu = %d\0A */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str19102=allocate([37,108,108,117,32,62,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu _ %llu = %d\0A\ */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str20103=allocate([37,108,108,100,32,62,32,37,108,108,100,32,61,32,37,100,10,0] /* %lld _ %lld = %d\0A\ */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str21104=allocate([37,108,108,117,32,60,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu _ %llu = %d\0A\ */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str22105=allocate([37,108,108,100,32,60,32,37,108,108,100,32,61,32,37,100,10,0] /* %lld _ %lld = %d\0A\ */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str23106=allocate([40,40,37,108,108,120,32,38,32,37,108,108,120,41,32,61,61,32,37,108,108,120,41,32,61,32,37,100,10,0] /* ((%llx & %llx) == %l */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str24107=allocate([40,40,37,108,108,120,32,38,32,37,108,108,120,41,32,33,61,32,37,108,108,120,41,32,61,32,37,100,10,0] /* ((%llx & %llx) != %l */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str25108=allocate([99,97,110,110,111,116,32,104,97,112,112,101,110,58,32,105,110,118,97,108,105,100,32,114,101,108,97,116,105,111,110,32,96,37,99,39,0] /* cannot happen: inval */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str26109=allocate([105,110,118,97,108,105,100,32,116,121,112,101,32,37,100,32,105,110,32,109,99,111,110,118,101,114,116,40,41,0] /* invalid type %d in m */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str27110=allocate([109,103,101,116,32,64,37,100,58,32,0] /* mget @%d: \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str28111=allocate([105,110,118,97,108,105,100,32,111,102,102,115,101,116,32,37,117,32,105,110,32,109,99,111,112,121,40,41,0] /* invalid offset %u in */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid113=allocate([64,40,35,41,36,70,105,108,101,58,32,97,115,99,109,97,103,105,99,46,99,44,118,32,49,46,56,52,32,50,48,49,49,47,49,50,47,48,56,32,49,50,58,51,56,58,50,52,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: ascmagic. */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str114=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1115=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2116=allocate([116,101,120,116,47,112,108,97,105,110,0] /* text/plain\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3117=allocate([32,116,101,120,116,36,0] /*  text$\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str4118=allocate([44,32,0] /* , \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5119=allocate([32,116,101,120,116,32,101,120,101,99,117,116,97,98,108,101,36,0] /*  text executable$\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6120=allocate([32,37,115,0] /*  %s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str7121=allocate([32,101,120,101,99,117,116,97,98,108,101,0] /*  executable\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str8122=allocate([44,32,119,105,116,104,32,118,101,114,121,32,108,111,110,103,32,108,105,110,101,115,0] /* , with very long lin */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str9123=allocate([44,32,119,105,116,104,0] /* , with\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str10124=allocate([32,110,111,0] /*  no\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str11125=allocate([32,67,82,76,70,0] /*  CRLF\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str12126=allocate([44,0] /* ,\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str13127=allocate([32,67,82,0] /*  CR\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14128=allocate([32,76,70,0] /*  LF\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str15129=allocate([32,78,69,76,0] /*  NEL\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str16130=allocate([32,108,105,110,101,32,116,101,114,109,105,110,97,116,111,114,115,0] /*  line terminators\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17131=allocate([44,32,119,105,116,104,32,101,115,99,97,112,101,32,115,101,113,117,101,110,99,101,115,0] /* , with escape sequen */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str18132=allocate([44,32,119,105,116,104,32,111,118,101,114,115,116,114,105,107,105,110,103,0] /* , with overstriking\ */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid134=allocate([64,40,35,41,36,70,105,108,101,58,32,101,110,99,111,100,105,110,103,46,99,44,118,32,49,46,55,32,50,48,49,50,47,48,49,47,50,52,32,49,57,58,48,50,58,48,50,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: encoding. */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str135=allocate([116,101,120,116,0] /* text\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1136=allocate([65,83,67,73,73,0] /* ASCII\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2137=allocate([117,115,45,97,115,99,105,105,0] /* us-ascii\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3138=allocate([85,84,70,45,56,32,85,110,105,99,111,100,101,32,40,119,105,116,104,32,66,79,77,41,0] /* UTF-8 Unicode (with  */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str4139=allocate([117,116,102,45,56,0] /* utf-8\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5140=allocate([85,84,70,45,56,32,85,110,105,99,111,100,101,0] /* UTF-8 Unicode\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6141=allocate([76,105,116,116,108,101,45,101,110,100,105,97,110,32,85,84,70,45,49,54,32,85,110,105,99,111,100,101,0] /* Little-endian UTF-16 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str7142=allocate([117,116,102,45,49,54,108,101,0] /* utf-16le\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str8143=allocate([66,105,103,45,101,110,100,105,97,110,32,85,84,70,45,49,54,32,85,110,105,99,111,100,101,0] /* Big-endian UTF-16 Un */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str9144=allocate([117,116,102,45,49,54,98,101,0] /* utf-16be\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str10145=allocate([73,83,79,45,56,56,53,57,0] /* ISO-8859\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str11146=allocate([105,115,111,45,56,56,53,57,45,49,0] /* iso-8859-1\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str12147=allocate([78,111,110,45,73,83,79,32,101,120,116,101,110,100,101,100,45,65,83,67,73,73,0] /* Non-ISO extended-ASC */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str13148=allocate([117,110,107,110,111,119,110,45,56,98,105,116,0] /* unknown-8bit\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14149=allocate([69,66,67,68,73,67,0] /* EBCDIC\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str15150=allocate([101,98,99,100,105,99,0] /* ebcdic\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str16151=allocate([73,110,116,101,114,110,97,116,105,111,110,97,108,32,69,66,67,68,73,67,0] /* International EBCDIC */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17152=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str81=allocate([32,0] /*  \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str182=allocate([10,0] /* \0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str283=allocate([37,99,0] /* %c\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str384=allocate([37,104,117,0] /* %hu\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str485=allocate([37,117,0] /* %u\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str586=allocate([37,103,0] /* %g\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str687=allocate([105,110,118,97,108,105,100,32,109,45,62,116,121,112,101,32,40,37,100,41,32,105,110,32,109,112,114,105,110,116,40,41,0] /* invalid m-_type (%d) */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str788=allocate([37,91,45,48,45,57,92,46,93,42,115,0] /* %[-0-9\5C.]_s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str889=allocate([114,101,103,101,120,32,101,114,114,111,114,32,37,100,44,32,40,37,115,41,0] /* regex error %d, (%s) */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str990=allocate([10,45,32,0] /* \0A- \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1091=allocate([37,46,56,115,0] /* %.8s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1192=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1293=allocate([99,97,110,110,111,116,32,104,97,112,112,101,110,32,119,105,116,104,32,102,108,111,97,116,58,32,105,110,118,97,108,105,100,32,114,101,108,97,116,105,111,110,32,96,37,99,39,0] /* cannot happen with f */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1394=allocate([99,97,110,110,111,116,32,104,97,112,112,101,110,32,119,105,116,104,32,100,111,117,98,108,101,58,32,105,110,118,97,108,105,100,32,114,101,108,97,116,105,111,110,32,96,37,99,39,0] /* cannot happen with d */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1495=allocate([114,101,103,101,120,101,99,32,101,114,114,111,114,32,37,100,44,32,40,37,115,41,0] /* regexec error %d, (% */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1596=allocate([105,110,118,97,108,105,100,32,116,121,112,101,32,37,100,32,105,110,32,109,97,103,105,99,99,104,101,99,107,40,41,0] /* invalid type %d in m */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1697=allocate([37,108,108,117,32,61,61,32,42,97,110,121,42,32,61,32,49,10,0] /* %llu == _any_ = 1\0A */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1798=allocate([37,108,108,117,32,33,61,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu != %llu = %d\0A */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1899=allocate([37,108,108,117,32,61,61,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu == %llu = %d\0A */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19100=allocate([37,108,108,117,32,62,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu _ %llu = %d\0A\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str20101=allocate([37,108,108,100,32,62,32,37,108,108,100,32,61,32,37,100,10,0] /* %lld _ %lld = %d\0A\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str21102=allocate([37,108,108,117,32,60,32,37,108,108,117,32,61,32,37,100,10,0] /* %llu _ %llu = %d\0A\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str22103=allocate([37,108,108,100,32,60,32,37,108,108,100,32,61,32,37,100,10,0] /* %lld _ %lld = %d\0A\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str23104=allocate([40,40,37,108,108,120,32,38,32,37,108,108,120,41,32,61,61,32,37,108,108,120,41,32,61,32,37,100,10,0] /* ((%llx & %llx) == %l */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str24105=allocate([40,40,37,108,108,120,32,38,32,37,108,108,120,41,32,33,61,32,37,108,108,120,41,32,61,32,37,100,10,0] /* ((%llx & %llx) != %l */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str25106=allocate([99,97,110,110,111,116,32,104,97,112,112,101,110,58,32,105,110,118,97,108,105,100,32,114,101,108,97,116,105,111,110,32,96,37,99,39,0] /* cannot happen: inval */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str26107=allocate([105,110,118,97,108,105,100,32,116,121,112,101,32,37,100,32,105,110,32,109,99,111,110,118,101,114,116,40,41,0] /* invalid type %d in m */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str27108=allocate([109,103,101,116,32,64,37,100,58,32,0] /* mget @%d: \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str28109=allocate([105,110,118,97,108,105,100,32,111,102,102,115,101,116,32,37,117,32,105,110,32,109,99,111,112,121,40,41,0] /* invalid offset %u in */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid111=allocate([64,40,35,41,36,70,105,108,101,58,32,97,115,99,109,97,103,105,99,46,99,44,118,32,49,46,56,52,32,50,48,49,49,47,49,50,47,48,56,32,49,50,58,51,56,58,50,52,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: ascmagic. */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str112=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1113=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2114=allocate([116,101,120,116,47,112,108,97,105,110,0] /* text/plain\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3115=allocate([32,116,101,120,116,36,0] /*  text$\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4116=allocate([44,32,0] /* , \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5117=allocate([32,116,101,120,116,32,101,120,101,99,117,116,97,98,108,101,36,0] /*  text executable$\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6118=allocate([32,37,115,0] /*  %s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7119=allocate([32,101,120,101,99,117,116,97,98,108,101,0] /*  executable\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8120=allocate([44,32,119,105,116,104,32,118,101,114,121,32,108,111,110,103,32,108,105,110,101,115,0] /* , with very long lin */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9121=allocate([44,32,119,105,116,104,0] /* , with\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10122=allocate([32,110,111,0] /*  no\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11123=allocate([32,67,82,76,70,0] /*  CRLF\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12124=allocate([44,0] /* ,\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13125=allocate([32,67,82,0] /*  CR\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14126=allocate([32,76,70,0] /*  LF\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15127=allocate([32,78,69,76,0] /*  NEL\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16128=allocate([32,108,105,110,101,32,116,101,114,109,105,110,97,116,111,114,115,0] /*  line terminators\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17129=allocate([44,32,119,105,116,104,32,101,115,99,97,112,101,32,115,101,113,117,101,110,99,101,115,0] /* , with escape sequen */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18130=allocate([44,32,119,105,116,104,32,111,118,101,114,115,116,114,105,107,105,110,103,0] /* , with overstriking\ */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid132=allocate([64,40,35,41,36,70,105,108,101,58,32,101,110,99,111,100,105,110,103,46,99,44,118,32,49,46,55,32,50,48,49,50,47,48,49,47,50,52,32,49,57,58,48,50,58,48,50,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: encoding. */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str133=allocate([116,101,120,116,0] /* text\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1134=allocate([65,83,67,73,73,0] /* ASCII\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2135=allocate([117,115,45,97,115,99,105,105,0] /* us-ascii\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3136=allocate([85,84,70,45,56,32,85,110,105,99,111,100,101,32,40,119,105,116,104,32,66,79,77,41,0] /* UTF-8 Unicode (with  */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4137=allocate([117,116,102,45,56,0] /* utf-8\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5138=allocate([85,84,70,45,56,32,85,110,105,99,111,100,101,0] /* UTF-8 Unicode\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6139=allocate([76,105,116,116,108,101,45,101,110,100,105,97,110,32,85,84,70,45,49,54,32,85,110,105,99,111,100,101,0] /* Little-endian UTF-16 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7140=allocate([117,116,102,45,49,54,108,101,0] /* utf-16le\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8141=allocate([66,105,103,45,101,110,100,105,97,110,32,85,84,70,45,49,54,32,85,110,105,99,111,100,101,0] /* Big-endian UTF-16 Un */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9142=allocate([117,116,102,45,49,54,98,101,0] /* utf-16be\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10143=allocate([73,83,79,45,56,56,53,57,0] /* ISO-8859\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11144=allocate([105,115,111,45,56,56,53,57,45,49,0] /* iso-8859-1\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12145=allocate([78,111,110,45,73,83,79,32,101,120,116,101,110,100,101,100,45,65,83,67,73,73,0] /* Non-ISO extended-ASC */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13146=allocate([117,110,107,110,111,119,110,45,56,98,105,116,0] /* unknown-8bit\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14147=allocate([69,66,67,68,73,67,0] /* EBCDIC\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15148=allocate([101,98,99,100,105,99,0] /* ebcdic\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16149=allocate([73,110,116,101,114,110,97,116,105,111,110,97,108,32,69,66,67,68,73,67,0] /* International EBCDIC */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17150=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
 STRING_TABLE._text_chars=allocate([0,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,3,3,3,3,3,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2] /* \00\00\00\00\00\00\0 */, "i8", ALLOC_STATIC);
 STRING_TABLE._ebcdic_to_ascii=allocate([0,1,2,3,156,9,134,127,151,141,142,11,12,13,14,15,16,17,18,19,157,133,8,135,24,25,146,143,28,29,30,31,128,129,130,131,132,10,23,27,136,137,138,139,140,5,6,7,144,145,22,147,148,149,150,4,152,153,154,155,20,21,158,26,32,160,161,162,163,164,165,166,167,168,213,46,60,40,43,124,38,169,170,171,172,173,174,175,176,177,33,36,42,41,59,126,45,47,178,179,180,181,182,183,184,185,203,44,37,95,62,63,186,187,188,189,190,191,192,193,194,96,58,35,64,39,61,34,195,97,98,99,100,101,102,103,104,105,196,197,198,199,200,201,202,106,107,108,109,110,111,112,113,114,94,204,205,206,207,208,209,229,115,116,117,118,119,120,121,122,210,211,212,91,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,93,230,231,123,65,66,67,68,69,70,71,72,73,232,233,234,235,236,237,125,74,75,76,77,78,79,80,81,82,238,239,240,241,242,243,92,159,83,84,85,86,87,88,89,90,244,245,246,247,248,249,48,49,50,51,52,53,54,55,56,57,250,251,252,253,254,255] /* \00\01\02\03\9C\09\8 */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid158=allocate([64,40,35,41,36,70,105,108,101,58,32,114,101,97,100,101,108,102,46,99,44,118,32,49,46,57,48,32,50,48,49,49,47,48,56,47,50,51,32,48,56,58,48,49,58,49,50,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: readelf.c */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid160=allocate([64,40,35,41,36,70,105,108,101,58,32,112,114,105,110,116,46,99,44,118,32,49,46,55,49,32,50,48,49,49,47,48,57,47,50,48,32,49,53,58,50,56,58,48,57,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: print.c,v */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid156=allocate([64,40,35,41,36,70,105,108,101,58,32,114,101,97,100,101,108,102,46,99,44,118,32,49,46,57,48,32,50,48,49,49,47,48,56,47,50,51,32,48,56,58,48,49,58,49,50,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: readelf.c */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid158=allocate([64,40,35,41,36,70,105,108,101,58,32,112,114,105,110,116,46,99,44,118,32,49,46,55,49,32,50,48,49,49,47,48,57,47,50,48,32,49,53,58,50,56,58,48,57,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: print.c,v */, "i8", ALLOC_STATIC);
 STRING_TABLE._file_mdump_optyp=allocate([38,124,94,43,45,42,47,37,0] /* &|^+-_/%\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str161=allocate([37,117,58,32,37,46,42,115,32,37,117,0] /* %u: %._s %u\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1162=allocate([62,62,62,62,62,62,62,62,0] /* ________\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2163=allocate([40,37,115,44,0] /* (%s,\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3164=allocate([42,98,97,100,42,0] /* _bad_\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str4165=allocate([37,99,37,117,41,44,0] /* %c%u),\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5166=allocate([32,37,115,37,115,0] /*  %s%s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6167=allocate([117,0] /* u\00 */, "i8", ALLOC_STATIC);
-__str7168=allocate(1, "i8", ALLOC_STATIC);
-STRING_TABLE.__str8169=allocate([47,37,117,0] /* /%u\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str9170=allocate([37,46,56,108,108,120,0] /* %.8llx\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str10171=allocate([44,37,99,0] /* ,%c\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str11172=allocate([37,100,0] /* %d\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str12173=allocate([37,108,108,100,0] /* %lld\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str13174=allocate([37,115,44,0] /* %s,\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14175=allocate([37,71,0] /* %G\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str15176=allocate([44,34,37,115,34,93,10,0] /* ,\22%s\22]\0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str16177=allocate([37,115,44,32,37,108,117,58,32,0] /* %s, %lu: \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17178=allocate([87,97,114,110,105,110,103,58,32,0] /* Warning: \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str159=allocate([37,117,58,32,37,46,42,115,32,37,117,0] /* %u: %._s %u\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1160=allocate([62,62,62,62,62,62,62,62,0] /* ________\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2161=allocate([40,37,115,44,0] /* (%s,\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3162=allocate([42,98,97,100,42,0] /* _bad_\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4163=allocate([37,99,37,117,41,44,0] /* %c%u),\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5164=allocate([32,37,115,37,115,0] /*  %s%s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6165=allocate([117,0] /* u\00 */, "i8", ALLOC_STATIC);
+__str7166=allocate(1, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8167=allocate([47,37,117,0] /* /%u\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9168=allocate([37,46,56,108,108,120,0] /* %.8llx\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10169=allocate([44,37,99,0] /* ,%c\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11170=allocate([37,100,0] /* %d\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12171=allocate([37,108,108,100,0] /* %lld\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13172=allocate([37,115,44,0] /* %s,\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14173=allocate([37,71,0] /* %G\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15174=allocate([44,34,37,115,34,93,10,0] /* ,\22%s\22]\0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16175=allocate([37,115,44,32,37,108,117,58,32,0] /* %s, %lu: \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17176=allocate([87,97,114,110,105,110,103,58,32,0] /* Warning: \00 */, "i8", ALLOC_STATIC);
 _file_fmttime_daylight=allocate(4, "i8", ALLOC_STATIC);
-STRING_TABLE.__str18179=allocate([10,0] /* \0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str19180=allocate([42,73,110,118,97,108,105,100,32,116,105,109,101,42,0] /* _Invalid time_\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid188=allocate([64,40,35,41,36,70,105,108,101,58,32,102,117,110,99,115,46,99,44,118,32,49,46,54,48,32,50,48,49,49,47,49,50,47,48,56,32,49,50,58,51,56,58,50,52,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: funcs.c,v */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str189=allocate([37,115,37,115,0] /* %s%s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1190=allocate([118,97,115,112,114,105,110,116,102,32,102,97,105,108,101,100,0] /* vasprintf failed\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2191=allocate([99,97,110,110,111,116,32,97,108,108,111,99,97,116,101,32,37,122,117,32,98,121,116,101,115,0] /* cannot allocate %zu  */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3192=allocate([101,114,114,111,114,32,115,101,101,107,105,110,103,0] /* error seeking\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str4193=allocate([101,114,114,111,114,32,114,101,97,100,105,110,103,0] /* error reading\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5194=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6195=allocate([97,112,112,108,105,99,97,116,105,111,110,47,120,45,101,109,112,116,121,0] /* application/x-empty\ */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str7196=allocate([101,109,112,116,121,0] /* empty\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str8197=allocate([97,112,112,108,105,99,97,116,105,111,110,47,111,99,116,101,116,45,115,116,114,101,97,109,0] /* application/octet-st */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str9198=allocate([118,101,114,121,32,115,104,111,114,116,32,102,105,108,101,32,40,110,111,32,109,97,103,105,99,41,0] /* very short file (no  */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str10199=allocate([116,97,114,32,37,100,10,0] /* tar %d\0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str11200=allocate([99,100,102,32,37,100,10,0] /* cdf %d\0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str12201=allocate([115,111,102,116,109,97,103,105,99,32,37,100,10,0] /* softmagic %d\0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str13202=allocate([97,115,99,109,97,103,105,99,32,37,100,10,0] /* ascmagic %d\0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14203=allocate([97,115,99,109,97,103,105,99,47,101,110,99,32,37,100,10,0] /* ascmagic/enc %d\0A\0 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str15204=allocate([100,97,116,97,0] /* data\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str16205=allocate([59,32,99,104,97,114,115,101,116,61,0] /* ; charset=\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17206=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str18207=allocate([110,111,32,109,97,103,105,99,32,102,105,108,101,115,32,108,111,97,100,101,100,0] /* no magic files loade */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str19208=allocate([114,101,103,101,120,32,101,114,114,111,114,32,37,100,44,32,40,37,115,41,0] /* regex error %d, (%s) */, "i8", ALLOC_STATIC);
-__str20209=allocate(1, "i8", ALLOC_STATIC);
-STRING_TABLE.__str21210=allocate([108,105,110,101,32,37,122,117,58,32,0] /* line %zu: \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str22211=allocate([32,40,37,115,41,0] /*  (%s)\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid235=allocate([64,40,35,41,36,70,105,108,101,58,32,97,112,112,116,121,112,101,46,99,44,118,32,49,46,49,51,32,50,48,49,49,47,48,57,47,48,55,32,50,49,58,53,55,58,49,53,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: apptype.c */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid237=allocate([64,40,35,41,36,70,105,108,101,58,32,102,115,109,97,103,105,99,46,99,44,118,32,49,46,54,52,32,50,48,49,49,47,48,56,47,49,52,32,48,57,58,48,51,58,49,50,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: fsmagic.c */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str238=allocate([99,97,110,110,111,116,32,115,116,97,116,32,96,37,115,39,0] /* cannot stat `%s'\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1239=allocate([99,97,110,110,111,116,32,111,112,101,110,32,96,37,115,39,32,40,37,115,41,0] /* cannot open `%s' (%s */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2240=allocate([115,101,116,117,105,100,32,0] /* setuid \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3241=allocate([115,101,116,103,105,100,32,0] /* setgid \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str4242=allocate([115,116,105,99,107,121,32,0] /* sticky \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5243=allocate([100,105,114,101,99,116,111,114,121,0] /* directory\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6244=allocate([99,104,97,114,100,101,118,105,99,101,0] /* chardevice\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str7245=allocate([99,104,97,114,97,99,116,101,114,32,115,112,101,99,105,97,108,0] /* character special\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str8246=allocate([98,108,111,99,107,100,101,118,105,99,101,0] /* blockdevice\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str9247=allocate([98,108,111,99,107,32,115,112,101,99,105,97,108,0] /* block special\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str10248=allocate([102,105,102,111,0] /* fifo\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str11249=allocate([102,105,102,111,32,40,110,97,109,101,100,32,112,105,112,101,41,0] /* fifo (named pipe)\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str12250=allocate([117,110,114,101,97,100,97,98,108,101,32,115,121,109,108,105,110,107,32,96,37,115,39,0] /* unreadable symlink ` */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str13251=allocate([115,121,109,108,105,110,107,0] /* symlink\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14252=allocate([117,110,114,101,97,100,97,98,108,101,32,115,121,109,108,105,110,107,32,96,37,115,39,32,40,37,115,41,0] /* unreadable symlink ` */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str15253=allocate([112,97,116,104,32,116,111,111,32,108,111,110,103,58,32,96,37,115,39,0] /* path too long: `%s'\ */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str16254=allocate([120,45,112,97,116,104,45,116,111,111,45,108,111,110,103,0] /* x-path-too-long\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17255=allocate([115,121,109,98,111,108,105,99,32,108,105,110,107,32,116,111,32,96,37,115,39,0] /* symbolic link to `%s */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str18256=allocate([115,111,99,107,101,116,0] /* socket\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str19257=allocate([105,110,118,97,108,105,100,32,109,111,100,101,32,48,37,111,0] /* invalid mode 0%o\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str20258=allocate([120,45,101,109,112,116,121,0] /* x-empty\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str21259=allocate([101,109,112,116,121,0] /* empty\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str22260=allocate([105,110,111,100,101,47,115,121,109,108,105,110,107,0] /* inode/symlink\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str23261=allocate([98,114,111,107,101,110,32,115,121,109,98,111,108,105,99,32,108,105,110,107,32,116,111,32,96,37,115,39,0] /* broken symbolic link */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str24262=allocate([105,110,111,100,101,47,37,115,0] /* inode/%s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str25263=allocate([59,32,99,104,97,114,115,101,116,61,0] /* ; charset=\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str26264=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid268=allocate([64,40,35,41,36,70,105,108,101,58,32,105,115,95,116,97,114,46,99,44,118,32,49,46,51,55,32,50,48,49,48,47,49,49,47,51,48,32,49,52,58,53,56,58,53,51,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: is_tar.c, */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str269=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1270=allocate([97,112,112,108,105,99,97,116,105,111,110,47,120,45,116,97,114,0] /* application/x-tar\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18177=allocate([10,0] /* \0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19178=allocate([42,73,110,118,97,108,105,100,32,116,105,109,101,42,0] /* _Invalid time_\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid186=allocate([64,40,35,41,36,70,105,108,101,58,32,102,117,110,99,115,46,99,44,118,32,49,46,54,48,32,50,48,49,49,47,49,50,47,48,56,32,49,50,58,51,56,58,50,52,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: funcs.c,v */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str187=allocate([37,115,37,115,0] /* %s%s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1188=allocate([118,97,115,112,114,105,110,116,102,32,102,97,105,108,101,100,0] /* vasprintf failed\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2189=allocate([99,97,110,110,111,116,32,97,108,108,111,99,97,116,101,32,37,122,117,32,98,121,116,101,115,0] /* cannot allocate %zu  */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3190=allocate([101,114,114,111,114,32,115,101,101,107,105,110,103,0] /* error seeking\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4191=allocate([101,114,114,111,114,32,114,101,97,100,105,110,103,0] /* error reading\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5192=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6193=allocate([97,112,112,108,105,99,97,116,105,111,110,47,120,45,101,109,112,116,121,0] /* application/x-empty\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7194=allocate([101,109,112,116,121,0] /* empty\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8195=allocate([97,112,112,108,105,99,97,116,105,111,110,47,111,99,116,101,116,45,115,116,114,101,97,109,0] /* application/octet-st */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9196=allocate([118,101,114,121,32,115,104,111,114,116,32,102,105,108,101,32,40,110,111,32,109,97,103,105,99,41,0] /* very short file (no  */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10197=allocate([116,97,114,32,37,100,10,0] /* tar %d\0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11198=allocate([99,100,102,32,37,100,10,0] /* cdf %d\0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12199=allocate([115,111,102,116,109,97,103,105,99,32,37,100,10,0] /* softmagic %d\0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13200=allocate([97,115,99,109,97,103,105,99,32,37,100,10,0] /* ascmagic %d\0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14201=allocate([97,115,99,109,97,103,105,99,47,101,110,99,32,37,100,10,0] /* ascmagic/enc %d\0A\0 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15202=allocate([100,97,116,97,0] /* data\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16203=allocate([59,32,99,104,97,114,115,101,116,61,0] /* ; charset=\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17204=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18205=allocate([110,111,32,109,97,103,105,99,32,102,105,108,101,115,32,108,111,97,100,101,100,0] /* no magic files loade */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19206=allocate([114,101,103,101,120,32,101,114,114,111,114,32,37,100,44,32,40,37,115,41,0] /* regex error %d, (%s) */, "i8", ALLOC_STATIC);
+__str20207=allocate(1, "i8", ALLOC_STATIC);
+STRING_TABLE.__str21208=allocate([108,105,110,101,32,37,122,117,58,32,0] /* line %zu: \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str22209=allocate([32,40,37,115,41,0] /*  (%s)\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid233=allocate([64,40,35,41,36,70,105,108,101,58,32,97,112,112,116,121,112,101,46,99,44,118,32,49,46,49,51,32,50,48,49,49,47,48,57,47,48,55,32,50,49,58,53,55,58,49,53,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: apptype.c */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid235=allocate([64,40,35,41,36,70,105,108,101,58,32,102,115,109,97,103,105,99,46,99,44,118,32,49,46,54,52,32,50,48,49,49,47,48,56,47,49,52,32,48,57,58,48,51,58,49,50,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: fsmagic.c */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str236=allocate([99,97,110,110,111,116,32,115,116,97,116,32,96,37,115,39,0] /* cannot stat `%s'\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1237=allocate([99,97,110,110,111,116,32,111,112,101,110,32,96,37,115,39,32,40,37,115,41,0] /* cannot open `%s' (%s */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2238=allocate([115,101,116,117,105,100,32,0] /* setuid \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3239=allocate([115,101,116,103,105,100,32,0] /* setgid \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4240=allocate([115,116,105,99,107,121,32,0] /* sticky \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5241=allocate([100,105,114,101,99,116,111,114,121,0] /* directory\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6242=allocate([99,104,97,114,100,101,118,105,99,101,0] /* chardevice\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7243=allocate([99,104,97,114,97,99,116,101,114,32,115,112,101,99,105,97,108,0] /* character special\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8244=allocate([98,108,111,99,107,100,101,118,105,99,101,0] /* blockdevice\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9245=allocate([98,108,111,99,107,32,115,112,101,99,105,97,108,0] /* block special\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10246=allocate([102,105,102,111,0] /* fifo\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11247=allocate([102,105,102,111,32,40,110,97,109,101,100,32,112,105,112,101,41,0] /* fifo (named pipe)\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12248=allocate([117,110,114,101,97,100,97,98,108,101,32,115,121,109,108,105,110,107,32,96,37,115,39,0] /* unreadable symlink ` */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13249=allocate([115,121,109,108,105,110,107,0] /* symlink\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14250=allocate([117,110,114,101,97,100,97,98,108,101,32,115,121,109,108,105,110,107,32,96,37,115,39,32,40,37,115,41,0] /* unreadable symlink ` */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15251=allocate([112,97,116,104,32,116,111,111,32,108,111,110,103,58,32,96,37,115,39,0] /* path too long: `%s'\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16252=allocate([120,45,112,97,116,104,45,116,111,111,45,108,111,110,103,0] /* x-path-too-long\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17253=allocate([115,121,109,98,111,108,105,99,32,108,105,110,107,32,116,111,32,96,37,115,39,0] /* symbolic link to `%s */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18254=allocate([115,111,99,107,101,116,0] /* socket\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19255=allocate([105,110,118,97,108,105,100,32,109,111,100,101,32,48,37,111,0] /* invalid mode 0%o\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str20256=allocate([120,45,101,109,112,116,121,0] /* x-empty\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str21257=allocate([101,109,112,116,121,0] /* empty\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str22258=allocate([105,110,111,100,101,47,115,121,109,108,105,110,107,0] /* inode/symlink\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str23259=allocate([98,114,111,107,101,110,32,115,121,109,98,111,108,105,99,32,108,105,110,107,32,116,111,32,96,37,115,39,0] /* broken symbolic link */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str24260=allocate([105,110,111,100,101,47,37,115,0] /* inode/%s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str25261=allocate([59,32,99,104,97,114,115,101,116,61,0] /* ; charset=\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str26262=allocate([98,105,110,97,114,121,0] /* binary\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid266=allocate([64,40,35,41,36,70,105,108,101,58,32,105,115,95,116,97,114,46,99,44,118,32,49,46,51,55,32,50,48,49,48,47,49,49,47,51,48,32,49,52,58,53,56,58,53,51,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: is_tar.c, */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str267=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1268=allocate([97,112,112,108,105,99,97,116,105,111,110,47,120,45,116,97,114,0] /* application/x-tar\00 */, "i8", ALLOC_STATIC);
 _tartype=allocate([116, 97, 114, 32, 97, 114, 99, 104, 105, 118, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 79, 83, 73, 88, 32, 116, 97, 114, 32, 97, 114, 99, 104, 105, 118, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 79, 83, 73, 88, 32, 116, 97, 114, 32, 97, 114, 99, 104, 105, 118, 101, 32, 40, 71, 78, 85, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0], "i8", ALLOC_STATIC);
-STRING_TABLE.__str2271=allocate([117,115,116,97,114,32,32,0] /* ustar  \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3272=allocate([117,115,116,97,114,0] /* ustar\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid276=allocate([64,40,35,41,36,70,105,108,101,58,32,99,100,102,46,99,44,118,32,49,46,53,48,32,50,48,49,50,47,48,50,47,50,48,32,50,50,58,51,53,58,50,57,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: cdf.c,v 1 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2269=allocate([117,115,116,97,114,32,32,0] /* ustar  \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3270=allocate([117,115,116,97,114,0] /* ustar\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid274=allocate([64,40,35,41,36,70,105,108,101,58,32,99,100,102,46,99,44,118,32,49,46,53,48,32,50,48,49,50,47,48,50,47,50,48,32,50,50,58,51,53,58,50,57,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: cdf.c,v 1 */, "i8", ALLOC_STATIC);
 _cdf_bo=allocate(4, "i8", ALLOC_STATIC);
-STRING_TABLE.__str277=allocate([1,2,3,4,0] /* \01\02\03\04\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1278=allocate([99,100,102,46,99,0] /* cdf.c\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.___func___cdf_read_sector=allocate([99,100,102,95,114,101,97,100,95,115,101,99,116,111,114,0] /* cdf_read_sector\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2279=allocate([115,115,32,61,61,32,108,101,110,0] /* ss == len\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.___func___cdf_read_short_sector=allocate([99,100,102,95,114,101,97,100,95,115,104,111,114,116,95,115,101,99,116,111,114,0] /* cdf_read_short_secto */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str275=allocate([1,2,3,4,0] /* \01\02\03\04\00 */, "i8", ALLOC_STATIC);
 STRING_TABLE._cdf_read_summary_info_name=allocate([5,83,117,109,109,97,114,121,73,110,102,111,114,109,97,116,105,111,110,0] /* \05SummaryInformatio */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3280=allocate([37,46,56,120,45,37,46,52,120,45,37,46,52,120,45,37,46,50,120,37,46,50,120,45,37,46,50,120,37,46,50,120,37,46,50,120,37,46,50,120,37,46,50,120,37,46,50,120,0] /* %.8x-%.4x-%.4x-%.2x% */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1276=allocate([37,46,56,120,45,37,46,52,120,45,37,46,52,120,45,37,46,50,120,37,46,50,120,45,37,46,50,120,37,46,50,120,37,46,50,120,37,46,50,120,37,46,50,120,37,46,50,120,0] /* %.8x-%.4x-%.4x-%.2x% */, "i8", ALLOC_STATIC);
 _vn=allocate([1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, -2147483648, 0, 0, 0, 0, 0, 0, 0], ["i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0], ALLOC_STATIC);
-STRING_TABLE.__str4281=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5282=allocate([48,120,37,120,0] /* 0x%x\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6283=allocate([37,100,100,43,0] /* %dd+\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str7284=allocate([37,46,50,100,58,0] /* %.2d:\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str8285=allocate([37,46,50,100,0] /* %.2d\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str9286=allocate([67,111,100,101,32,112,97,103,101,0] /* Code page\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str10287=allocate([84,105,116,108,101,0] /* Title\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str11288=allocate([83,117,98,106,101,99,116,0] /* Subject\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str12289=allocate([65,117,116,104,111,114,0] /* Author\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str13290=allocate([75,101,121,119,111,114,100,115,0] /* Keywords\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14291=allocate([67,111,109,109,101,110,116,115,0] /* Comments\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str15292=allocate([84,101,109,112,108,97,116,101,0] /* Template\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str16293=allocate([76,97,115,116,32,83,97,118,101,100,32,66,121,0] /* Last Saved By\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17294=allocate([82,101,118,105,115,105,111,110,32,78,117,109,98,101,114,0] /* Revision Number\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str18295=allocate([84,111,116,97,108,32,69,100,105,116,105,110,103,32,84,105,109,101,0] /* Total Editing Time\0 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str19296=allocate([76,97,115,116,32,80,114,105,110,116,101,100,0] /* Last Printed\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str20297=allocate([67,114,101,97,116,101,32,84,105,109,101,47,68,97,116,101,0] /* Create Time/Date\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str21298=allocate([76,97,115,116,32,83,97,118,101,100,32,84,105,109,101,47,68,97,116,101,0] /* Last Saved Time/Date */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str22299=allocate([78,117,109,98,101,114,32,111,102,32,80,97,103,101,115,0] /* Number of Pages\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str23300=allocate([78,117,109,98,101,114,32,111,102,32,87,111,114,100,115,0] /* Number of Words\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str24301=allocate([78,117,109,98,101,114,32,111,102,32,67,104,97,114,97,99,116,101,114,115,0] /* Number of Characters */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str25302=allocate([84,104,117,109,98,110,97,105,108,0] /* Thumbnail\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str26303=allocate([78,97,109,101,32,111,102,32,67,114,101,97,116,105,110,103,32,65,112,112,108,105,99,97,116,105,111,110,0] /* Name of Creating App */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str27304=allocate([83,101,99,117,114,105,116,121,0] /* Security\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str28305=allocate([76,111,99,97,108,101,32,73,68,0] /* Locale ID\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid307=allocate([64,40,35,41,36,70,105,108,101,58,32,99,100,102,95,116,105,109,101,46,99,44,118,32,49,46,49,49,32,50,48,49,49,47,49,50,47,49,51,32,49,51,58,52,56,58,52,49,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: cdf_time. */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2277=allocate([37,115,0] /* %s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3278=allocate([48,120,37,120,0] /* 0x%x\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4279=allocate([37,100,100,43,0] /* %dd+\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5280=allocate([37,46,50,100,58,0] /* %.2d:\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6281=allocate([37,46,50,100,0] /* %.2d\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7282=allocate([67,111,100,101,32,112,97,103,101,0] /* Code page\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8283=allocate([84,105,116,108,101,0] /* Title\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9284=allocate([83,117,98,106,101,99,116,0] /* Subject\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10285=allocate([65,117,116,104,111,114,0] /* Author\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11286=allocate([75,101,121,119,111,114,100,115,0] /* Keywords\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12287=allocate([67,111,109,109,101,110,116,115,0] /* Comments\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13288=allocate([84,101,109,112,108,97,116,101,0] /* Template\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14289=allocate([76,97,115,116,32,83,97,118,101,100,32,66,121,0] /* Last Saved By\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15290=allocate([82,101,118,105,115,105,111,110,32,78,117,109,98,101,114,0] /* Revision Number\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16291=allocate([84,111,116,97,108,32,69,100,105,116,105,110,103,32,84,105,109,101,0] /* Total Editing Time\0 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17292=allocate([76,97,115,116,32,80,114,105,110,116,101,100,0] /* Last Printed\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18293=allocate([67,114,101,97,116,101,32,84,105,109,101,47,68,97,116,101,0] /* Create Time/Date\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19294=allocate([76,97,115,116,32,83,97,118,101,100,32,84,105,109,101,47,68,97,116,101,0] /* Last Saved Time/Date */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str20295=allocate([78,117,109,98,101,114,32,111,102,32,80,97,103,101,115,0] /* Number of Pages\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str21296=allocate([78,117,109,98,101,114,32,111,102,32,87,111,114,100,115,0] /* Number of Words\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str22297=allocate([78,117,109,98,101,114,32,111,102,32,67,104,97,114,97,99,116,101,114,115,0] /* Number of Characters */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str23298=allocate([84,104,117,109,98,110,97,105,108,0] /* Thumbnail\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str24299=allocate([78,97,109,101,32,111,102,32,67,114,101,97,116,105,110,103,32,65,112,112,108,105,99,97,116,105,111,110,0] /* Name of Creating App */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str25300=allocate([83,101,99,117,114,105,116,121,0] /* Security\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str26301=allocate([76,111,99,97,108,101,32,73,68,0] /* Locale ID\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid303=allocate([64,40,35,41,36,70,105,108,101,58,32,99,100,102,95,116,105,109,101,46,99,44,118,32,49,46,49,49,32,50,48,49,49,47,49,50,47,49,51,32,49,51,58,52,56,58,52,49,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: cdf_time. */, "i8", ALLOC_STATIC);
 _cdf_ctime_ctbuf=allocate(26, "i8", ALLOC_STATIC);
-STRING_TABLE.__str308=allocate([42,66,97,100,42,32,48,120,37,49,54,46,49,54,108,108,120,10,0] /* _Bad_ 0x%16.16llx\0A */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str304=allocate([42,66,97,100,42,32,48,120,37,49,54,46,49,54,108,108,120,10,0] /* _Bad_ 0x%16.16llx\0A */, "i8", ALLOC_STATIC);
 _mdays=allocate([31, 0, 0, 0, 28, 0, 0, 0, 31, 0, 0, 0, 30, 0, 0, 0, 31, 0, 0, 0, 30, 0, 0, 0, 31, 0, 0, 0, 31, 0, 0, 0, 30, 0, 0, 0, 31, 0, 0, 0, 30, 0, 0, 0, 31, 0, 0, 0], ["i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0,"i32",0,0,0], ALLOC_STATIC);
-STRING_TABLE._rcsid310=allocate([64,40,35,41,36,70,105,108,101,58,32,114,101,97,100,99,100,102,46,99,44,118,32,49,46,50,57,32,50,48,49,50,47,48,50,47,50,48,32,50,48,58,48,52,58,53,56,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: readcdf.c */, "i8", ALLOC_STATIC);
-__str311=allocate(1, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1312=allocate([99,111,114,114,117,112,116,58,32,0] /* corrupt: \00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2313=allocate([67,97,110,39,116,32,114,101,97,100,32,83,65,84,0] /* Can't read SAT\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3314=allocate([67,97,110,39,116,32,114,101,97,100,32,83,83,65,84,0] /* Can't read SSAT\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str4315=allocate([67,97,110,39,116,32,114,101,97,100,32,100,105,114,101,99,116,111,114,121,0] /* Can't read directory */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5316=allocate([67,97,110,110,111,116,32,114,101,97,100,32,115,104,111,114,116,32,115,116,114,101,97,109,0] /* Cannot read short st */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6317=allocate([78,111,32,115,117,109,109,97,114,121,32,105,110,102,111,0] /* No summary info\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str7318=allocate([67,97,110,110,111,116,32,114,101,97,100,32,115,117,109,109,97,114,121,32,105,110,102,111,0] /* Cannot read summary  */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str8319=allocate([67,97,110,39,116,32,101,120,112,97,110,100,32,115,117,109,109,97,114,121,95,105,110,102,111,0] /* Can't expand summary */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str9320=allocate([118,110,100,46,109,115,45,111,102,102,105,99,101,0] /* vnd.ms-office\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str10321=allocate([87,111,114,100,68,111,99,117,109,101,110,116,0] /* WordDocument\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str11322=allocate([109,115,119,111,114,100,0] /* msword\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str12323=allocate([97,112,112,108,105,99,97,116,105,111,110,47,37,115,0] /* application/%s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str13324=allocate([67,111,109,112,111,115,105,116,101,32,68,111,99,117,109,101,110,116,32,70,105,108,101,32,86,50,32,68,111,99,117,109,101,110,116,0] /* Composite Document F */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14325=allocate([44,32,37,115,37,115,0] /* , %s%s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str15326=allocate([44,32,37,115,32,69,110,100,105,97,110,0] /* , %s Endian\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str16327=allocate([76,105,116,116,108,101,0] /* Little\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str17328=allocate([66,105,103,0] /* Big\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str18329=allocate([44,32,79,115,58,32,87,105,110,100,111,119,115,44,32,86,101,114,115,105,111,110,32,37,100,46,37,100,0] /* , Os: Windows, Versi */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str19330=allocate([44,32,79,115,58,32,77,97,99,79,83,44,32,86,101,114,115,105,111,110,32,37,100,46,37,100,0] /* , Os: MacOS, Version */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str20331=allocate([44,32,79,115,32,37,100,44,32,86,101,114,115,105,111,110,58,32,37,100,46,37,100,0] /* , Os %d, Version: %d */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str21332=allocate([44,32,37,115,58,32,37,104,100,0] /* , %s: %hd\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str22333=allocate([44,32,37,115,58,32,37,100,0] /* , %s: %d\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str23334=allocate([44,32,37,115,58,32,37,117,0] /* , %s: %u\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str24335=allocate([44,32,37,115,58,32,37,103,0] /* , %s: %g\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str25336=allocate([44,32,37,115,58,32,37,115,0] /* , %s: %s\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str26337=allocate([87,111,114,100,0] /* Word\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str27338=allocate([69,120,99,101,108,0] /* Excel\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str28339=allocate([118,110,100,46,109,115,45,101,120,99,101,108,0] /* vnd.ms-excel\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str29340=allocate([80,111,119,101,114,112,111,105,110,116,0] /* Powerpoint\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str30341=allocate([118,110,100,46,109,115,45,112,111,119,101,114,112,111,105,110,116,0] /* vnd.ms-powerpoint\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str31342=allocate([67,114,121,115,116,97,108,32,82,101,112,111,114,116,115,0] /* Crystal Reports\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str32343=allocate([120,45,114,112,116,0] /* x-rpt\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid347=allocate([64,40,35,41,36,70,105,108,101,58,32,97,115,112,114,105,110,116,102,46,99,44,118,32,49,46,52,32,50,48,49,48,47,48,55,47,50,49,32,49,54,58,52,55,58,49,55,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: asprintf. */, "i8", ALLOC_STATIC);
-STRING_TABLE._rcsid351=allocate([64,40,35,41,36,70,105,108,101,58,32,118,97,115,112,114,105,110,116,102,46,99,44,118,32,49,46,56,32,50,48,49,49,47,49,50,47,48,56,32,49,50,58,51,56,58,50,52,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: vasprintf */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str352=allocate([40,110,117,108,108,41,0] /* (null)\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1353=allocate([100,105,111,117,120,88,102,101,103,69,71,99,115,112,110,0] /* diouxXfegEGcspn\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2354=allocate([37,105,0] /* %i\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3355=allocate([100,105,111,117,120,88,0] /* diouxX\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str4356=allocate([118,97,115,112,114,105,110,116,102,46,99,0] /* vasprintf.c\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.___func___print_it=allocate([112,114,105,110,116,95,105,116,0] /* print_it\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str5357=allocate([40,115,45,62,98,117,102,102,101,114,95,98,97,115,101,41,91,115,45,62,98,117,102,102,101,114,95,108,101,110,32,45,32,49,93,32,61,61,32,49,0] /* (s-_buffer_base)[s-_ */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str6358=allocate([37,0] /* %\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid306=allocate([64,40,35,41,36,70,105,108,101,58,32,114,101,97,100,99,100,102,46,99,44,118,32,49,46,50,57,32,50,48,49,50,47,48,50,47,50,48,32,50,48,58,48,52,58,53,56,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: readcdf.c */, "i8", ALLOC_STATIC);
+__str307=allocate(1, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1308=allocate([99,111,114,114,117,112,116,58,32,0] /* corrupt: \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2309=allocate([67,97,110,39,116,32,114,101,97,100,32,83,65,84,0] /* Can't read SAT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3310=allocate([67,97,110,39,116,32,114,101,97,100,32,83,83,65,84,0] /* Can't read SSAT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4311=allocate([67,97,110,39,116,32,114,101,97,100,32,100,105,114,101,99,116,111,114,121,0] /* Can't read directory */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5312=allocate([67,97,110,110,111,116,32,114,101,97,100,32,115,104,111,114,116,32,115,116,114,101,97,109,0] /* Cannot read short st */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6313=allocate([78,111,32,115,117,109,109,97,114,121,32,105,110,102,111,0] /* No summary info\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7314=allocate([67,97,110,110,111,116,32,114,101,97,100,32,115,117,109,109,97,114,121,32,105,110,102,111,0] /* Cannot read summary  */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8315=allocate([67,97,110,39,116,32,101,120,112,97,110,100,32,115,117,109,109,97,114,121,95,105,110,102,111,0] /* Can't expand summary */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9316=allocate([118,110,100,46,109,115,45,111,102,102,105,99,101,0] /* vnd.ms-office\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10317=allocate([87,111,114,100,68,111,99,117,109,101,110,116,0] /* WordDocument\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11318=allocate([109,115,119,111,114,100,0] /* msword\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12319=allocate([97,112,112,108,105,99,97,116,105,111,110,47,37,115,0] /* application/%s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13320=allocate([67,111,109,112,111,115,105,116,101,32,68,111,99,117,109,101,110,116,32,70,105,108,101,32,86,50,32,68,111,99,117,109,101,110,116,0] /* Composite Document F */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14321=allocate([44,32,37,115,37,115,0] /* , %s%s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15322=allocate([44,32,37,115,32,69,110,100,105,97,110,0] /* , %s Endian\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16323=allocate([76,105,116,116,108,101,0] /* Little\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17324=allocate([66,105,103,0] /* Big\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18325=allocate([44,32,79,115,58,32,87,105,110,100,111,119,115,44,32,86,101,114,115,105,111,110,32,37,100,46,37,100,0] /* , Os: Windows, Versi */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19326=allocate([44,32,79,115,58,32,77,97,99,79,83,44,32,86,101,114,115,105,111,110,32,37,100,46,37,100,0] /* , Os: MacOS, Version */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str20327=allocate([44,32,79,115,32,37,100,44,32,86,101,114,115,105,111,110,58,32,37,100,46,37,100,0] /* , Os %d, Version: %d */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str21328=allocate([44,32,37,115,58,32,37,104,100,0] /* , %s: %hd\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str22329=allocate([44,32,37,115,58,32,37,100,0] /* , %s: %d\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str23330=allocate([44,32,37,115,58,32,37,117,0] /* , %s: %u\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str24331=allocate([44,32,37,115,58,32,37,103,0] /* , %s: %g\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str25332=allocate([44,32,37,115,58,32,37,115,0] /* , %s: %s\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str26333=allocate([87,111,114,100,0] /* Word\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str27334=allocate([69,120,99,101,108,0] /* Excel\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str28335=allocate([118,110,100,46,109,115,45,101,120,99,101,108,0] /* vnd.ms-excel\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str29336=allocate([80,111,119,101,114,112,111,105,110,116,0] /* Powerpoint\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str30337=allocate([118,110,100,46,109,115,45,112,111,119,101,114,112,111,105,110,116,0] /* vnd.ms-powerpoint\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str31338=allocate([67,114,121,115,116,97,108,32,82,101,112,111,114,116,115,0] /* Crystal Reports\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str32339=allocate([120,45,114,112,116,0] /* x-rpt\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid343=allocate([64,40,35,41,36,70,105,108,101,58,32,97,115,112,114,105,110,116,102,46,99,44,118,32,49,46,52,32,50,48,49,48,47,48,55,47,50,49,32,49,54,58,52,55,58,49,55,32,99,104,114,105,115,116,111,115,32,69,120,112,32,36,0] /* @(#)$File: asprintf. */, "i8", ALLOC_STATIC);
+STRING_TABLE._rcsid347=allocate([64,40,35,41,36,70,105,108,101,58,32,118,97,115,112,114,105,110,116,102,46,99,44,118,32,49,46,56,32,50,48,49,49,47,49,50,47,48,56,32,49,50,58,51,56,58,50,52,32,114,114,116,32,69,120,112,32,36,0] /* @(#)$File: vasprintf */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str348=allocate([40,110,117,108,108,41,0] /* (null)\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1349=allocate([100,105,111,117,120,88,102,101,103,69,71,99,115,112,110,0] /* diouxXfegEGcspn\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2350=allocate([37,105,0] /* %i\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3351=allocate([100,105,111,117,120,88,0] /* diouxX\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4352=allocate([37,0] /* %\00 */, "i8", ALLOC_STATIC);
+_nuls=allocate(10, "i8", ALLOC_STATIC);
+STRING_TABLE.__str356=allocate([91,58,60,58,93,93,0] /* [:_:]]\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1357=allocate([91,58,62,58,93,93,0] /* [:_:]]\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2358=allocate([78,85,76,0] /* NUL\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3359=allocate([83,79,72,0] /* SOH\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4360=allocate([83,84,88,0] /* STX\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5361=allocate([69,84,88,0] /* ETX\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6362=allocate([69,79,84,0] /* EOT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7363=allocate([69,78,81,0] /* ENQ\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8364=allocate([65,67,75,0] /* ACK\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9365=allocate([66,69,76,0] /* BEL\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10366=allocate([97,108,101,114,116,0] /* alert\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11367=allocate([66,83,0] /* BS\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12368=allocate([98,97,99,107,115,112,97,99,101,0] /* backspace\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13369=allocate([72,84,0] /* HT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14370=allocate([116,97,98,0] /* tab\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15371=allocate([76,70,0] /* LF\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16372=allocate([110,101,119,108,105,110,101,0] /* newline\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17373=allocate([86,84,0] /* VT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18374=allocate([118,101,114,116,105,99,97,108,45,116,97,98,0] /* vertical-tab\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19375=allocate([70,70,0] /* FF\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str20376=allocate([102,111,114,109,45,102,101,101,100,0] /* form-feed\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str21377=allocate([67,82,0] /* CR\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str22378=allocate([99,97,114,114,105,97,103,101,45,114,101,116,117,114,110,0] /* carriage-return\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str23379=allocate([83,79,0] /* SO\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str24380=allocate([83,73,0] /* SI\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str25381=allocate([68,76,69,0] /* DLE\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str26382=allocate([68,67,49,0] /* DC1\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str27383=allocate([68,67,50,0] /* DC2\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str28384=allocate([68,67,51,0] /* DC3\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str29385=allocate([68,67,52,0] /* DC4\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str30386=allocate([78,65,75,0] /* NAK\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str31387=allocate([83,89,78,0] /* SYN\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str32388=allocate([69,84,66,0] /* ETB\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str33389=allocate([67,65,78,0] /* CAN\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str34390=allocate([69,77,0] /* EM\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str35391=allocate([83,85,66,0] /* SUB\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str36392=allocate([69,83,67,0] /* ESC\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str37393=allocate([73,83,52,0] /* IS4\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str38394=allocate([70,83,0] /* FS\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str39395=allocate([73,83,51,0] /* IS3\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str40396=allocate([71,83,0] /* GS\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str41397=allocate([73,83,50,0] /* IS2\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str42398=allocate([82,83,0] /* RS\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str43399=allocate([73,83,49,0] /* IS1\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str44400=allocate([85,83,0] /* US\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str45401=allocate([115,112,97,99,101,0] /* space\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str46402=allocate([101,120,99,108,97,109,97,116,105,111,110,45,109,97,114,107,0] /* exclamation-mark\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str47403=allocate([113,117,111,116,97,116,105,111,110,45,109,97,114,107,0] /* quotation-mark\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str48404=allocate([110,117,109,98,101,114,45,115,105,103,110,0] /* number-sign\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str49405=allocate([100,111,108,108,97,114,45,115,105,103,110,0] /* dollar-sign\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str50406=allocate([112,101,114,99,101,110,116,45,115,105,103,110,0] /* percent-sign\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str51407=allocate([97,109,112,101,114,115,97,110,100,0] /* ampersand\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str52408=allocate([97,112,111,115,116,114,111,112,104,101,0] /* apostrophe\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str53409=allocate([108,101,102,116,45,112,97,114,101,110,116,104,101,115,105,115,0] /* left-parenthesis\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str54410=allocate([114,105,103,104,116,45,112,97,114,101,110,116,104,101,115,105,115,0] /* right-parenthesis\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str55411=allocate([97,115,116,101,114,105,115,107,0] /* asterisk\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str56412=allocate([112,108,117,115,45,115,105,103,110,0] /* plus-sign\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str57413=allocate([99,111,109,109,97,0] /* comma\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str58414=allocate([104,121,112,104,101,110,0] /* hyphen\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str59415=allocate([104,121,112,104,101,110,45,109,105,110,117,115,0] /* hyphen-minus\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str60416=allocate([112,101,114,105,111,100,0] /* period\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str61417=allocate([102,117,108,108,45,115,116,111,112,0] /* full-stop\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str62418=allocate([115,108,97,115,104,0] /* slash\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str63419=allocate([115,111,108,105,100,117,115,0] /* solidus\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str64420=allocate([122,101,114,111,0] /* zero\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str65421=allocate([111,110,101,0] /* one\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str66422=allocate([116,119,111,0] /* two\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str67423=allocate([116,104,114,101,101,0] /* three\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str68424=allocate([102,111,117,114,0] /* four\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str69425=allocate([102,105,118,101,0] /* five\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str70426=allocate([115,105,120,0] /* six\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str71427=allocate([115,101,118,101,110,0] /* seven\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str72428=allocate([101,105,103,104,116,0] /* eight\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str73429=allocate([110,105,110,101,0] /* nine\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str74430=allocate([99,111,108,111,110,0] /* colon\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str75431=allocate([115,101,109,105,99,111,108,111,110,0] /* semicolon\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str76432=allocate([108,101,115,115,45,116,104,97,110,45,115,105,103,110,0] /* less-than-sign\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str77433=allocate([101,113,117,97,108,115,45,115,105,103,110,0] /* equals-sign\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str78434=allocate([103,114,101,97,116,101,114,45,116,104,97,110,45,115,105,103,110,0] /* greater-than-sign\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str79435=allocate([113,117,101,115,116,105,111,110,45,109,97,114,107,0] /* question-mark\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str80436=allocate([99,111,109,109,101,114,99,105,97,108,45,97,116,0] /* commercial-at\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str81437=allocate([108,101,102,116,45,115,113,117,97,114,101,45,98,114,97,99,107,101,116,0] /* left-square-bracket\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str82=allocate([98,97,99,107,115,108,97,115,104,0] /* backslash\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str83=allocate([114,101,118,101,114,115,101,45,115,111,108,105,100,117,115,0] /* reverse-solidus\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str84=allocate([114,105,103,104,116,45,115,113,117,97,114,101,45,98,114,97,99,107,101,116,0] /* right-square-bracket */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str85=allocate([99,105,114,99,117,109,102,108,101,120,0] /* circumflex\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str86=allocate([99,105,114,99,117,109,102,108,101,120,45,97,99,99,101,110,116,0] /* circumflex-accent\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str87=allocate([117,110,100,101,114,115,99,111,114,101,0] /* underscore\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str88=allocate([108,111,119,45,108,105,110,101,0] /* low-line\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str89=allocate([103,114,97,118,101,45,97,99,99,101,110,116,0] /* grave-accent\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str90=allocate([108,101,102,116,45,98,114,97,99,101,0] /* left-brace\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str91=allocate([108,101,102,116,45,99,117,114,108,121,45,98,114,97,99,107,101,116,0] /* left-curly-bracket\0 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str92=allocate([118,101,114,116,105,99,97,108,45,108,105,110,101,0] /* vertical-line\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str93=allocate([114,105,103,104,116,45,98,114,97,99,101,0] /* right-brace\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str94=allocate([114,105,103,104,116,45,99,117,114,108,121,45,98,114,97,99,107,101,116,0] /* right-curly-bracket\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str95=allocate([116,105,108,100,101,0] /* tilde\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str96=allocate([68,69,76,0] /* DEL\00 */, "i8", ALLOC_STATIC);
+_cnames=allocate([0, 0, 0, 0, 0, undef, 0, 0, 0, 0, 0, 0, 1, undef, 0, 0, 0, 0, 0, 0, 2, undef, 0, 0, 0, 0, 0, 0, 3, undef, 0, 0, 0, 0, 0, 0, 4, undef, 0, 0, 0, 0, 0, 0, 5, undef, 0, 0, 0, 0, 0, 0, 6, undef, 0, 0, 0, 0, 0, 0, 7, undef, 0, 0, 0, 0, 0, 0, 7, undef, 0, 0, 0, 0, 0, 0, 8, undef, 0, 0, 0, 0, 0, 0, 8, undef, 0, 0, 0, 0, 0, 0, 9, undef, 0, 0, 0, 0, 0, 0, 9, undef, 0, 0, 0, 0, 0, 0, 10, undef, 0, 0, 0, 0, 0, 0, 10, undef, 0, 0, 0, 0, 0, 0, 11, undef, 0, 0, 0, 0, 0, 0, 11, undef, 0, 0, 0, 0, 0, 0, 12, undef, 0, 0, 0, 0, 0, 0, 12, undef, 0, 0, 0, 0, 0, 0, 13, undef, 0, 0, 0, 0, 0, 0, 13, undef, 0, 0, 0, 0, 0, 0, 14, undef, 0, 0, 0, 0, 0, 0, 15, undef, 0, 0, 0, 0, 0, 0, 16, undef, 0, 0, 0, 0, 0, 0, 17, undef, 0, 0, 0, 0, 0, 0, 18, undef, 0, 0, 0, 0, 0, 0, 19, undef, 0, 0, 0, 0, 0, 0, 20, undef, 0, 0, 0, 0, 0, 0, 21, undef, 0, 0, 0, 0, 0, 0, 22, undef, 0, 0, 0, 0, 0, 0, 23, undef, 0, 0, 0, 0, 0, 0, 24, undef, 0, 0, 0, 0, 0, 0, 25, undef, 0, 0, 0, 0, 0, 0, 26, undef, 0, 0, 0, 0, 0, 0, 27, undef, 0, 0, 0, 0, 0, 0, 28, undef, 0, 0, 0, 0, 0, 0, 28, undef, 0, 0, 0, 0, 0, 0, 29, undef, 0, 0, 0, 0, 0, 0, 29, undef, 0, 0, 0, 0, 0, 0, 30, undef, 0, 0, 0, 0, 0, 0, 30, undef, 0, 0, 0, 0, 0, 0, 31, undef, 0, 0, 0, 0, 0, 0, 31, undef, 0, 0, 0, 0, 0, 0, 32, undef, 0, 0, 0, 0, 0, 0, 33, undef, 0, 0, 0, 0, 0, 0, 34, undef, 0, 0, 0, 0, 0, 0, 35, undef, 0, 0, 0, 0, 0, 0, 36, undef, 0, 0, 0, 0, 0, 0, 37, undef, 0, 0, 0, 0, 0, 0, 38, undef, 0, 0, 0, 0, 0, 0, 39, undef, 0, 0, 0, 0, 0, 0, 40, undef, 0, 0, 0, 0, 0, 0, 41, undef, 0, 0, 0, 0, 0, 0, 42, undef, 0, 0, 0, 0, 0, 0, 43, undef, 0, 0, 0, 0, 0, 0, 44, undef, 0, 0, 0, 0, 0, 0, 45, undef, 0, 0, 0, 0, 0, 0, 45, undef, 0, 0, 0, 0, 0, 0, 46, undef, 0, 0, 0, 0, 0, 0, 46, undef, 0, 0, 0, 0, 0, 0, 47, undef, 0, 0, 0, 0, 0, 0, 47, undef, 0, 0, 0, 0, 0, 0, 48, undef, 0, 0, 0, 0, 0, 0, 49, undef, 0, 0, 0, 0, 0, 0, 50, undef, 0, 0, 0, 0, 0, 0, 51, undef, 0, 0, 0, 0, 0, 0, 52, undef, 0, 0, 0, 0, 0, 0, 53, undef, 0, 0, 0, 0, 0, 0, 54, undef, 0, 0, 0, 0, 0, 0, 55, undef, 0, 0, 0, 0, 0, 0, 56, undef, 0, 0, 0, 0, 0, 0, 57, undef, 0, 0, 0, 0, 0, 0, 58, undef, 0, 0, 0, 0, 0, 0, 59, undef, 0, 0, 0, 0, 0, 0, 60, undef, 0, 0, 0, 0, 0, 0, 61, undef, 0, 0, 0, 0, 0, 0, 62, undef, 0, 0, 0, 0, 0, 0, 63, undef, 0, 0, 0, 0, 0, 0, 64, undef, 0, 0, 0, 0, 0, 0, 91, undef, 0, 0, 0, 0, 0, 0, 92, undef, 0, 0, 0, 0, 0, 0, 92, undef, 0, 0, 0, 0, 0, 0, 93, undef, 0, 0, 0, 0, 0, 0, 94, undef, 0, 0, 0, 0, 0, 0, 94, undef, 0, 0, 0, 0, 0, 0, 95, undef, 0, 0, 0, 0, 0, 0, 95, undef, 0, 0, 0, 0, 0, 0, 96, undef, 0, 0, 0, 0, 0, 0, 123, undef, 0, 0, 0, 0, 0, 0, 123, undef, 0, 0, 0, 0, 0, 0, 124, undef, 0, 0, 0, 0, 0, 0, 125, undef, 0, 0, 0, 0, 0, 0, 125, undef, 0, 0, 0, 0, 0, 0, 126, undef, 0, 0, 0, 0, 0, 0, 127, undef, 0, 0, 0, 0, 0, 0, 0, undef, 0, 0], ["*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8","*",0,0,0,"i8","i8","i8","i8"], ALLOC_STATIC);
+_cclasses=allocate(156, "i8", ALLOC_STATIC);
+STRING_TABLE.__str97=allocate([97,108,110,117,109,0] /* alnum\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str98=allocate([65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,48,49,50,51,52,53,54,55,56,57,0] /* ABCDEFGHIJKLMNOPQRST */, "i8", ALLOC_STATIC);
+__str99=allocate(1, "i8", ALLOC_STATIC);
+STRING_TABLE.__str100=allocate([97,108,112,104,97,0] /* alpha\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str101=allocate([65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,0] /* ABCDEFGHIJKLMNOPQRST */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str102=allocate([98,108,97,110,107,0] /* blank\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str103=allocate([32,9,0] /*  \09\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str104=allocate([99,110,116,114,108,0] /* cntrl\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str105=allocate([7,8,9,10,11,12,13,1,2,3,4,5,6,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,127,0] /* \07\08\09\0A\0B\0C\0 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str106=allocate([100,105,103,105,116,0] /* digit\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str107=allocate([48,49,50,51,52,53,54,55,56,57,0] /* 0123456789\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str108=allocate([103,114,97,112,104,0] /* graph\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str109=allocate([65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,48,49,50,51,52,53,54,55,56,57,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,58,59,60,61,62,63,64,91,92,93,94,95,96,123,124,125,126,0] /* ABCDEFGHIJKLMNOPQRST */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str110=allocate([108,111,119,101,114,0] /* lower\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str111=allocate([97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,0] /* abcdefghijklmnopqrst */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str112438=allocate([112,114,105,110,116,0] /* print\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str113439=allocate([65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,48,49,50,51,52,53,54,55,56,57,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,58,59,60,61,62,63,64,91,92,93,94,95,96,123,124,125,126,32,0] /* ABCDEFGHIJKLMNOPQRST */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str114=allocate([112,117,110,99,116,0] /* punct\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str115=allocate([33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,58,59,60,61,62,63,64,91,92,93,94,95,96,123,124,125,126,0] /* !\22#$%&'()_+,-./:;_ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str116=allocate([9,10,11,12,13,32,0] /* \09\0A\0B\0C\0D \00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str117=allocate([117,112,112,101,114,0] /* upper\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str118=allocate([65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,0] /* ABCDEFGHIJKLMNOPQRST */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str119=allocate([120,100,105,103,105,116,0] /* xdigit\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str120=allocate([48,49,50,51,52,53,54,55,56,57,65,66,67,68,69,70,97,98,99,100,101,102,0] /* 0123456789ABCDEFabcd */, "i8", ALLOC_STATIC);
+_rerrs=allocate([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0,"i32",0,0,0,"*",0,0,0,"*",0,0,0], ALLOC_STATIC);
+STRING_TABLE.__str442=allocate([82,69,71,95,48,120,37,120,0] /* REG_0x%x\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1443=allocate([48,0] /* 0\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2444=allocate([37,100,0] /* %d\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3445=allocate([82,69,71,95,78,79,77,65,84,67,72,0] /* REG_NOMATCH\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str4446=allocate([108,108,118,109,95,114,101,103,101,120,101,99,40,41,32,102,97,105,108,101,100,32,116,111,32,109,97,116,99,104,0] /* llvm_regexec() faile */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str5447=allocate([82,69,71,95,66,65,68,80,65,84,0] /* REG_BADPAT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str6448=allocate([105,110,118,97,108,105,100,32,114,101,103,117,108,97,114,32,101,120,112,114,101,115,115,105,111,110,0] /* invalid regular expr */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str7449=allocate([82,69,71,95,69,67,79,76,76,65,84,69,0] /* REG_ECOLLATE\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str8450=allocate([105,110,118,97,108,105,100,32,99,111,108,108,97,116,105,110,103,32,101,108,101,109,101,110,116,0] /* invalid collating el */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str9451=allocate([82,69,71,95,69,67,84,89,80,69,0] /* REG_ECTYPE\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str10452=allocate([105,110,118,97,108,105,100,32,99,104,97,114,97,99,116,101,114,32,99,108,97,115,115,0] /* invalid character cl */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str11453=allocate([82,69,71,95,69,69,83,67,65,80,69,0] /* REG_EESCAPE\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str12454=allocate([116,114,97,105,108,105,110,103,32,98,97,99,107,115,108,97,115,104,32,40,92,41,0] /* trailing backslash ( */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str13455=allocate([82,69,71,95,69,83,85,66,82,69,71,0] /* REG_ESUBREG\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14456=allocate([105,110,118,97,108,105,100,32,98,97,99,107,114,101,102,101,114,101,110,99,101,32,110,117,109,98,101,114,0] /* invalid backreferenc */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str15457=allocate([82,69,71,95,69,66,82,65,67,75,0] /* REG_EBRACK\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str16458=allocate([98,114,97,99,107,101,116,115,32,40,91,32,93,41,32,110,111,116,32,98,97,108,97,110,99,101,100,0] /* brackets ([ ]) not b */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str17459=allocate([82,69,71,95,69,80,65,82,69,78,0] /* REG_EPAREN\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str18460=allocate([112,97,114,101,110,116,104,101,115,101,115,32,110,111,116,32,98,97,108,97,110,99,101,100,0] /* parentheses not bala */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str19461=allocate([82,69,71,95,69,66,82,65,67,69,0] /* REG_EBRACE\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str20462=allocate([98,114,97,99,101,115,32,110,111,116,32,98,97,108,97,110,99,101,100,0] /* braces not balanced\ */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str21463=allocate([82,69,71,95,66,65,68,66,82,0] /* REG_BADBR\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str22464=allocate([105,110,118,97,108,105,100,32,114,101,112,101,116,105,116,105,111,110,32,99,111,117,110,116,40,115,41,0] /* invalid repetition c */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str23465=allocate([82,69,71,95,69,82,65,78,71,69,0] /* REG_ERANGE\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str24466=allocate([105,110,118,97,108,105,100,32,99,104,97,114,97,99,116,101,114,32,114,97,110,103,101,0] /* invalid character ra */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str25467=allocate([82,69,71,95,69,83,80,65,67,69,0] /* REG_ESPACE\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str26468=allocate([111,117,116,32,111,102,32,109,101,109,111,114,121,0] /* out of memory\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str27469=allocate([82,69,71,95,66,65,68,82,80,84,0] /* REG_BADRPT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str28470=allocate([114,101,112,101,116,105,116,105,111,110,45,111,112,101,114,97,116,111,114,32,111,112,101,114,97,110,100,32,105,110,118,97,108,105,100,0] /* repetition-operator  */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str29471=allocate([82,69,71,95,69,77,80,84,89,0] /* REG_EMPTY\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str30472=allocate([101,109,112,116,121,32,40,115,117,98,41,101,120,112,114,101,115,115,105,111,110,0] /* empty (sub)expressio */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str31473=allocate([82,69,71,95,65,83,83,69,82,84,0] /* REG_ASSERT\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str32474=allocate([34,99,97,110,39,116,32,104,97,112,112,101,110,34,32,45,45,32,121,111,117,32,102,111,117,110,100,32,97,32,98,117,103,0] /* \22can't happen\22 - */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str33475=allocate([82,69,71,95,73,78,86,65,82,71,0] /* REG_INVARG\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str34476=allocate([105,110,118,97,108,105,100,32,97,114,103,117,109,101,110,116,32,116,111,32,114,101,103,101,120,32,114,111,117,116,105,110,101,0] /* invalid argument to  */, "i8", ALLOC_STATIC);
+__str35477=allocate(1, "i8", ALLOC_STATIC);
+STRING_TABLE.__str36478=allocate([42,42,42,32,117,110,107,110,111,119,110,32,114,101,103,101,120,112,32,101,114,114,111,114,32,99,111,100,101,32,42,42,42,0] /* ___ unknown regexp e */, "i8", ALLOC_STATIC);
 _m=allocate(4, "i8", ALLOC_STATIC);
-STRING_TABLE.__str362=allocate([46,47,109,97,103,105,99,0] /* ./magic\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1363=allocate([101,114,114,111,114,58,32,37,115,10,0] /* error: %s\0A\00 */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2364=allocate([37,115,10,0] /* %s\0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str487=allocate([46,47,109,97,103,105,99,0] /* ./magic\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1488=allocate([101,114,114,111,114,58,32,37,115,10,0] /* error: %s\0A\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2489=allocate([37,115,10,0] /* %s\0A\00 */, "i8", ALLOC_STATIC);
 __gm_=allocate(468, "i8", ALLOC_STATIC);
 _mparams=allocate(24, "i8", ALLOC_STATIC);
-STRING_TABLE.__str365=allocate([109,97,120,32,115,121,115,116,101,109,32,98,121,116,101,115,32,61,32,37,49,48,108,117,10,0] /* max system bytes = % */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str1366=allocate([115,121,115,116,101,109,32,98,121,116,101,115,32,32,32,32,32,61,32,37,49,48,108,117,10,0] /* system bytes     = % */, "i8", ALLOC_STATIC);
-STRING_TABLE.__str2367=allocate([105,110,32,117,115,101,32,98,121,116,101,115,32,32,32,32,32,61,32,37,49,48,108,117,10,0] /* in use bytes     = % */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str490=allocate([109,97,120,32,115,121,115,116,101,109,32,98,121,116,101,115,32,61,32,37,49,48,108,117,10,0] /* max system bytes = % */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str1491=allocate([115,121,115,116,101,109,32,98,121,116,101,115,32,32,32,32,32,61,32,37,49,48,108,117,10,0] /* system bytes     = % */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str2492=allocate([105,110,32,117,115,101,32,98,121,116,101,115,32,32,32,32,32,61,32,37,49,48,108,117,10,0] /* in use bytes     = % */, "i8", ALLOC_STATIC);
 __ZSt7nothrow=allocate(1, "i8", ALLOC_STATIC);
 __ZL13__new_handler=allocate(4, "i8", ALLOC_STATIC);
 __ZTVSt9bad_alloc=allocate([0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 14, 0, 0, 0, 16, 0, 0, 0], ["*",0,0,0,"*",0,0,0,"*",0,0,0,"*",0,0,0,"*",0,0,0], ALLOC_STATIC);
 allocate(1, "i8", ALLOC_STATIC);
-STRING_TABLE.__str3368=allocate([115,116,100,58,58,98,97,100,95,97,108,108,111,99,0] /* std::bad_alloc\00 */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str3493=allocate([115,116,100,58,58,98,97,100,95,97,108,108,111,99,0] /* std::bad_alloc\00 */, "i8", ALLOC_STATIC);
 __ZTVSt20bad_array_new_length=allocate([0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 20, 0, 0, 0, 22, 0, 0, 0], ["*",0,0,0,"*",0,0,0,"*",0,0,0,"*",0,0,0,"*",0,0,0], ALLOC_STATIC);
 allocate(1, "i8", ALLOC_STATIC);
-STRING_TABLE.__str14369=allocate([98,97,100,95,97,114,114,97,121,95,110,101,119,95,108,101,110,103,116,104,0] /* bad_array_new_length */, "i8", ALLOC_STATIC);
+STRING_TABLE.__str14494=allocate([98,97,100,95,97,114,114,97,121,95,110,101,119,95,108,101,110,103,116,104,0] /* bad_array_new_length */, "i8", ALLOC_STATIC);
 STRING_TABLE.__ZTSSt9bad_alloc=allocate([83,116,57,98,97,100,95,97,108,108,111,99,0] /* St9bad_alloc\00 */, "i8", ALLOC_STATIC);
 __ZTISt9bad_alloc=allocate(12, "i8", ALLOC_STATIC);
 STRING_TABLE.__ZTSSt20bad_array_new_length=allocate([83,116,50,48,98,97,100,95,97,114,114,97,121,95,110,101,119,95,108,101,110,103,116,104,0] /* St20bad_array_new_le */, "i8", ALLOC_STATIC);
@@ -45662,42 +59246,208 @@ __ZTISt20bad_array_new_length=allocate(12, "i8", ALLOC_STATIC);
 HEAP32[((_llvm_used)>>2)]=((STRING_TABLE._rcsid)|0);
 HEAP32[(((_llvm_used)+(4))>>2)]=((STRING_TABLE._rcsid1)|0);
 HEAP32[(((_llvm_used)+(8))>>2)]=((STRING_TABLE._rcsid30)|0);
-HEAP32[(((_llvm_used)+(12))>>2)]=((STRING_TABLE._rcsid113)|0);
-HEAP32[(((_llvm_used)+(16))>>2)]=((STRING_TABLE._rcsid134)|0);
-HEAP32[(((_llvm_used)+(20))>>2)]=((STRING_TABLE._rcsid158)|0);
-HEAP32[(((_llvm_used)+(24))>>2)]=((STRING_TABLE._rcsid160)|0);
-HEAP32[(((_llvm_used)+(28))>>2)]=((STRING_TABLE._rcsid188)|0);
-HEAP32[(((_llvm_used)+(32))>>2)]=((STRING_TABLE._rcsid235)|0);
-HEAP32[(((_llvm_used)+(36))>>2)]=((STRING_TABLE._rcsid237)|0);
-HEAP32[(((_llvm_used)+(40))>>2)]=((STRING_TABLE._rcsid268)|0);
-HEAP32[(((_llvm_used)+(44))>>2)]=((STRING_TABLE._rcsid276)|0);
-HEAP32[(((_llvm_used)+(48))>>2)]=((STRING_TABLE._rcsid307)|0);
-HEAP32[(((_llvm_used)+(52))>>2)]=((STRING_TABLE._rcsid310)|0);
-HEAP32[(((_llvm_used)+(56))>>2)]=((STRING_TABLE._rcsid347)|0);
-HEAP32[(((_llvm_used)+(60))>>2)]=((STRING_TABLE._rcsid351)|0);
+HEAP32[(((_llvm_used)+(12))>>2)]=((STRING_TABLE._rcsid111)|0);
+HEAP32[(((_llvm_used)+(16))>>2)]=((STRING_TABLE._rcsid132)|0);
+HEAP32[(((_llvm_used)+(20))>>2)]=((STRING_TABLE._rcsid156)|0);
+HEAP32[(((_llvm_used)+(24))>>2)]=((STRING_TABLE._rcsid158)|0);
+HEAP32[(((_llvm_used)+(28))>>2)]=((STRING_TABLE._rcsid186)|0);
+HEAP32[(((_llvm_used)+(32))>>2)]=((STRING_TABLE._rcsid233)|0);
+HEAP32[(((_llvm_used)+(36))>>2)]=((STRING_TABLE._rcsid235)|0);
+HEAP32[(((_llvm_used)+(40))>>2)]=((STRING_TABLE._rcsid266)|0);
+HEAP32[(((_llvm_used)+(44))>>2)]=((STRING_TABLE._rcsid274)|0);
+HEAP32[(((_llvm_used)+(48))>>2)]=((STRING_TABLE._rcsid303)|0);
+HEAP32[(((_llvm_used)+(52))>>2)]=((STRING_TABLE._rcsid306)|0);
+HEAP32[(((_llvm_used)+(56))>>2)]=((STRING_TABLE._rcsid343)|0);
+HEAP32[(((_llvm_used)+(60))>>2)]=((STRING_TABLE._rcsid347)|0);
 HEAP32[((_bang)>>2)]=((STRING_TABLE.__str68)|0);
 HEAP32[(((_bang)+(12))>>2)]=((STRING_TABLE.__str69)|0);
 HEAP32[(((_bang)+(24))>>2)]=((STRING_TABLE.__str70)|0);
-HEAP32[(((_vn)+(4))>>2)]=((STRING_TABLE.__str9286)|0);
-HEAP32[(((_vn)+(12))>>2)]=((STRING_TABLE.__str10287)|0);
-HEAP32[(((_vn)+(20))>>2)]=((STRING_TABLE.__str11288)|0);
-HEAP32[(((_vn)+(28))>>2)]=((STRING_TABLE.__str12289)|0);
-HEAP32[(((_vn)+(36))>>2)]=((STRING_TABLE.__str13290)|0);
-HEAP32[(((_vn)+(44))>>2)]=((STRING_TABLE.__str14291)|0);
-HEAP32[(((_vn)+(52))>>2)]=((STRING_TABLE.__str15292)|0);
-HEAP32[(((_vn)+(60))>>2)]=((STRING_TABLE.__str16293)|0);
-HEAP32[(((_vn)+(68))>>2)]=((STRING_TABLE.__str17294)|0);
-HEAP32[(((_vn)+(76))>>2)]=((STRING_TABLE.__str18295)|0);
-HEAP32[(((_vn)+(84))>>2)]=((STRING_TABLE.__str19296)|0);
-HEAP32[(((_vn)+(92))>>2)]=((STRING_TABLE.__str20297)|0);
-HEAP32[(((_vn)+(100))>>2)]=((STRING_TABLE.__str21298)|0);
-HEAP32[(((_vn)+(108))>>2)]=((STRING_TABLE.__str22299)|0);
-HEAP32[(((_vn)+(116))>>2)]=((STRING_TABLE.__str23300)|0);
-HEAP32[(((_vn)+(124))>>2)]=((STRING_TABLE.__str24301)|0);
-HEAP32[(((_vn)+(132))>>2)]=((STRING_TABLE.__str25302)|0);
-HEAP32[(((_vn)+(140))>>2)]=((STRING_TABLE.__str26303)|0);
-HEAP32[(((_vn)+(148))>>2)]=((STRING_TABLE.__str27304)|0);
-HEAP32[(((_vn)+(156))>>2)]=((STRING_TABLE.__str28305)|0);
+HEAP32[(((_vn)+(4))>>2)]=((STRING_TABLE.__str7282)|0);
+HEAP32[(((_vn)+(12))>>2)]=((STRING_TABLE.__str8283)|0);
+HEAP32[(((_vn)+(20))>>2)]=((STRING_TABLE.__str9284)|0);
+HEAP32[(((_vn)+(28))>>2)]=((STRING_TABLE.__str10285)|0);
+HEAP32[(((_vn)+(36))>>2)]=((STRING_TABLE.__str11286)|0);
+HEAP32[(((_vn)+(44))>>2)]=((STRING_TABLE.__str12287)|0);
+HEAP32[(((_vn)+(52))>>2)]=((STRING_TABLE.__str13288)|0);
+HEAP32[(((_vn)+(60))>>2)]=((STRING_TABLE.__str14289)|0);
+HEAP32[(((_vn)+(68))>>2)]=((STRING_TABLE.__str15290)|0);
+HEAP32[(((_vn)+(76))>>2)]=((STRING_TABLE.__str16291)|0);
+HEAP32[(((_vn)+(84))>>2)]=((STRING_TABLE.__str17292)|0);
+HEAP32[(((_vn)+(92))>>2)]=((STRING_TABLE.__str18293)|0);
+HEAP32[(((_vn)+(100))>>2)]=((STRING_TABLE.__str19294)|0);
+HEAP32[(((_vn)+(108))>>2)]=((STRING_TABLE.__str20295)|0);
+HEAP32[(((_vn)+(116))>>2)]=((STRING_TABLE.__str21296)|0);
+HEAP32[(((_vn)+(124))>>2)]=((STRING_TABLE.__str22297)|0);
+HEAP32[(((_vn)+(132))>>2)]=((STRING_TABLE.__str23298)|0);
+HEAP32[(((_vn)+(140))>>2)]=((STRING_TABLE.__str24299)|0);
+HEAP32[(((_vn)+(148))>>2)]=((STRING_TABLE.__str25300)|0);
+HEAP32[(((_vn)+(156))>>2)]=((STRING_TABLE.__str26301)|0);
+HEAP32[((_cnames)>>2)]=((STRING_TABLE.__str2358)|0);
+HEAP32[(((_cnames)+(8))>>2)]=((STRING_TABLE.__str3359)|0);
+HEAP32[(((_cnames)+(16))>>2)]=((STRING_TABLE.__str4360)|0);
+HEAP32[(((_cnames)+(24))>>2)]=((STRING_TABLE.__str5361)|0);
+HEAP32[(((_cnames)+(32))>>2)]=((STRING_TABLE.__str6362)|0);
+HEAP32[(((_cnames)+(40))>>2)]=((STRING_TABLE.__str7363)|0);
+HEAP32[(((_cnames)+(48))>>2)]=((STRING_TABLE.__str8364)|0);
+HEAP32[(((_cnames)+(56))>>2)]=((STRING_TABLE.__str9365)|0);
+HEAP32[(((_cnames)+(64))>>2)]=((STRING_TABLE.__str10366)|0);
+HEAP32[(((_cnames)+(72))>>2)]=((STRING_TABLE.__str11367)|0);
+HEAP32[(((_cnames)+(80))>>2)]=((STRING_TABLE.__str12368)|0);
+HEAP32[(((_cnames)+(88))>>2)]=((STRING_TABLE.__str13369)|0);
+HEAP32[(((_cnames)+(96))>>2)]=((STRING_TABLE.__str14370)|0);
+HEAP32[(((_cnames)+(104))>>2)]=((STRING_TABLE.__str15371)|0);
+HEAP32[(((_cnames)+(112))>>2)]=((STRING_TABLE.__str16372)|0);
+HEAP32[(((_cnames)+(120))>>2)]=((STRING_TABLE.__str17373)|0);
+HEAP32[(((_cnames)+(128))>>2)]=((STRING_TABLE.__str18374)|0);
+HEAP32[(((_cnames)+(136))>>2)]=((STRING_TABLE.__str19375)|0);
+HEAP32[(((_cnames)+(144))>>2)]=((STRING_TABLE.__str20376)|0);
+HEAP32[(((_cnames)+(152))>>2)]=((STRING_TABLE.__str21377)|0);
+HEAP32[(((_cnames)+(160))>>2)]=((STRING_TABLE.__str22378)|0);
+HEAP32[(((_cnames)+(168))>>2)]=((STRING_TABLE.__str23379)|0);
+HEAP32[(((_cnames)+(176))>>2)]=((STRING_TABLE.__str24380)|0);
+HEAP32[(((_cnames)+(184))>>2)]=((STRING_TABLE.__str25381)|0);
+HEAP32[(((_cnames)+(192))>>2)]=((STRING_TABLE.__str26382)|0);
+HEAP32[(((_cnames)+(200))>>2)]=((STRING_TABLE.__str27383)|0);
+HEAP32[(((_cnames)+(208))>>2)]=((STRING_TABLE.__str28384)|0);
+HEAP32[(((_cnames)+(216))>>2)]=((STRING_TABLE.__str29385)|0);
+HEAP32[(((_cnames)+(224))>>2)]=((STRING_TABLE.__str30386)|0);
+HEAP32[(((_cnames)+(232))>>2)]=((STRING_TABLE.__str31387)|0);
+HEAP32[(((_cnames)+(240))>>2)]=((STRING_TABLE.__str32388)|0);
+HEAP32[(((_cnames)+(248))>>2)]=((STRING_TABLE.__str33389)|0);
+HEAP32[(((_cnames)+(256))>>2)]=((STRING_TABLE.__str34390)|0);
+HEAP32[(((_cnames)+(264))>>2)]=((STRING_TABLE.__str35391)|0);
+HEAP32[(((_cnames)+(272))>>2)]=((STRING_TABLE.__str36392)|0);
+HEAP32[(((_cnames)+(280))>>2)]=((STRING_TABLE.__str37393)|0);
+HEAP32[(((_cnames)+(288))>>2)]=((STRING_TABLE.__str38394)|0);
+HEAP32[(((_cnames)+(296))>>2)]=((STRING_TABLE.__str39395)|0);
+HEAP32[(((_cnames)+(304))>>2)]=((STRING_TABLE.__str40396)|0);
+HEAP32[(((_cnames)+(312))>>2)]=((STRING_TABLE.__str41397)|0);
+HEAP32[(((_cnames)+(320))>>2)]=((STRING_TABLE.__str42398)|0);
+HEAP32[(((_cnames)+(328))>>2)]=((STRING_TABLE.__str43399)|0);
+HEAP32[(((_cnames)+(336))>>2)]=((STRING_TABLE.__str44400)|0);
+HEAP32[(((_cnames)+(344))>>2)]=((STRING_TABLE.__str45401)|0);
+HEAP32[(((_cnames)+(352))>>2)]=((STRING_TABLE.__str46402)|0);
+HEAP32[(((_cnames)+(360))>>2)]=((STRING_TABLE.__str47403)|0);
+HEAP32[(((_cnames)+(368))>>2)]=((STRING_TABLE.__str48404)|0);
+HEAP32[(((_cnames)+(376))>>2)]=((STRING_TABLE.__str49405)|0);
+HEAP32[(((_cnames)+(384))>>2)]=((STRING_TABLE.__str50406)|0);
+HEAP32[(((_cnames)+(392))>>2)]=((STRING_TABLE.__str51407)|0);
+HEAP32[(((_cnames)+(400))>>2)]=((STRING_TABLE.__str52408)|0);
+HEAP32[(((_cnames)+(408))>>2)]=((STRING_TABLE.__str53409)|0);
+HEAP32[(((_cnames)+(416))>>2)]=((STRING_TABLE.__str54410)|0);
+HEAP32[(((_cnames)+(424))>>2)]=((STRING_TABLE.__str55411)|0);
+HEAP32[(((_cnames)+(432))>>2)]=((STRING_TABLE.__str56412)|0);
+HEAP32[(((_cnames)+(440))>>2)]=((STRING_TABLE.__str57413)|0);
+HEAP32[(((_cnames)+(448))>>2)]=((STRING_TABLE.__str58414)|0);
+HEAP32[(((_cnames)+(456))>>2)]=((STRING_TABLE.__str59415)|0);
+HEAP32[(((_cnames)+(464))>>2)]=((STRING_TABLE.__str60416)|0);
+HEAP32[(((_cnames)+(472))>>2)]=((STRING_TABLE.__str61417)|0);
+HEAP32[(((_cnames)+(480))>>2)]=((STRING_TABLE.__str62418)|0);
+HEAP32[(((_cnames)+(488))>>2)]=((STRING_TABLE.__str63419)|0);
+HEAP32[(((_cnames)+(496))>>2)]=((STRING_TABLE.__str64420)|0);
+HEAP32[(((_cnames)+(504))>>2)]=((STRING_TABLE.__str65421)|0);
+HEAP32[(((_cnames)+(512))>>2)]=((STRING_TABLE.__str66422)|0);
+HEAP32[(((_cnames)+(520))>>2)]=((STRING_TABLE.__str67423)|0);
+HEAP32[(((_cnames)+(528))>>2)]=((STRING_TABLE.__str68424)|0);
+HEAP32[(((_cnames)+(536))>>2)]=((STRING_TABLE.__str69425)|0);
+HEAP32[(((_cnames)+(544))>>2)]=((STRING_TABLE.__str70426)|0);
+HEAP32[(((_cnames)+(552))>>2)]=((STRING_TABLE.__str71427)|0);
+HEAP32[(((_cnames)+(560))>>2)]=((STRING_TABLE.__str72428)|0);
+HEAP32[(((_cnames)+(568))>>2)]=((STRING_TABLE.__str73429)|0);
+HEAP32[(((_cnames)+(576))>>2)]=((STRING_TABLE.__str74430)|0);
+HEAP32[(((_cnames)+(584))>>2)]=((STRING_TABLE.__str75431)|0);
+HEAP32[(((_cnames)+(592))>>2)]=((STRING_TABLE.__str76432)|0);
+HEAP32[(((_cnames)+(600))>>2)]=((STRING_TABLE.__str77433)|0);
+HEAP32[(((_cnames)+(608))>>2)]=((STRING_TABLE.__str78434)|0);
+HEAP32[(((_cnames)+(616))>>2)]=((STRING_TABLE.__str79435)|0);
+HEAP32[(((_cnames)+(624))>>2)]=((STRING_TABLE.__str80436)|0);
+HEAP32[(((_cnames)+(632))>>2)]=((STRING_TABLE.__str81437)|0);
+HEAP32[(((_cnames)+(640))>>2)]=((STRING_TABLE.__str82)|0);
+HEAP32[(((_cnames)+(648))>>2)]=((STRING_TABLE.__str83)|0);
+HEAP32[(((_cnames)+(656))>>2)]=((STRING_TABLE.__str84)|0);
+HEAP32[(((_cnames)+(664))>>2)]=((STRING_TABLE.__str85)|0);
+HEAP32[(((_cnames)+(672))>>2)]=((STRING_TABLE.__str86)|0);
+HEAP32[(((_cnames)+(680))>>2)]=((STRING_TABLE.__str87)|0);
+HEAP32[(((_cnames)+(688))>>2)]=((STRING_TABLE.__str88)|0);
+HEAP32[(((_cnames)+(696))>>2)]=((STRING_TABLE.__str89)|0);
+HEAP32[(((_cnames)+(704))>>2)]=((STRING_TABLE.__str90)|0);
+HEAP32[(((_cnames)+(712))>>2)]=((STRING_TABLE.__str91)|0);
+HEAP32[(((_cnames)+(720))>>2)]=((STRING_TABLE.__str92)|0);
+HEAP32[(((_cnames)+(728))>>2)]=((STRING_TABLE.__str93)|0);
+HEAP32[(((_cnames)+(736))>>2)]=((STRING_TABLE.__str94)|0);
+HEAP32[(((_cnames)+(744))>>2)]=((STRING_TABLE.__str95)|0);
+HEAP32[(((_cnames)+(752))>>2)]=((STRING_TABLE.__str96)|0);
+HEAP32[((_cclasses)>>2)]=((STRING_TABLE.__str97)|0);
+HEAP32[(((_cclasses)+(4))>>2)]=((STRING_TABLE.__str98)|0);
+HEAP32[(((_cclasses)+(8))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(12))>>2)]=((STRING_TABLE.__str100)|0);
+HEAP32[(((_cclasses)+(16))>>2)]=((STRING_TABLE.__str101)|0);
+HEAP32[(((_cclasses)+(20))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(24))>>2)]=((STRING_TABLE.__str102)|0);
+HEAP32[(((_cclasses)+(28))>>2)]=((STRING_TABLE.__str103)|0);
+HEAP32[(((_cclasses)+(32))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(36))>>2)]=((STRING_TABLE.__str104)|0);
+HEAP32[(((_cclasses)+(40))>>2)]=((STRING_TABLE.__str105)|0);
+HEAP32[(((_cclasses)+(44))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(48))>>2)]=((STRING_TABLE.__str106)|0);
+HEAP32[(((_cclasses)+(52))>>2)]=((STRING_TABLE.__str107)|0);
+HEAP32[(((_cclasses)+(56))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(60))>>2)]=((STRING_TABLE.__str108)|0);
+HEAP32[(((_cclasses)+(64))>>2)]=((STRING_TABLE.__str109)|0);
+HEAP32[(((_cclasses)+(68))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(72))>>2)]=((STRING_TABLE.__str110)|0);
+HEAP32[(((_cclasses)+(76))>>2)]=((STRING_TABLE.__str111)|0);
+HEAP32[(((_cclasses)+(80))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(84))>>2)]=((STRING_TABLE.__str112438)|0);
+HEAP32[(((_cclasses)+(88))>>2)]=((STRING_TABLE.__str113439)|0);
+HEAP32[(((_cclasses)+(92))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(96))>>2)]=((STRING_TABLE.__str114)|0);
+HEAP32[(((_cclasses)+(100))>>2)]=((STRING_TABLE.__str115)|0);
+HEAP32[(((_cclasses)+(104))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(108))>>2)]=((STRING_TABLE.__str45401)|0);
+HEAP32[(((_cclasses)+(112))>>2)]=((STRING_TABLE.__str116)|0);
+HEAP32[(((_cclasses)+(116))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(120))>>2)]=((STRING_TABLE.__str117)|0);
+HEAP32[(((_cclasses)+(124))>>2)]=((STRING_TABLE.__str118)|0);
+HEAP32[(((_cclasses)+(128))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(132))>>2)]=((STRING_TABLE.__str119)|0);
+HEAP32[(((_cclasses)+(136))>>2)]=((STRING_TABLE.__str120)|0);
+HEAP32[(((_cclasses)+(140))>>2)]=((__str99)|0);
+HEAP32[(((_cclasses)+(152))>>2)]=((__str99)|0);
+HEAP32[(((_rerrs)+(4))>>2)]=((STRING_TABLE.__str3445)|0);
+HEAP32[(((_rerrs)+(8))>>2)]=((STRING_TABLE.__str4446)|0);
+HEAP32[(((_rerrs)+(16))>>2)]=((STRING_TABLE.__str5447)|0);
+HEAP32[(((_rerrs)+(20))>>2)]=((STRING_TABLE.__str6448)|0);
+HEAP32[(((_rerrs)+(28))>>2)]=((STRING_TABLE.__str7449)|0);
+HEAP32[(((_rerrs)+(32))>>2)]=((STRING_TABLE.__str8450)|0);
+HEAP32[(((_rerrs)+(40))>>2)]=((STRING_TABLE.__str9451)|0);
+HEAP32[(((_rerrs)+(44))>>2)]=((STRING_TABLE.__str10452)|0);
+HEAP32[(((_rerrs)+(52))>>2)]=((STRING_TABLE.__str11453)|0);
+HEAP32[(((_rerrs)+(56))>>2)]=((STRING_TABLE.__str12454)|0);
+HEAP32[(((_rerrs)+(64))>>2)]=((STRING_TABLE.__str13455)|0);
+HEAP32[(((_rerrs)+(68))>>2)]=((STRING_TABLE.__str14456)|0);
+HEAP32[(((_rerrs)+(76))>>2)]=((STRING_TABLE.__str15457)|0);
+HEAP32[(((_rerrs)+(80))>>2)]=((STRING_TABLE.__str16458)|0);
+HEAP32[(((_rerrs)+(88))>>2)]=((STRING_TABLE.__str17459)|0);
+HEAP32[(((_rerrs)+(92))>>2)]=((STRING_TABLE.__str18460)|0);
+HEAP32[(((_rerrs)+(100))>>2)]=((STRING_TABLE.__str19461)|0);
+HEAP32[(((_rerrs)+(104))>>2)]=((STRING_TABLE.__str20462)|0);
+HEAP32[(((_rerrs)+(112))>>2)]=((STRING_TABLE.__str21463)|0);
+HEAP32[(((_rerrs)+(116))>>2)]=((STRING_TABLE.__str22464)|0);
+HEAP32[(((_rerrs)+(124))>>2)]=((STRING_TABLE.__str23465)|0);
+HEAP32[(((_rerrs)+(128))>>2)]=((STRING_TABLE.__str24466)|0);
+HEAP32[(((_rerrs)+(136))>>2)]=((STRING_TABLE.__str25467)|0);
+HEAP32[(((_rerrs)+(140))>>2)]=((STRING_TABLE.__str26468)|0);
+HEAP32[(((_rerrs)+(148))>>2)]=((STRING_TABLE.__str27469)|0);
+HEAP32[(((_rerrs)+(152))>>2)]=((STRING_TABLE.__str28470)|0);
+HEAP32[(((_rerrs)+(160))>>2)]=((STRING_TABLE.__str29471)|0);
+HEAP32[(((_rerrs)+(164))>>2)]=((STRING_TABLE.__str30472)|0);
+HEAP32[(((_rerrs)+(172))>>2)]=((STRING_TABLE.__str31473)|0);
+HEAP32[(((_rerrs)+(176))>>2)]=((STRING_TABLE.__str32474)|0);
+HEAP32[(((_rerrs)+(184))>>2)]=((STRING_TABLE.__str33475)|0);
+HEAP32[(((_rerrs)+(188))>>2)]=((STRING_TABLE.__str34476)|0);
+HEAP32[(((_rerrs)+(196))>>2)]=((__str35477)|0);
+HEAP32[(((_rerrs)+(200))>>2)]=((STRING_TABLE.__str36478)|0);
 HEAP32[(((__ZTVSt9bad_alloc)+(4))>>2)]=__ZTISt9bad_alloc;
 HEAP32[(((__ZTVSt20bad_array_new_length)+(4))>>2)]=__ZTISt20bad_array_new_length;
 __ZTVN10__cxxabiv120__si_class_type_infoE=allocate([2,0,0,0], ["i8*",0,0,0], ALLOC_STATIC);
@@ -45889,10 +59639,10 @@ if (shouldRunNow) {
   // {{MODULE_ADDITIONS}}
 
 
-// EMSCRIPTEN_GENERATED_FUNCTIONS: ["_magic_setflags","_magic_error","_magic_errno","_magic_getpath","_get_default_magic","_magic_open","_magic_close","_free_mlist","_magic_load","_magic_compile","_magic_check","_magic_list","_magic_descriptor","_file_or_fd","_magic_file","_magic_buffer","_unreadable_info","_close_and_restore","_file_delmagic","_file_apprentice","_init_file_tables","_apprentice_1","_file_signextend","_file_showstr","_file_pstring_length_size","_file_pstring_get_length","_apprentice_load","_apprentice_compile","_swap4","_apprentice_map","_apprentice_list","_mkdbname","_byteswap","_apprentice_magic_strength","_swap2","_swap8","_bs1","_cmpstrp","_load_1","_set_test_type","_apprentice_sort","_parse","_get_op","_get_cond","_check_cond","_get_type","_eatsize","_string_modifier_check","_getvalue","_check_format","_getstr","_hextoint","_check_format_type","_parse_mime","_parse_apple","_parse_strength","_file_softmagic","_match","_strndup","_mget","_magiccheck","_handle_annotation","_print_sep","_mprint","_moffset","_check_fmt","_file_strncmp","_file_strncmp16","_mcopy","_mdebug","_cvt_8","_mconvert","_cvt_16","_cvt_32","_cvt_64","_cvt_float","_cvt_double","_trim_nuls","_file_ascmagic","_file_ascmagic_with_encoding","_encode_utf8","_looks_ascii","_file_encoding","_looks_utf8_with_BOM","_file_looks_utf8","_looks_ucs16","_looks_latin1","_looks_extended","_from_ebcdic","_file_mdump","_file_fmttime","_file_magwarn","_file_vprintf","_file_error","_file_printf","_file_error_core","_file_magerror","_file_oomem","_file_badseek","_file_badread","_file_buffer","_file_reset","_file_getbuffer","_file_check_mem","_file_printedlen","_file_replace","_file_fsmagic","_handle_mime","_bad_link","_file_is_tar","__cdf_tole2","__cdf_tole4","__cdf_tole8","_is_tar","_from_oct","_cdf_tole2","_cdf_tole4","_cdf_tole8","_cdf_swap_header","_cdf_unpack_header","_cdf_swap_dir","_cdf_swap_class","_cdf_unpack_dir","_cdf_read_header","_cdf_read","_cdf_read_sector","_cdf_read_short_sector","_cdf_read_sat","_cdf_count_chain","_cdf_read_long_sector_chain","_cdf_read_short_sector_chain","_cdf_read_sector_chain","_cdf_read_dir","_cdf_read_ssat","_cdf_read_short_stream","_cdf_read_summary_info","_cdf_namecmp","_cdf_read_property_info","_cdf_check_stream_offset","_cdf_getuint32","_cdf_timespec_to_timestamp","_cdf_getdays","_cdf_getday","_cdf_getmonth","_cdf_unpack_summary_info","_cdf_print_classid","_cdf_print_property_name","_cdf_print_elapsed_time","_cdf_timestamp_to_timespec","_cdf_ctime","_file_trycdf","_cdf_file_summary_info","_cdf_file_property_info","_asprintf","_vasprintf","_core","_realloc_buff","_dispatch","_usual_char","_getint","_print_it","_type_s","_init_magic","_webfile_check","_malloc","_tmalloc_small","_tmalloc_large","_sys_alloc","_free","_sys_trim","_calloc","_realloc","_release_unused_segments","_memalign","_internal_memalign","_independent_calloc","_internal_realloc","_malloc_footprint","_malloc_max_footprint","_ialloc","_independent_comalloc","_valloc","_pvalloc","_malloc_trim","_mallinfo","_internal_mallinfo","_malloc_stats","_internal_malloc_stats","_mallopt","_init_mparams","_malloc_usable_size","_mmap_resize","_segment_holding","_init_top","_mmap_alloc","_init_bins","_change_mparam","_prepend_alloc","__ZNKSt9bad_alloc4whatEv","__ZSt15get_new_handlerv","__ZSt15set_new_handlerPFvvE","__ZNSt9bad_allocC2Ev","__ZdlPv","__ZdlPvRKSt9nothrow_t","__ZdaPv","__ZdaPvRKSt9nothrow_t","__ZNSt9bad_allocD0Ev","__ZNSt9bad_allocD2Ev","__ZNSt20bad_array_new_lengthC2Ev","_add_segment","__Znwj","__ZnwjRKSt9nothrow_t","__Znaj","__ZnajRKSt9nothrow_t","__ZNKSt20bad_array_new_length4whatEv","__ZNSt20bad_array_new_lengthD0Ev","__ZSt17__throw_bad_allocv"]
+// EMSCRIPTEN_GENERATED_FUNCTIONS: ["_magic_setflags","_magic_error","_magic_errno","_magic_getpath","_get_default_magic","_magic_open","_magic_close","_free_mlist","_magic_load","_magic_compile","_magic_check","_magic_list","_magic_descriptor","_file_or_fd","_magic_file","_magic_buffer","_unreadable_info","_close_and_restore","_file_delmagic","_init_file_tables","_file_apprentice","_apprentice_1","_file_signextend","_file_showstr","_file_pstring_length_size","_file_pstring_get_length","_apprentice_load","_apprentice_compile","_swap4","_apprentice_map","_apprentice_list","_mkdbname","_byteswap","_apprentice_magic_strength","_swap2","_swap8","_bs1","_cmpstrp","_load_1","_set_test_type","_apprentice_sort","_parse","_get_op","_get_cond","_check_cond","_get_type","_eatsize","_string_modifier_check","_getvalue","_check_format","_getstr","_hextoint","_check_format_type","_parse_mime","_parse_apple","_parse_strength","_file_softmagic","_match","_strndup","_mget","_magiccheck","_handle_annotation","_print_sep","_mprint","_moffset","_check_fmt","_file_strncmp","_file_strncmp16","_mcopy","_mdebug","_cvt_8","_mconvert","_cvt_16","_cvt_32","_cvt_64","_cvt_float","_cvt_double","_trim_nuls","_file_ascmagic","_file_ascmagic_with_encoding","_encode_utf8","_looks_ascii","_file_encoding","_looks_utf8_with_BOM","_file_looks_utf8","_looks_ucs16","_looks_latin1","_looks_extended","_from_ebcdic","_file_mdump","_file_fmttime","_file_magwarn","_file_vprintf","_file_error","_file_printf","_file_error_core","_file_magerror","_file_oomem","_file_badseek","_file_badread","_file_buffer","_file_reset","_file_getbuffer","_file_check_mem","_file_printedlen","_file_replace","_file_fsmagic","_handle_mime","_bad_link","_file_is_tar","__cdf_tole2","__cdf_tole4","__cdf_tole8","_is_tar","_from_oct","_cdf_tole2","_cdf_tole4","_cdf_tole8","_cdf_swap_header","_cdf_unpack_header","_cdf_swap_dir","_cdf_swap_class","_cdf_unpack_dir","_cdf_read_header","_cdf_read","_cdf_read_sector","_cdf_read_short_sector","_cdf_read_sat","_cdf_count_chain","_cdf_read_long_sector_chain","_cdf_read_short_sector_chain","_cdf_read_sector_chain","_cdf_read_dir","_cdf_read_ssat","_cdf_read_short_stream","_cdf_read_summary_info","_cdf_namecmp","_cdf_read_property_info","_cdf_check_stream_offset","_cdf_getuint32","_cdf_timespec_to_timestamp","_cdf_getdays","_cdf_getday","_cdf_getmonth","_cdf_unpack_summary_info","_cdf_print_classid","_cdf_print_property_name","_cdf_print_elapsed_time","_cdf_timestamp_to_timespec","_cdf_ctime","_file_trycdf","_cdf_file_summary_info","_cdf_file_property_info","_asprintf","_vasprintf","_core","_realloc_buff","_dispatch","_usual_char","_getint","_print_it","_type_s","_llvm_regcomp","_doemit","_p_ere","_p_str","_pluscount","_seterr","_isinsets","_samesets","_p_bre","_categorize","_stripsnug","_findmust","_enlarge","_p_simp_re","_nonnewline","_p_bracket","_dupl","_ordinary","_doinsert","_dofwd","_p_count","_repeat","_othercase","_bothcases","_allocset","_mccase","_mcinvert","_freeset","_nch","_firstch","_p_b_term","_freezeset","_p_b_cclass","_p_b_eclass","_p_b_symbol","_p_b_coll_elem","_mcadd","_p_ere_exp","_llvm_regerror","_regatoi","_llvm_regexec","_smatcher","_lmatcher","_lfast","_lslow","_ldissect","_lbackref","_lstep","_sfast","_sslow","_sdissect","_sbackref","_sstep","_llvm_strlcpy","_llvm_regfree","_init_magic","_webfile_check","_malloc","_tmalloc_small","_tmalloc_large","_sys_alloc","_free","_sys_trim","_calloc","_realloc","_release_unused_segments","_memalign","_internal_memalign","_independent_calloc","_internal_realloc","_malloc_footprint","_malloc_max_footprint","_ialloc","_independent_comalloc","_valloc","_pvalloc","_malloc_trim","_mallinfo","_internal_mallinfo","_malloc_stats","_internal_malloc_stats","_mallopt","_init_mparams","_malloc_usable_size","_mmap_resize","_segment_holding","_init_top","_mmap_alloc","_init_bins","_change_mparam","_prepend_alloc","__ZNKSt9bad_alloc4whatEv","__ZSt15get_new_handlerv","__ZSt15set_new_handlerPFvvE","__ZNSt9bad_allocC2Ev","__ZdlPv","__ZdlPvRKSt9nothrow_t","__ZdaPv","__ZdaPvRKSt9nothrow_t","__ZNSt9bad_allocD0Ev","__ZNSt9bad_allocD2Ev","__ZNSt20bad_array_new_lengthC2Ev","_add_segment","__Znwj","__ZnwjRKSt9nothrow_t","__Znaj","__ZnajRKSt9nothrow_t","__ZNKSt20bad_array_new_length4whatEv","__ZNSt20bad_array_new_lengthD0Ev","__ZSt17__throw_bad_allocv"]
 
-    window.webfile = {
-        cwrap: cwrap,
-    };
 
-});
+
+     
+
+ });
