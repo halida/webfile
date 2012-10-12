@@ -1,6 +1,4 @@
 *~
-tm
 *.o
 TAGS
-file.js
-*.data
+*.bin

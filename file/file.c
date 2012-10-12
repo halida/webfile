@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "magic.h"
 
-int main(int argc, char** argv){
+int main(){
     magic_t m = magic_open(MAGIC_NONE);
 
     // load magic

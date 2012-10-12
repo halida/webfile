@@ -1,5 +1,5 @@
 data = File.open('webfile.html').read()
-include = File.read('webfile_include.js')
+include = File.read('srcs/webfile_include.js')
 
 s = data.index("try {")
 e = data.rindex('</script>')

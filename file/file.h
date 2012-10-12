@@ -58,12 +58,12 @@
 #define S_IFDIR  0040000
 #define S_IFREG  0100000
 
-#include "regexp/regex_impl.h"
-#include "regexp/regutils.h"
-#include "regexp/regex2.h"
+#include "../regexp/regex_impl.h"
+#include "../regexp/regutils.h"
+#include "../regexp/regex2.h"
 
-#include "regexp/regcclass.h"
-#include "regexp/regcname.h"
+#include "../regexp/regcclass.h"
+#include "../regexp/regcname.h"
 
 #define regex_t llvm_regex_t
 #define regmatch_t llvm_regmatch_t
@@ -71,7 +71,10 @@
 #define regerror llvm_regerror
 #define regexec llvm_regexec
 #define regfree llvm_regfree
+
+#ifndef strlcpy
 #define strlcpy llvm_strlcpy
+#endif
 
 /* added end */
 
